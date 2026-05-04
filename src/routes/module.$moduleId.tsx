@@ -3,6 +3,8 @@ import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, BookOpen, CheckCircl
 import { useState, useMemo, useEffect } from "react";
 import { MODULES, getModule, type Section } from "@/data/courseMeta";
 import { LessonRenderer } from "@/components/vault/LessonRenderer";
+import { AssetList } from "@/components/vault/AssetList";
+import { getLessonAssets } from "@/data/assets";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/module/$moduleId")({
