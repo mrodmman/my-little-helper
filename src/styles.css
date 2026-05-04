@@ -138,6 +138,18 @@
   --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
+
+  /* Vault tokens — dark, secure, minimal */
+  --vault-surface: oklch(0.16 0.012 250);
+  --vault-elevated: oklch(0.22 0.014 250);
+  --vault-line: oklch(1 0 0 / 8%);
+  --vault-accent: oklch(0.82 0.16 145);     /* terminal green */
+  --vault-accent-soft: oklch(0.82 0.16 145 / 14%);
+  --vault-warn: oklch(0.82 0.17 75);
+  --vault-danger: oklch(0.7 0.21 25);
+  --gradient-vault: radial-gradient(1200px 600px at 10% -10%, oklch(0.82 0.16 145 / 8%), transparent 60%),
+                    radial-gradient(900px 500px at 110% 110%, oklch(0.6 0.2 280 / 10%), transparent 60%);
+  --shadow-vault: 0 30px 80px -20px oklch(0 0 0 / 60%), 0 0 0 1px var(--vault-line) inset;
 }
 
 @layer base {
