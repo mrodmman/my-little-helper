@@ -1,15 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Play, Video, FileText, Sparkles, ListChecks, GitBranch, Files,
-  Search, Bell, ChevronRight,
+  Search, Bell, ChevronRight, Zap,
 } from "lucide-react";
 import logo from "@/assets/kraken-logo.png";
 import heroBg from "@/assets/vault-hero-bg.jpg";
 import { ModuleCard } from "@/components/vault/ModuleCard";
 import { AssetCard } from "@/components/vault/AssetCard";
 import { OfferCard } from "@/components/vault/OfferCard";
-import { SystemMap } from "@/components/vault/SystemMap";
 import { FastTrackSection } from "@/components/vault/FastTrackSection";
+import { MessageCircle, Send, Database, Mail, Tag } from "lucide-react";
+
+const heroFlow = [
+  { label: "Content", icon: Video },
+  { label: "Engagement", icon: MessageCircle },
+  { label: "DM", icon: Send },
+  { label: "Lead Capture", icon: Database },
+  { label: "Email", icon: Mail },
+  { label: "Offer", icon: Tag },
+];
 import { MODULES } from "@/data/courseMeta";
 
 export const Route = createFileRoute("/")({
@@ -164,6 +173,30 @@ function VaultDashboard() {
               </div>
             </div>
           </div>
+
+          {/* Flow visual */}
+          <div className="relative px-8 md:px-14 pb-10 md:pb-12">
+            <div className="rounded-2xl border border-border bg-surface/40 backdrop-blur p-5 md:p-6">
+              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground mb-4 text-center">
+                The system, end to end
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
+                {heroFlow.map((step, i) => (
+                  <div key={step.label} className="flex items-center gap-2 md:gap-3">
+                    <div className="flex flex-col items-center gap-1.5 group">
+                      <div className="h-12 w-12 md:h-14 md:w-14 rounded-xl bg-surface-elevated border border-border flex items-center justify-center transition-all group-hover:border-primary/50 group-hover:shadow-glow">
+                        <step.icon className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+                      </div>
+                      <span className="text-[10px] md:text-xs font-medium text-center max-w-[80px]">{step.label}</span>
+                    </div>
+                    {i < heroFlow.length - 1 && (
+                      <ChevronRight className="h-4 w-4 text-primary/50 shrink-0" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* FAST TRACK */}
@@ -216,15 +249,7 @@ function VaultDashboard() {
           </div>
         </section>
 
-        {/* SYSTEM MAP */}
-        <section>
-          <SectionHeader
-            eyebrow="System Map"
-            title="How the Vault connects"
-            description="One unified flow — from first impression to closed offer."
-          />
-          <SystemMap />
-        </section>
+
 
         <footer className="pt-10 pb-6 border-t border-border text-center text-xs text-muted-foreground">
           © Kraken Vault · Private member access

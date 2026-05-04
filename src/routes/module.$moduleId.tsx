@@ -250,8 +250,21 @@ function ModulePage() {
                 </div>
               </div>
               <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{active.title}</h2>
+
+              {/* Center Fast Track shortcut */}
+              <div className="mt-5 flex justify-center">
+                <Link
+                  to="/fast-track"
+                  className="group inline-flex items-center gap-2 rounded-full border border-primary/40 bg-gradient-primary/10 hover:bg-gradient-primary/20 px-4 py-2 text-xs font-semibold text-primary transition-all"
+                >
+                  <Zap className="h-3.5 w-3.5" />
+                  Show me the Fast Track instead
+                  <ChevronRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
+              </div>
+
               {mode === "guided" && (
-                <p className="text-xs text-muted-foreground mt-2">
+                <p className="text-xs text-muted-foreground mt-4 text-center">
                   One step at a time. Check off as you go — the next step appears when you're ready.
                 </p>
               )}
