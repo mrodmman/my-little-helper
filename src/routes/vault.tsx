@@ -105,7 +105,7 @@ function VaultPage() {
 
   return (
     <div
-      className="min-h-screen text-foreground font-sans"
+      className="dark min-h-screen text-foreground font-sans"
       style={{
         background: "var(--gradient-vault), var(--color-background)",
       }}
