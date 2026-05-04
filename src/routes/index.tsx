@@ -6,7 +6,8 @@ import {
 import logo from "@/assets/kraken-logo.png";
 import heroBg from "@/assets/vault-hero-bg.jpg";
 import { ModuleCard } from "@/components/vault/ModuleCard";
-import { AssetCard } from "@/components/vault/AssetCard";
+import { AssetList } from "@/components/vault/AssetList";
+import { ASSETS } from "@/data/assets";
 import { OfferCard } from "@/components/vault/OfferCard";
 import { FastTrackSection } from "@/components/vault/FastTrackSection";
 import { MessageCircle, Send, Database, Mail, Tag } from "lucide-react";
@@ -31,14 +32,6 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-const assets = [
-  { icon: FileText, title: "Hook & Hero Templates", type: "Templates", count: 24 },
-  { icon: Sparkles, title: "Content Prompt Library", type: "Prompts", count: 120 },
-  { icon: ListChecks, title: "Launch Day Checklist", type: "Checklist", count: 8 },
-  { icon: GitBranch, title: "DM → Lead Workflow", type: "Workflow", count: 6 },
-  { icon: Files, title: "High-Converting Swipe File", type: "Swipe File", count: 42 },
-  { icon: FileText, title: "Email Sequence Pack", type: "Templates", count: 14 },
-];
 
 const offers = [
   { category: "Lead Magnet", title: "The 7-Day Content Map", useCase: "Capture leads from cold content", stage: "Top of Funnel" },
@@ -145,7 +138,7 @@ function VaultDashboard() {
                 {[
                   { label: "Modules", value: `0/${MODULES.length}` },
                   { label: "Lessons", value: `0/${totalLessons}` },
-                  { label: "Assets", value: String(assets.length) },
+                  { label: "Assets", value: String(ASSETS.length) },
                 ].map((s) => (
                   <div key={s.label} className="rounded-xl bg-surface/60 border border-border py-3">
                     <div className="text-base font-semibold">{s.value}</div>
@@ -232,9 +225,7 @@ function VaultDashboard() {
             title="Templates, Prompts & Swipe Files"
             description="Plug-and-play resources you can ship today."
           />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {assets.map((a) => <AssetCard key={a.title} {...a} />)}
-          </div>
+          <AssetList assets={ASSETS} title="All resources" />
         </section>
 
         {/* OFFER VAULT */}
