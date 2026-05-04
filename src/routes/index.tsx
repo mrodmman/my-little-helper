@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  Play, FileText, Sparkles, ListChecks, GitBranch, Files,
+  Play, Video, FileText, Sparkles, ListChecks, GitBranch, Files,
   Search, Bell, ChevronRight, Zap,
 } from "lucide-react";
 import logo from "@/assets/kraken-logo.png";
