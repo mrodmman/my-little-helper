@@ -1,94 +1,227 @@
 import {
-  Rocket, Target, Hammer, Send, Magnet, Megaphone, type LucideIcon,
+  Rocket, Puzzle, Music2, Package, Timer, Repeat, Zap, type LucideIcon,
 } from "lucide-react";
+
+export type FastTrackItem = {
+  title: string;
+  body?: string;        // short paragraph under the title
+  bullets?: string[];   // checklist bullets
+};
 
 export type FastTrackTile = {
   id: string;
   step: number;
+  emoji: string;
   title: string;
   tagline: string;
-  time: string;
   icon: LucideIcon;
-  bullets: string[];
+  intro?: string;
+  bullets?: string[];          // simple flat tile (intro + checklist)
+  items?: FastTrackItem[];     // tiles with multiple sub-strategies
+  closer?: string;             // final 👉 line
 };
 
 export const FAST_TRACK: FastTrackTile[] = [
   {
-    id: "pick-one-offer",
+    id: "just-start",
     step: 1,
-    title: "Pick One Offer",
-    tagline: "Don't overthink it. One thing to sell.",
-    time: "10 min",
-    icon: Target,
-    bullets: [
-      "Choose 1 product, service, or affiliate offer",
-      "Write the outcome in one sentence",
-      "Set a price. Move on.",
-    ],
-  },
-  {
-    id: "minimum-stack",
-    step: 2,
-    title: "Minimum Stack",
-    tagline: "The 3 tools you actually need today.",
-    time: "20 min",
-    icon: Hammer,
-    bullets: [
-      "Landing page builder",
-      "Email tool with 1 list",
-      "Payment link",
-    ],
-  },
-  {
-    id: "one-page-funnel",
-    step: 3,
-    title: "One-Page Funnel",
-    tagline: "Headline, promise, CTA. Ship it ugly.",
-    time: "30 min",
+    emoji: "🚀",
+    title: "Just Start",
+    tagline: "Momentum beats mastery.",
     icon: Rocket,
     bullets: [
-      "Hook + outcome above the fold",
-      "3 bullets of proof",
-      "One CTA button. Repeat 3x.",
+      "Not trying to master everything right away",
+      "Feeling overwhelmed is normal",
+      "You don't need a full system yet",
+    ],
+    closer: "Take simple steps and build momentum.",
+  },
+  {
+    id: "the-method",
+    step: 2,
+    emoji: "🧩",
+    title: "The Method",
+    tagline: "Patience + repetition wins.",
+    icon: Puzzle,
+    bullets: [
+      "Apply for TikTok Shop or Amazon Affiliate",
+      "Find products you vibe with",
+      "Make 3 posts per day using the strategies below",
+      "Post on TikTok, Facebook, and Instagram",
+      "Have your link in your post or comments",
+      "Stay consistent — sales will come",
+    ],
+    closer: "Patience + repetition wins.",
+  },
+  {
+    id: "tiktok-shop",
+    step: 3,
+    emoji: "📱",
+    title: "TikTok Shop Strategies",
+    tagline: "High-energy conversion + game-fied shopping. Pick a few a day — no thinking required.",
+    icon: Music2,
+    items: [
+      {
+        title: "Slash & Free Referral Hack",
+        body: "Screen record the progress bar dropping toward $0 in the \"Slash & Free\" tab. Show users how to get free items via referrals.",
+      },
+      {
+        title: "Low-Competition 'Blue Ocean' Find",
+        body: "Search for items with 100+ sold but few creator videos. Use the hook: \"Nobody is talking about this yet.\"",
+      },
+      {
+        title: "Flash Sale Countdown",
+        body: "Use a 10-second recording of a live Flash Sale timer as your green screen background to drive urgency.",
+      },
+      {
+        title: "The Cart Price Alert",
+        body: "Record the red \"Price Dropped\" tag in your cart. Zoom in on the exact dollar amount saved.",
+      },
+      {
+        title: "Voucher Stacking Demo",
+        body: "Record yourself claiming a \"New Customer\" coupon and show the final checkout price drop.",
+      },
+      {
+        title: "Live-Only Price Reaction",
+        body: "Green screen over a Shopping Live \"Exclusive Price\" badge to show why the deal is a steal.",
+      },
+      {
+        title: "Viral Shop Stitch",
+        body: "Stitch the first 3 seconds of a viral review video, then transition to the product page showing it's in stock.",
+      },
+      {
+        title: "Cross-Platform Price War",
+        body: "Use split-screen to compare Amazon price vs TikTok price. Highlight the cheaper option.",
+      },
+      {
+        title: "Shop Page Trust Tour",
+        body: "Green screen over a brand storefront. Scroll through \"Sold\" counts (ex: 10k+ sold) to prove reliability.",
+      },
+      {
+        title: "Negative Review Debunk",
+        body: "Find a 1-star review where the user made a mistake. Point out the error to build authority.",
+      },
+      {
+        title: "Inventory FOMO Alert",
+        body: "Screen record \"Low Stock\" or \"Only X Left\" badges to create urgency.",
+      },
+      {
+        title: "Affiliate-Only Creator Deal",
+        body: "Record the \"Special Price\" tag that only appears when someone clicks your affiliate link.",
+      },
     ],
   },
   {
-    id: "lead-magnet",
+    id: "amazon-curation",
     step: 4,
-    title: "Instant Lead Magnet",
-    tagline: "A 1-page PDF beats a 30-page ebook.",
-    time: "20 min",
-    icon: Magnet,
-    bullets: [
-      "Solve one tiny problem",
-      "Deliver via email opt-in",
-      "Pitch your offer at the bottom",
+    emoji: "📦",
+    title: "Amazon Curation Strategies",
+    tagline: "Authority + trust + lifestyle integration. Pick a few a day — no thinking required.",
+    icon: Package,
+    items: [
+      {
+        title: "Prime Video Screenshot",
+        body: "Use a still from a trending show. Add \"Watch Now\" text. Link the product (outfit, gear, etc.).",
+      },
+      {
+        title: "Brand Page Green Screen",
+        body: "Film yourself in front of a themed brand store (example: a collection page like Fallout).",
+      },
+      {
+        title: "Review Showcase",
+        body: "Green screen over a product page. Highlight customer photos and reviews.",
+      },
+      {
+        title: "Feature Demo (Savings)",
+        body: "Record yourself using features like coupon clipping, discounts, and scratch-offs.",
+      },
+      {
+        title: "Audible Quote Overlay",
+        body: "Screenshot an audiobook cover. Overlay a powerful quote for engagement.",
+      },
+      {
+        title: "Home Item Find",
+        body: "Show an item you already own in real life, then pull up the Amazon listing.",
+      },
+      {
+        title: "Creator React",
+        body: "React to an Amazon Live creator showcasing a product.",
+      },
+      {
+        title: "Shoppable Page Tour",
+        body: "Scroll through a shoppable image page showing how items look together.",
+      },
+      {
+        title: "Image Pop-Up Talk",
+        body: "Have product images pop up on screen while you explain benefits.",
+      },
+      {
+        title: "Wishlist Walkthrough",
+        body: "Scroll your wishlist. Explain why you want each item.",
+      },
+      {
+        title: "Amazon Search Hack",
+        body: "Record using filters like \"Under $25\" or \"Overstock Deals\".",
+      },
+      {
+        title: "Best-Seller Reaction",
+        body: "React to items on Movers & Shakers or Trending pages.",
+      },
+      {
+        title: "Virtual Cart Build",
+        body: "Create a themed cart: \"Spend $50 with me\" or \"Self-care night\".",
+      },
+      {
+        title: "Gift Idea List",
+        body: "Scroll through a custom idea list. Explain top picks.",
+      },
+      {
+        title: "Rating Comparison",
+        body: "Compare top positive review vs top negative review. Give honest perspective.",
+      },
     ],
   },
   {
-    id: "first-100",
+    id: "30-60-plan",
     step: 5,
-    title: "First 100 Eyeballs",
-    tagline: "Free traffic, today.",
-    time: "1 hr",
-    icon: Megaphone,
+    emoji: "⏱",
+    title: "30–60 Minute Plan",
+    tagline: "Replace Netflix time with this.",
+    icon: Timer,
     bullets: [
-      "Post 3 short-form videos",
-      "DM 10 warm leads",
-      "Drop link in 3 relevant communities",
+      "10 min → find products",
+      "20–30 min → record content",
+      "10–15 min → post + add links",
     ],
+    closer: "Replace Netflix time with this. Momentum builds fast.",
   },
   {
-    id: "send-it",
+    id: "consistency",
     step: 6,
-    title: "Send It",
-    tagline: "Email your list. Ask for the sale.",
-    time: "15 min",
-    icon: Send,
+    emoji: "🔁",
+    title: "Consistency",
+    tagline: "Sales come from repetition + time.",
+    icon: Repeat,
     bullets: [
-      "Subject: a specific result",
-      "3 short paragraphs",
-      "One link. One ask.",
+      "First posts might flop — normal",
+      "You're building data",
+      "You're building momentum",
     ],
+    closer: "Sales come from repetition + time.",
+  },
+  {
+    id: "speed-it-up",
+    step: 7,
+    emoji: "⚡",
+    title: "Speed It Up",
+    tagline: "Use Content Kraken to remove friction.",
+    icon: Zap,
+    intro: "Use Content Kraken to:",
+    bullets: [
+      "Post to all platforms at once",
+      "Keep links updated automatically",
+      "Create a landing page for products",
+    ],
+    closer: "Less friction · More consistency · Faster growth.",
   },
 ];
