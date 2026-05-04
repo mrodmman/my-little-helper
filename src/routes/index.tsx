@@ -233,9 +233,7 @@ function VaultDashboard() {
             title="Templates, Prompts & Swipe Files"
             description="Plug-and-play resources you can ship today."
           />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {assets.map((a) => <AssetCard key={a.title} {...a} />)}
-          </div>
+          <AssetList assets={ASSETS} title="All resources" />
         </section>
 
         {/* OFFER VAULT */}
