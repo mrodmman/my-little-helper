@@ -6,7 +6,8 @@ import {
 import logo from "@/assets/kraken-logo.png";
 import heroBg from "@/assets/vault-hero-bg.jpg";
 import { ModuleCard } from "@/components/vault/ModuleCard";
-import { AssetCard } from "@/components/vault/AssetCard";
+import { AssetList } from "@/components/vault/AssetList";
+import { ASSETS } from "@/data/assets";
 import { OfferCard } from "@/components/vault/OfferCard";
 import { FastTrackSection } from "@/components/vault/FastTrackSection";
 import { MessageCircle, Send, Database, Mail, Tag } from "lucide-react";
