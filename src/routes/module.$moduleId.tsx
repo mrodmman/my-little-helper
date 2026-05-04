@@ -282,6 +282,8 @@ function ModulePage() {
                 />
               </div>
 
+              <AssetList assets={getLessonAssets(mod.id, activeIdx)} />
+
               {/* Lesson footer actions */}
               <div className="mt-10 pt-6 border-t border-border flex flex-wrap items-center justify-between gap-4">
                 <button
