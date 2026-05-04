@@ -9,9 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VaultRouteImport } from './routes/vault'
+import { Route as FastTrackRouteImport } from './routes/fast-track'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ModuleModuleIdRouteImport } from './routes/module.$moduleId'
 
+const VaultRoute = VaultRouteImport.update({
+  id: '/vault',
+  path: '/vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FastTrackRoute = FastTrackRouteImport.update({
+  id: '/fast-track',
+  path: '/fast-track',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -25,32 +37,54 @@ const ModuleModuleIdRoute = ModuleModuleIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/fast-track': typeof FastTrackRoute
+  '/vault': typeof VaultRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/fast-track': typeof FastTrackRoute
+  '/vault': typeof VaultRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/fast-track': typeof FastTrackRoute
+  '/vault': typeof VaultRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/module/$moduleId'
+  fullPaths: '/' | '/fast-track' | '/vault' | '/module/$moduleId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/module/$moduleId'
-  id: '__root__' | '/' | '/module/$moduleId'
+  to: '/' | '/fast-track' | '/vault' | '/module/$moduleId'
+  id: '__root__' | '/' | '/fast-track' | '/vault' | '/module/$moduleId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FastTrackRoute: typeof FastTrackRoute
+  VaultRoute: typeof VaultRoute
   ModuleModuleIdRoute: typeof ModuleModuleIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vault': {
+      id: '/vault'
+      path: '/vault'
+      fullPath: '/vault'
+      preLoaderRoute: typeof VaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fast-track': {
+      id: '/fast-track'
+      path: '/fast-track'
+      fullPath: '/fast-track'
+      preLoaderRoute: typeof FastTrackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -70,6 +104,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FastTrackRoute: FastTrackRoute,
+  VaultRoute: VaultRoute,
   ModuleModuleIdRoute: ModuleModuleIdRoute,
 }
 export const routeTree = rootRouteImport

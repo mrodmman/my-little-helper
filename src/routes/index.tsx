@@ -9,6 +9,7 @@ import { ModuleCard } from "@/components/vault/ModuleCard";
 import { AssetCard } from "@/components/vault/AssetCard";
 import { OfferCard } from "@/components/vault/OfferCard";
 import { SystemMap } from "@/components/vault/SystemMap";
+import { FastTrackSection } from "@/components/vault/FastTrackSection";
 import { MODULES } from "@/data/courseMeta";
 
 export const Route = createFileRoute("/")({
@@ -164,6 +165,9 @@ function VaultDashboard() {
             </div>
           </div>
         </section>
+
+        {/* FAST TRACK */}
+        <FastTrackSection />
 
         {/* MODULES */}
         <section id="modules" className="scroll-mt-20">

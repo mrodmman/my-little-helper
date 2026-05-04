@@ -144,6 +144,25 @@ function ModulePage() {
         </div>
       </section>
 
+      {/* Fast Track bail-out */}
+      <div className="max-w-7xl mx-auto px-6 pt-6">
+        <Link
+          to="/fast-track"
+          className="group flex flex-wrap items-center gap-4 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-4 hover:border-primary/60 transition-all"
+        >
+          <div className="h-10 w-10 rounded-xl bg-gradient-primary/20 border border-primary/40 flex items-center justify-center shrink-0">
+            <Zap className="h-4 w-4 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-semibold">Feeling overwhelmed? Take the Fast Track.</div>
+            <div className="text-xs text-muted-foreground">Skip ahead to the 6-tile shortcut and get results going faster.</div>
+          </div>
+          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+            Bail to Fast Track <ChevronRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+          </span>
+        </Link>
+      </div>
+
       {/* Body */}
       <main id="lesson-top" className="max-w-7xl mx-auto px-6 py-10 grid lg:grid-cols-[300px_1fr] gap-10">
         {/* Sidebar */}
