@@ -8,8 +8,17 @@ import heroBg from "@/assets/vault-hero-bg.jpg";
 import { ModuleCard } from "@/components/vault/ModuleCard";
 import { AssetCard } from "@/components/vault/AssetCard";
 import { OfferCard } from "@/components/vault/OfferCard";
-import { SystemMap } from "@/components/vault/SystemMap";
 import { FastTrackSection } from "@/components/vault/FastTrackSection";
+import { Video, MessageCircle, Send, Database, Mail, Tag } from "lucide-react";
+
+const heroFlow = [
+  { label: "Content", icon: Video },
+  { label: "Engagement", icon: MessageCircle },
+  { label: "DM", icon: Send },
+  { label: "Lead Capture", icon: Database },
+  { label: "Email", icon: Mail },
+  { label: "Offer", icon: Tag },
+];
 import { MODULES } from "@/data/courseMeta";
 
 export const Route = createFileRoute("/")({
