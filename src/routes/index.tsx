@@ -32,14 +32,6 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-const assets = [
-  { icon: FileText, title: "Hook & Hero Templates", type: "Templates", count: 24 },
-  { icon: Sparkles, title: "Content Prompt Library", type: "Prompts", count: 120 },
-  { icon: ListChecks, title: "Launch Day Checklist", type: "Checklist", count: 8 },
-  { icon: GitBranch, title: "DM → Lead Workflow", type: "Workflow", count: 6 },
-  { icon: Files, title: "High-Converting Swipe File", type: "Swipe File", count: 42 },
-  { icon: FileText, title: "Email Sequence Pack", type: "Templates", count: 14 },
-];
 
 const offers = [
   { category: "Lead Magnet", title: "The 7-Day Content Map", useCase: "Capture leads from cold content", stage: "Top of Funnel" },
