@@ -173,6 +173,30 @@ function VaultDashboard() {
               </div>
             </div>
           </div>
+
+          {/* Flow visual */}
+          <div className="relative px-8 md:px-14 pb-10 md:pb-12">
+            <div className="rounded-2xl border border-border bg-surface/40 backdrop-blur p-5 md:p-6">
+              <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground mb-4 text-center">
+                The system, end to end
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
+                {heroFlow.map((step, i) => (
+                  <div key={step.label} className="flex items-center gap-2 md:gap-3">
+                    <div className="flex flex-col items-center gap-1.5 group">
+                      <div className="h-12 w-12 md:h-14 md:w-14 rounded-xl bg-surface-elevated border border-border flex items-center justify-center transition-all group-hover:border-primary/50 group-hover:shadow-glow">
+                        <step.icon className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+                      </div>
+                      <span className="text-[10px] md:text-xs font-medium text-center max-w-[80px]">{step.label}</span>
+                    </div>
+                    {i < heroFlow.length - 1 && (
+                      <ChevronRight className="h-4 w-4 text-primary/50 shrink-0" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* FAST TRACK */}
