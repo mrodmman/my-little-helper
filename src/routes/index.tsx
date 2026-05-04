@@ -146,7 +146,7 @@ function VaultDashboard() {
                 {[
                   { label: "Modules", value: `0/${MODULES.length}` },
                   { label: "Lessons", value: `0/${totalLessons}` },
-                  { label: "Assets", value: String(assets.length) },
+                  { label: "Assets", value: String(ASSETS.length) },
                 ].map((s) => (
                   <div key={s.label} className="rounded-xl bg-surface/60 border border-border py-3">
                     <div className="text-base font-semibold">{s.value}</div>
