@@ -9,7 +9,7 @@ import { ModuleCard } from "@/components/vault/ModuleCard";
 import { AssetCard } from "@/components/vault/AssetCard";
 import { OfferCard } from "@/components/vault/OfferCard";
 import { FastTrackSection } from "@/components/vault/FastTrackSection";
-import { Video, MessageCircle, Send, Database, Mail, Tag } from "lucide-react";
+import { MessageCircle, Send, Database, Mail, Tag } from "lucide-react";
 
 const heroFlow = [
   { label: "Content", icon: Video },
