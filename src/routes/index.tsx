@@ -225,15 +225,7 @@ function VaultDashboard() {
           </div>
         </section>
 
-        {/* SYSTEM MAP */}
-        <section>
-          <SectionHeader
-            eyebrow="System Map"
-            title="How the Vault connects"
-            description="One unified flow — from first impression to closed offer."
-          />
-          <SystemMap />
-        </section>
+
 
         <footer className="pt-10 pb-6 border-t border-border text-center text-xs text-muted-foreground">
           © Kraken Vault · Private member access
