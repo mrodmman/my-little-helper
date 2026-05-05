@@ -75,6 +75,12 @@ function ModulePage() {
     });
   };
 
+  const resetModuleProgress = () => {
+    setCompleted(new Set());
+    setActiveIdx(0);
+    try { localStorage.setItem(storageKey, JSON.stringify([])); } catch { /* noop */ }
+  };
+
   const progress = lessons.length ? Math.round((completed.size / lessons.length) * 100) : 0;
   const prevMod = MODULES[mod.index - 1];
   const nextMod = MODULES[mod.index + 1];
@@ -190,7 +196,10 @@ function ModulePage() {
                   return (
                     <li key={s.title}>
                       <button
-                        onClick={() => setActiveIdx(i)}
+                        onClick={() => {
+                          if (progress === 100 && completed.has(i)) toggleComplete(i);
+                          setActiveIdx(i);
+                        }}
                         className={`w-full text-left flex items-start gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
                           isActive
                             ? "bg-gradient-primary/15 border border-primary/30 text-foreground"
@@ -294,6 +303,12 @@ function ModulePage() {
                     >
                       <ArrowLeft className="h-4 w-4" /> Back to The Vault
                     </Link>
+                    <button
+                      onClick={resetModuleProgress}
+                      className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-border bg-surface/60 hover:bg-surface-elevated"
+                    >
+                      Restart Module
+                    </button>
                     {nextMod && (
                       <Link
                         to="/module/$moduleId"
