@@ -2,14 +2,39 @@ import {
   Wrench, GitBranch, Mail, Workflow, TrendingUp, Video, MessageSquare,
   Tag, Megaphone, Map, type LucideIcon,
 } from "lucide-react";
-import imgStart from "@/assets/vault-start.jpg";
-import imgContent from "@/assets/vault-content.jpg";
-import imgDm from "@/assets/vault-dm.jpg";
-import imgEmail from "@/assets/vault-email.jpg";
-import imgAuto from "@/assets/vault-automation.jpg";
-import imgOffer from "@/assets/vault-offer.jpg";
-import imgHero from "@/assets/vault-hero-bg.jpg";
 import courseRaw from "./course.json";
+
+const toDataUri = (svg: string) => `data:image/svg+xml,${encodeURIComponent(svg)}`;
+
+const makeModuleImage = (from: string, to: string, accent: string) =>
+  toDataUri(`
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 675' preserveAspectRatio='xMidYMid slice'>
+  <defs>
+    <linearGradient id='bg' x1='0' y1='0' x2='1' y2='1'>
+      <stop offset='0%' stop-color='${from}' />
+      <stop offset='100%' stop-color='${to}' />
+    </linearGradient>
+    <radialGradient id='ring' cx='75%' cy='15%' r='70%'>
+      <stop offset='0%' stop-color='${accent}' stop-opacity='0.35' />
+      <stop offset='100%' stop-color='${accent}' stop-opacity='0' />
+    </radialGradient>
+  </defs>
+  <rect width='1200' height='675' fill='url(#bg)' />
+  <rect width='1200' height='675' fill='url(#ring)' />
+  <g stroke='${accent}' stroke-opacity='0.18' fill='none'>
+    <rect x='110' y='95' width='980' height='485' rx='24' stroke-width='2' />
+    <path d='M110 250h980M110 405h980M365 95v485M620 95v485M875 95v485' />
+  </g>
+</svg>
+`);
+
+const imgStart = makeModuleImage("#111827", "#1f2937", "#60a5fa");
+const imgContent = makeModuleImage("#0f172a", "#1e3a8a", "#38bdf8");
+const imgDm = makeModuleImage("#1e1b4b", "#312e81", "#a78bfa");
+const imgEmail = makeModuleImage("#1f2937", "#0f766e", "#2dd4bf");
+const imgAuto = makeModuleImage("#111827", "#334155", "#93c5fd");
+const imgOffer = makeModuleImage("#172554", "#312e81", "#c4b5fd");
+const imgHero = makeModuleImage("#0b1020", "#1f2a44", "#8b5cf6");
 
 export type Section = { title: string; content: string };
 export type Module = {

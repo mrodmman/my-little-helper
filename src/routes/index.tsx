@@ -3,14 +3,50 @@ import {
   Play, Video, FileText, Sparkles, ListChecks, GitBranch, Files,
   Search, Bell, ChevronRight, Zap,
 } from "lucide-react";
-import logo from "@/assets/kraken-logo.png";
-import heroBg from "@/assets/vault-hero-bg.jpg";
 import { ModuleCard } from "@/components/vault/ModuleCard";
 import { AssetList } from "@/components/vault/AssetList";
 import { ASSETS } from "@/data/assets";
 import { OfferCard } from "@/components/vault/OfferCard";
 import { FastTrackSection } from "@/components/vault/FastTrackSection";
 import { MessageCircle, Send, Database, Mail, Tag } from "lucide-react";
+
+const toDataUri = (svg: string) => `data:image/svg+xml,${encodeURIComponent(svg)}`;
+
+const logo = toDataUri(`
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'>
+  <defs>
+    <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+      <stop offset='0%' stop-color='#60a5fa' />
+      <stop offset='100%' stop-color='#8b5cf6' />
+    </linearGradient>
+  </defs>
+  <rect width='80' height='80' rx='40' fill='#0b1220' />
+  <circle cx='40' cy='40' r='31' fill='none' stroke='url(#g)' stroke-width='4' />
+  <path d='M24 54V26h8l8 10 8-10h8v28h-8V38l-8 9-8-9v16z' fill='url(#g)' />
+</svg>
+`);
+
+const heroBg = toDataUri(`
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='xMidYMid slice'>
+  <defs>
+    <linearGradient id='bg' x1='0' y1='0' x2='1' y2='1'>
+      <stop offset='0%' stop-color='#0b1020' />
+      <stop offset='50%' stop-color='#1f2a44' />
+      <stop offset='100%' stop-color='#131a30' />
+    </linearGradient>
+    <radialGradient id='glow' cx='75%' cy='20%' r='60%'>
+      <stop offset='0%' stop-color='#8b5cf6' stop-opacity='0.45' />
+      <stop offset='100%' stop-color='#8b5cf6' stop-opacity='0' />
+    </radialGradient>
+  </defs>
+  <rect width='1600' height='900' fill='url(#bg)'/>
+  <rect width='1600' height='900' fill='url(#glow)'/>
+  <g stroke='#60a5fa' stroke-opacity='0.12'>
+    <path d='M0 130h1600M0 300h1600M0 470h1600M0 640h1600M0 810h1600'/>
+    <path d='M160 0v900M420 0v900M680 0v900M940 0v900M1200 0v900M1460 0v900'/>
+  </g>
+</svg>
+`);
 
 const heroFlow = [
   { label: "Content", icon: Video },
