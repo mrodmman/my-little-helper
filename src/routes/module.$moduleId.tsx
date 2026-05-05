@@ -75,6 +75,12 @@ function ModulePage() {
     });
   };
 
+  const resetModuleProgress = () => {
+    setCompleted(new Set());
+    setActiveIdx(0);
+    try { localStorage.setItem(storageKey, JSON.stringify([])); } catch { /* noop */ }
+  };
+
   const progress = lessons.length ? Math.round((completed.size / lessons.length) * 100) : 0;
   const prevMod = MODULES[mod.index - 1];
   const nextMod = MODULES[mod.index + 1];
@@ -190,7 +196,10 @@ function ModulePage() {
                   return (
                     <li key={s.title}>
                       <button
-                        onClick={() => setActiveIdx(i)}
+                        onClick={() => {
+                          if (progress === 100 && completed.has(i)) toggleComplete(i);
+                          setActiveIdx(i);
+                        }}
                         className={`w-full text-left flex items-start gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
                           isActive
                             ? "bg-gradient-primary/15 border border-primary/30 text-foreground"
@@ -283,6 +292,35 @@ function ModulePage() {
               </div>
 
               <AssetList assets={getLessonAssets(mod.id, activeIdx)} />
+
+              {progress === 100 && (
+                <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/10 p-4">
+                  <div className="text-sm font-semibold mb-3">Module complete. Keep your momentum.</div>
+                  <div className="flex flex-wrap gap-2">
+                    <Link
+                      to="/"
+                      className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-border bg-surface/60 hover:bg-surface-elevated"
+                    >
+                      <ArrowLeft className="h-4 w-4" /> Back to The Vault
+                    </Link>
+                    <button
+                      onClick={resetModuleProgress}
+                      className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-border bg-surface/60 hover:bg-surface-elevated"
+                    >
+                      Restart Module
+                    </button>
+                    {nextMod && (
+                      <Link
+                        to="/module/$moduleId"
+                        params={{ moduleId: nextMod.id }}
+                        className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold bg-gradient-primary text-primary-foreground shadow-glow"
+                      >
+                        Next Module <ChevronRight className="h-4 w-4" />
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Lesson footer actions */}
               <div className="mt-10 pt-6 border-t border-border flex flex-wrap items-center justify-between gap-4">

@@ -111,7 +111,7 @@ function Tile({
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-            Tile {tile.step} · {tile.emoji}
+            {tile.emoji}
           </div>
           <h2 className="text-lg md:text-xl font-bold tracking-tight truncate">
             {tile.title}
@@ -130,7 +130,7 @@ function Tile({
       {isOpen && (
         <div className="px-5 md:px-6 pb-6 pt-1 border-t border-border/60">
           {tile.intro && (
-            <p className="text-sm text-muted-foreground mt-4">{tile.intro}</p>
+            <p className="text-sm text-muted-foreground mt-4 whitespace-pre-line">{tile.intro}</p>
           )}
 
           {tile.bullets && (
