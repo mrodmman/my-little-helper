@@ -15,7 +15,7 @@ function slug(s: string, i: number) {
  * Parse a lesson's markdown into:
  *   - intro:        markdown before the first ### heading
  *   - sections:     each ### heading becomes a collapsible
- *   - steps:        within a section, paragraphs starting with **Step N:** become
+ *   - steps:        within a section, structured action items become
  *                   a progressive checklist (one revealed at a time).
  */
 function parseLesson(md: string): Parsed {
@@ -27,24 +27,36 @@ function parseLesson(md: string): Parsed {
     const body = (nl === -1 ? "" : part.slice(nl + 1)).trim();
     const title = titleRaw.replace(/^\*+|\*+$/g, "").trim();
 
-    // Split body on **Step N:** boundaries
-    const stepRe = /(?=^\*\*Step\s+\d+[:.]?\*\*)/im;
-    const blocks = body.split(stepRe);
-    const head = blocks[0].trim();
-    const stepBlocks = blocks.slice(1);
+    // Prefer explicit **Step N:** boundaries.
+    const explicitStepRe = /(?=^\*\*Step\s+\d+[:.]?\*\*)/im;
+    const explicitBlocks = body.split(explicitStepRe);
+    const head = explicitBlocks[0].trim();
+    const explicitStepBlocks = explicitBlocks.slice(1);
 
-    if (stepBlocks.length === 0) {
-      return { id: slug(title, i), title, intro: head, steps: [] };
+    if (explicitStepBlocks.length > 0) {
+      const steps: Step[] = explicitStepBlocks.map((b, j) => {
+        const m = b.match(/^\*\*(Step\s+\d+[:.]?)\*\*\s*/i);
+        const label = m ? m[1].replace(/[:.]$/, "") : `Step ${j + 1}`;
+        const body = b.replace(/^\*\*Step\s+\d+[:.]?\*\*\s*/i, "").trim();
+        return { id: `step-${j + 1}`, label, body };
+      });
+
+      return { id: slug(title, i), title, intro: head, steps };
     }
 
-    const steps: Step[] = stepBlocks.map((b, j) => {
-      const m = b.match(/^\*\*(Step\s+\d+[:.]?)\*\*\s*/i);
-      const label = m ? m[1].replace(/[:.]$/, "") : `Step ${j + 1}`;
-      const body = b.replace(/^\*\*Step\s+\d+[:.]?\*\*\s*/i, "").trim();
-      return { id: `step-${j + 1}`, label, body };
-    });
+    // Fallback: convert top-level numbered list items into progressive steps.
+    const numberedItemRe = /^\s*(\d+)[\.)]\s+(.+)/gm;
+    const numberedMatches = Array.from(body.matchAll(numberedItemRe));
+    if (numberedMatches.length >= 2) {
+      const steps: Step[] = numberedMatches.map((m, j) => ({
+        id: `step-${j + 1}`,
+        label: `Step ${m[1]}`,
+        body: (m[2] ?? "").trim(),
+      }));
+      return { id: slug(title, i), title, intro: "", steps };
+    }
 
-    return { id: slug(title, i), title, intro: head, steps };
+    return { id: slug(title, i), title, intro: head, steps: [] };
   });
 
   return { intro, sections };
