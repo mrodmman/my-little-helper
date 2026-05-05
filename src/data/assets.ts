@@ -81,6 +81,36 @@ export const ASSETS: Asset[] = [
     source: "Notion",
     tags: ["tools"],
   },
+  {
+    id: "file-prompt-module-2-funnel-shell",
+    type: "file",
+    title: "Module 2 — Funnel shell build prompt",
+    description: "Drop into Claude/ChatGPT to generate the full Cloudflare-ready React + Vite funnel app.",
+    url: "/prompts/module-2-funnel-shell.md",
+    filename: "module-2-funnel-shell.md",
+    format: "Prompt",
+    tags: ["prompt", "module-2", "funnel"],
+  },
+  {
+    id: "file-prompt-module-3-email-injection",
+    type: "file",
+    title: "Module 3 — Email form injection prompt",
+    description: "Tells the AI exactly which file to edit to swap the placeholder form for your MailerLite / EmailOctopus embed.",
+    url: "/prompts/module-3-email-form-injection.md",
+    filename: "module-3-email-form-injection.md",
+    format: "Prompt",
+    tags: ["prompt", "module-3", "email"],
+  },
+  {
+    id: "file-prompt-module-4-sheets-telegram",
+    type: "file",
+    title: "Module 4 — Google Sheets + Telegram automation prompt",
+    description: "Generates the Apps Script webhook + Telegram ping and wires it into your funnel.",
+    url: "/prompts/module-4-sheets-telegram.md",
+    filename: "module-4-sheets-telegram.md",
+    format: "Prompt",
+    tags: ["prompt", "module-4", "automation"],
+  },
 ];
 
 // ---------- Lookup ----------
@@ -101,11 +131,22 @@ export type ModuleAssets = {
 };
 
 export const MODULE_ASSETS: Record<string, ModuleAssets> = {
-  // Example wiring — replace IDs as you add more assets.
-  // "module-1a-tools-stack-setup": {
-  //   module: ["link-tool-stack"],
-  //   lessons: { 0: ["video-welcome"], 4: ["file-funnel-checklist"] },
-  // },
+  "module-2-the-funnel-system": {
+    lessons: {
+      5: ["file-prompt-module-2-funnel-shell"],
+      8: ["file-funnel-checklist"],
+    },
+  },
+  "module-3-the-email-system": {
+    lessons: {
+      3: ["file-prompt-module-3-email-injection"],
+    },
+  },
+  "module-4-the-automation-system": {
+    lessons: {
+      3: ["file-prompt-module-4-sheets-telegram"],
+    },
+  },
 };
 
 export const getLessonAssets = (moduleId: string, lessonIdx: number): Asset[] => {

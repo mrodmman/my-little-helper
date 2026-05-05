@@ -103,13 +103,16 @@ function VaultDashboard() {
           </div>
 
           <div className="flex items-center gap-3">
+            <Link to="/login" className="hidden sm:inline-flex items-center rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated px-3 py-2 text-xs font-semibold transition-colors">
+              Sign in
+            </Link>
             <button aria-label="Notifications" className="h-9 w-9 rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated transition-colors flex items-center justify-center relative">
               <Bell className="h-4 w-4" />
               <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-primary shadow-glow" />
             </button>
-            <div className="h-9 w-9 rounded-full bg-gradient-primary flex items-center justify-center text-xs font-bold text-primary-foreground">
+            <Link to="/profile" aria-label="Profile" className="h-9 w-9 rounded-full bg-gradient-primary flex items-center justify-center text-xs font-bold text-primary-foreground hover:opacity-90 transition-opacity">
               KV
-            </div>
+            </Link>
           </div>
         </div>
       </header>
