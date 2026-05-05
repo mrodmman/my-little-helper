@@ -1,17 +1,19 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Play, Video, Bell, ChevronRight, Zap, Search } from "lucide-react";
+import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
+import { Play, Video, Bell, ChevronRight, Zap, Search, LogOut, User } from "lucide-react";
 import { MessageCircle, Send, Database, Mail, Tag } from "lucide-react";
+import { useTransition } from "react";
 import { ModuleCard } from "@/components/vault/ModuleCard";
 import { AssetList } from "@/components/vault/AssetList";
 import { OfferCard } from "@/components/vault/OfferCard";
 import { FastTrackSection } from "@/components/vault/FastTrackSection";
-import { getModules } from "@/server/modules";
-import { getAllAssets } from "@/server/modules";
+import { getModules, getAllAssets } from "@/server/modules";
 import { loadProgressSummary } from "@/server/progress";
+import { getCurrentUser, logOut } from "@/server/auth";
 import { MODULES } from "@/data/courseMeta";
 import { ASSETS } from "@/data/assets";
 import type { DbModule, DbAsset } from "@/server/modules";
 import type { ModuleProgressSummary } from "@/server/progress";
+import type { SafeUser } from "@/server/auth";
 
 const toDataUri = (svg: string) => `data:image/svg+xml,${encodeURIComponent(svg)}`;
 
@@ -70,13 +72,16 @@ const offers = [
 export const Route = createFileRoute("/")({
   component: VaultDashboard,
   loader: async () => {
-    // Run in parallel: modules, assets, progress summary
+    // Require auth
+    const user = await getCurrentUser().catch(() => null);
+    if (!user) throw redirect({ to: "/login" });
+
     const [dbModules, dbAssets, progressData] = await Promise.all([
       getModules().catch(() => null),
       getAllAssets().catch(() => null),
       loadProgressSummary().catch(() => null),
     ]);
-    return { dbModules, dbAssets, progressData };
+    return { dbModules, dbAssets, progressData, user };
   },
   head: () => ({
     meta: [
@@ -92,7 +97,16 @@ function getModuleImageUrl(dbMod: DbModule | null | undefined): string | null {
 }
 
 function VaultDashboard() {
-  const { dbModules, dbAssets, progressData } = Route.useLoaderData();
+  const { dbModules, dbAssets, progressData, user } = Route.useLoaderData();
+  const navigate = useNavigate();
+  const [, startTransition] = useTransition();
+
+  const handleLogout = () => {
+    startTransition(async () => {
+      await logOut().catch(() => null);
+      navigate({ to: "/login" });
+    });
+  };
 
   // Fall back to static data if D1 unavailable
   const modules = MODULES;
@@ -154,17 +168,24 @@ function VaultDashboard() {
             />
           </div>
 
-          <div className="flex items-center gap-3">
-            <Link to="/admin" className="hidden sm:inline-flex items-center rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated px-3 py-2 text-xs font-semibold transition-colors">
-              Admin
+          <div className="flex items-center gap-2">
+            {user.role === "admin" && (
+              <Link to="/admin" className="hidden sm:inline-flex items-center rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated px-3 py-2 text-xs font-semibold transition-colors">
+                Admin
+              </Link>
+            )}
+            <Link to="/profile" className="hidden sm:flex items-center gap-2 rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated px-3 py-2 text-xs font-medium transition-colors">
+              <User className="h-3.5 w-3.5" />
+              {user.name.split(" ")[0]}
             </Link>
-            <button aria-label="Notifications" className="h-9 w-9 rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated transition-colors flex items-center justify-center relative">
-              <Bell className="h-4 w-4" />
-              <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-primary shadow-glow" />
+            <button
+              onClick={handleLogout}
+              aria-label="Sign out"
+              className="h-9 w-9 rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated transition-colors flex items-center justify-center"
+              title="Sign out"
+            >
+              <LogOut className="h-4 w-4 text-muted-foreground" />
             </button>
-            <Link to="/profile" aria-label="Profile" className="h-9 w-9 rounded-full bg-gradient-primary flex items-center justify-center text-xs font-bold text-primary-foreground hover:opacity-90 transition-opacity">
-              KV
-            </Link>
           </div>
         </div>
       </header>

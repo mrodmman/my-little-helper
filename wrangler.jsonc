@@ -20,6 +20,10 @@
     }
   ],
   "vars": {
-    "ADMIN_SECRET": "change-me-before-deploy"
+    "ADMIN_SECRET": "change-me-before-deploy",
+    "RESEND_API_KEY": "re_your_resend_api_key_here",
+    "APP_URL": "https://your-worker.workers.dev",
+    "FROM_EMAIL": "noreply@kbkcompanies.com",
+    "FROM_NAME": "Kraken Vault"
   }
 }

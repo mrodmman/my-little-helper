@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import {
   ArrowLeft, ChevronLeft, ChevronRight, ChevronDown,
   BookOpen, CheckCircle2, Circle, Zap, Sparkles,
@@ -11,15 +11,18 @@ import { getLessonAssets } from "@/data/assets";
 import { cn } from "@/lib/utils";
 import { loadModuleProgress, markLessonComplete, markLessonIncomplete, resetModuleProgress } from "@/server/progress";
 import { getModuleWithLessons } from "@/server/modules";
+import { getCurrentUser } from "@/server/auth";
 import type { DbLesson } from "@/server/modules";
 
 export const Route = createFileRoute("/module/$moduleId")({
   component: ModulePage,
   loader: async ({ params }) => {
+    const user = await getCurrentUser().catch(() => null);
+    if (!user) throw redirect({ to: "/login" });
+
     const staticMod = getModule(params.moduleId);
     if (!staticMod) throw notFound();
 
-    // Load D1 data + progress in parallel; fall back gracefully if D1 unavailable
     const [dbData, progressData] = await Promise.all([
       getModuleWithLessons({ data: params.moduleId }).catch(() => null),
       loadModuleProgress({ data: params.moduleId }).catch(() => null),

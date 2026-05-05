@@ -4,7 +4,7 @@
  */
 import { createFileRoute, Link, Outlet, useRouter } from "@tanstack/react-router";
 import { useState, useTransition } from "react";
-import { LayoutDashboard, BookOpen, Package, LogOut, Settings } from "lucide-react";
+import { LayoutDashboard, BookOpen, Package, Users, LogOut, Settings } from "lucide-react";
 import { checkAdminAuth, adminLogin, adminLogout } from "@/server/admin";
 
 export const Route = createFileRoute("/admin")({
@@ -48,6 +48,7 @@ function AdminLayout() {
             { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
             { to: "/admin/modules", label: "Modules", icon: BookOpen },
             { to: "/admin/assets", label: "Assets", icon: Package },
+            { to: "/admin/users", label: "Users", icon: Users },
           ].map(({ to, label, icon: Icon }) => (
             <Link
               key={to}
@@ -68,6 +69,7 @@ function AdminLayout() {
             { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
             { to: "/admin/modules", label: "Modules", icon: BookOpen },
             { to: "/admin/assets", label: "Assets", icon: Package },
+            { to: "/admin/users", label: "Users", icon: Users },
           ].map(({ to, label, icon: Icon }) => (
             <Link
               key={to}

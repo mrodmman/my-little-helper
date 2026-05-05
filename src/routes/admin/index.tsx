@@ -4,21 +4,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpen, Package, Users, TrendingUp, ArrowRight } from "lucide-react";
 import { getAllModulesAdmin, getAllAssets } from "@/server/modules";
+import { listUsers } from "@/server/auth";
 
 export const Route = createFileRoute("/admin/")({
   component: AdminDashboard,
   loader: async () => {
-    const [modules, assets] = await Promise.all([
+    const [modules, assets, users] = await Promise.all([
       getAllModulesAdmin().catch(() => []),
       getAllAssets().catch(() => []),
+      listUsers().catch(() => []),
     ]);
-    const totalLessons = 0; // Queried per-module; skip for dashboard speed
-    return { moduleCount: modules.length, assetCount: assets.length, totalLessons };
+    return { moduleCount: modules.length, assetCount: assets.length, userCount: users.length };
   },
 });
 
 function AdminDashboard() {
-  const { moduleCount, assetCount } = Route.useLoaderData();
+  const { moduleCount, assetCount, userCount } = Route.useLoaderData();
 
   const cards = [
     {
@@ -36,18 +37,18 @@ function AdminDashboard() {
       description: "Videos, prompts, files and links",
     },
     {
+      label: "Users",
+      value: userCount,
+      icon: Users,
+      to: "/admin/users",
+      description: "Registered members, roles & verification",
+    },
+    {
       label: "Progress",
       value: "D1",
       icon: TrendingUp,
       to: "/",
-      description: "Stored in Cloudflare D1 by session",
-    },
-    {
-      label: "Users",
-      value: "Anon",
-      icon: Users,
-      to: "/",
-      description: "Cookie-based sessions, no login required",
+      description: "Lesson completions stored per session in D1",
     },
   ];
 
@@ -101,6 +102,16 @@ function AdminDashboard() {
             <div>
               <div className="text-sm font-medium">Asset Vault</div>
               <div className="text-xs text-muted-foreground">Videos, prompts, files, links</div>
+            </div>
+          </Link>
+          <Link
+            to="/admin/users"
+            className="flex items-center gap-3 rounded-xl bg-surface/60 border border-border p-4 hover:border-primary/40 transition-colors"
+          >
+            <Users className="h-5 w-5 text-primary shrink-0" />
+            <div>
+              <div className="text-sm font-medium">Users</div>
+              <div className="text-xs text-muted-foreground">Roles, verification, delete</div>
             </div>
           </Link>
         </div>
