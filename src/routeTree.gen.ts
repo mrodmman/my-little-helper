@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VaultRouteImport } from './routes/vault'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as FastTrackRouteImport } from './routes/fast-track'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ModuleModuleIdRouteImport } from './routes/module.$moduleId'
@@ -17,6 +19,16 @@ import { Route as ModuleModuleIdRouteImport } from './routes/module.$moduleId'
 const VaultRoute = VaultRouteImport.update({
   id: '/vault',
   path: '/vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FastTrackRoute = FastTrackRouteImport.update({
@@ -38,12 +50,16 @@ const ModuleModuleIdRoute = ModuleModuleIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/fast-track': typeof FastTrackRoute
+  '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/vault': typeof VaultRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/fast-track': typeof FastTrackRoute
+  '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/vault': typeof VaultRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
 }
@@ -51,20 +67,43 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/fast-track': typeof FastTrackRoute
+  '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/vault': typeof VaultRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/fast-track' | '/vault' | '/module/$moduleId'
+  fullPaths:
+    | '/'
+    | '/fast-track'
+    | '/login'
+    | '/profile'
+    | '/vault'
+    | '/module/$moduleId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/fast-track' | '/vault' | '/module/$moduleId'
-  id: '__root__' | '/' | '/fast-track' | '/vault' | '/module/$moduleId'
+  to:
+    | '/'
+    | '/fast-track'
+    | '/login'
+    | '/profile'
+    | '/vault'
+    | '/module/$moduleId'
+  id:
+    | '__root__'
+    | '/'
+    | '/fast-track'
+    | '/login'
+    | '/profile'
+    | '/vault'
+    | '/module/$moduleId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   FastTrackRoute: typeof FastTrackRoute
+  LoginRoute: typeof LoginRoute
+  ProfileRoute: typeof ProfileRoute
   VaultRoute: typeof VaultRoute
   ModuleModuleIdRoute: typeof ModuleModuleIdRoute
 }
@@ -76,6 +115,20 @@ declare module '@tanstack/react-router' {
       path: '/vault'
       fullPath: '/vault'
       preLoaderRoute: typeof VaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fast-track': {
@@ -105,9 +158,20 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   FastTrackRoute: FastTrackRoute,
+  LoginRoute: LoginRoute,
+  ProfileRoute: ProfileRoute,
   VaultRoute: VaultRoute,
   ModuleModuleIdRoute: ModuleModuleIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
