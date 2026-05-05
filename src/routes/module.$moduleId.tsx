@@ -1,18 +1,36 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, ChevronLeft, ChevronRight, ChevronDown, BookOpen, CheckCircle2, Circle, Zap, Sparkles } from "lucide-react";
-import { useState, useMemo, useEffect } from "react";
+import {
+  ArrowLeft, ChevronLeft, ChevronRight, ChevronDown,
+  BookOpen, CheckCircle2, Circle, Zap, Sparkles,
+} from "lucide-react";
+import { useState, useMemo, useEffect, useTransition } from "react";
 import { MODULES, getModule, type Section } from "@/data/courseMeta";
 import { LessonRenderer } from "@/components/vault/LessonRenderer";
 import { AssetList } from "@/components/vault/AssetList";
 import { getLessonAssets } from "@/data/assets";
 import { cn } from "@/lib/utils";
+import { loadModuleProgress, markLessonComplete, markLessonIncomplete, resetModuleProgress } from "@/server/progress";
+import { getModuleWithLessons } from "@/server/modules";
+import type { DbLesson } from "@/server/modules";
 
 export const Route = createFileRoute("/module/$moduleId")({
   component: ModulePage,
-  loader: ({ params }) => {
-    const mod = getModule(params.moduleId);
-    if (!mod) throw notFound();
-    return { moduleId: params.moduleId };
+  loader: async ({ params }) => {
+    const staticMod = getModule(params.moduleId);
+    if (!staticMod) throw notFound();
+
+    // Load D1 data + progress in parallel; fall back gracefully if D1 unavailable
+    const [dbData, progressData] = await Promise.all([
+      getModuleWithLessons({ data: params.moduleId }).catch(() => null),
+      loadModuleProgress({ data: params.moduleId }).catch(() => null),
+    ]);
+
+    return {
+      moduleId: params.moduleId,
+      dbLessons: dbData?.lessons ?? null,
+      dbModule: dbData?.module ?? null,
+      initialCompleted: progressData?.completedIndexes ?? [],
+    };
   },
   notFoundComponent: () => (
     <div className="min-h-screen flex items-center justify-center text-center px-6">
@@ -42,50 +60,79 @@ export const Route = createFileRoute("/module/$moduleId")({
 });
 
 function ModulePage() {
-  const { moduleId } = Route.useLoaderData();
+  const { moduleId, dbLessons, dbModule, initialCompleted } = Route.useLoaderData();
   const mod = getModule(moduleId)!;
   const Icon = mod.icon;
 
-  const lessons = useMemo(
-    () => mod.sections.filter((s: Section) => s.content.trim().length > 0),
-    [mod],
-  );
+  // Use D1 lessons if available, otherwise fall back to static course.json
+  const lessons = useMemo((): (Section & { dbId?: number })[] => {
+    if (dbLessons && dbLessons.length > 0) {
+      return dbLessons.map((l: DbLesson) => ({
+        title: l.title,
+        content: l.content,
+        dbId: l.id,
+      }));
+    }
+    return mod.sections.filter((s: Section) => s.content.trim().length > 0);
+  }, [dbLessons, mod]);
+
+  // Use R2 image if available
+  const moduleImage = dbModule?.image_key
+    ? `/api/cdn/${encodeURIComponent(dbModule.image_key)}`
+    : mod.image;
 
   const [activeIdx, setActiveIdx] = useState(0);
   const active = lessons[activeIdx];
 
-  // Persist progress per module in localStorage
-  const storageKey = `vault:progress:${mod.id}`;
-  const [completed, setCompleted] = useState<Set<number>>(new Set());
+  // Progress state — seeded from server-side load, then tracked in D1 via server fns
+  const [completed, setCompleted] = useState<Set<number>>(new Set(initialCompleted));
   const [lessonsOpen, setLessonsOpen] = useState(false);
+  const [, startTransition] = useTransition();
 
+  // Also sync with localStorage as a fallback (for UX speed)
+  const storageKey = `vault:progress:${mod.id}`;
   useEffect(() => {
+    if (initialCompleted.length > 0) return; // D1 data loaded — trust it
     try {
       const raw = localStorage.getItem(storageKey);
       if (raw) setCompleted(new Set(JSON.parse(raw)));
     } catch { /* noop */ }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [storageKey]);
 
   const toggleComplete = (i: number) => {
     setCompleted((prev) => {
       const next = new Set(prev);
-      if (next.has(i)) next.delete(i); else next.add(i);
+      const nowComplete = !next.has(i);
+      if (nowComplete) { next.add(i); } else { next.delete(i); }
+      // Optimistically update localStorage
       try { localStorage.setItem(storageKey, JSON.stringify([...next])); } catch { /* noop */ }
+      // Persist to D1
+      startTransition(async () => {
+        if (nowComplete) {
+          await markLessonComplete({ data: { module_id: mod.id, lesson_idx: i } }).catch(() => null);
+        } else {
+          await markLessonIncomplete({ data: { module_id: mod.id, lesson_idx: i } }).catch(() => null);
+        }
+      });
       return next;
     });
   };
 
-  const resetModuleProgress = () => {
+  const handleResetProgress = () => {
     setCompleted(new Set());
     setActiveIdx(0);
     try { localStorage.setItem(storageKey, JSON.stringify([])); } catch { /* noop */ }
+    startTransition(async () => {
+      await resetModuleProgress({ data: mod.id }).catch(() => null);
+    });
   };
 
   const progress = lessons.length ? Math.round((completed.size / lessons.length) * 100) : 0;
   const prevMod = MODULES[mod.index - 1];
   const nextMod = MODULES[mod.index + 1];
 
-  // View mode: "guided" = step-by-step, "full" = power user (everything expanded)
+  // View mode: "guided" = step-by-step, "full" = power user
   const modeKey = "vault:viewMode";
   const [mode, setMode] = useState<"guided" | "full">("guided");
   useEffect(() => {
@@ -99,7 +146,6 @@ function ModulePage() {
     try { localStorage.setItem(modeKey, m); } catch { /* noop */ }
   };
 
-  // Scroll to top on lesson switch
   useEffect(() => {
     document.getElementById("lesson-top")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, [activeIdx]);
@@ -120,7 +166,7 @@ function ModulePage() {
 
       {/* Hero */}
       <section className="relative border-b border-border overflow-hidden">
-        <img src={mod.image} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-25" />
+        <img src={moduleImage} alt="" aria-hidden className="absolute inset-0 w-full h-full object-cover opacity-25" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/85 to-background" />
         <div className="relative max-w-7xl mx-auto px-6 py-12 md:py-16">
           <div className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-primary mb-4">
@@ -190,7 +236,7 @@ function ModulePage() {
             </button>
             {lessonsOpen && (
               <ol className="space-y-1 mt-1">
-                {lessons.map((s: Section, i: number) => {
+                {lessons.map((s, i) => {
                   const isActive = i === activeIdx;
                   const isDone = completed.has(i);
                   return (
@@ -260,7 +306,7 @@ function ModulePage() {
                   </button>
                 </div>
               </div>
-              {/* Fast Track shortcut — above the title */}
+
               <div className="mt-4 mb-4 flex justify-center">
                 <Link
                   to="/fast-track"
@@ -304,7 +350,7 @@ function ModulePage() {
                       <ArrowLeft className="h-4 w-4" /> Back to The Vault
                     </Link>
                     <button
-                      onClick={resetModuleProgress}
+                      onClick={handleResetProgress}
                       className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-border bg-surface/60 hover:bg-surface-elevated"
                     >
                       Restart Module

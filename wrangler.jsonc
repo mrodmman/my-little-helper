@@ -5,5 +5,21 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
-  "main": "@tanstack/react-start/server-entry"
+  "main": "@tanstack/react-start/server-entry",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "kraken-vault-db",
+      "database_id": "placeholder-replace-with-real-id"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "R2_BUCKET",
+      "bucket_name": "kraken-vault-assets"
+    }
+  ],
+  "vars": {
+    "ADMIN_SECRET": "change-me-before-deploy"
+  }
 }
