@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef, useState } from "react";
-import { ArrowLeft, Camera, CheckCircle2, CreditCard, Crown, Mail, User, Bell, Shield, LogOut } from "lucide-react";
+import { useRef, useState, useTransition } from "react";
+import { ArrowLeft, Camera, CheckCircle2, CreditCard, Crown, Mail, User, Bell, Shield, RotateCcw } from "lucide-react";
+import { resetAllProgress } from "@/server/progress";
 
 export const Route = createFileRoute("/profile")({
   component: ProfilePage,
@@ -18,6 +19,16 @@ function ProfilePage() {
   const [name, setName] = useState("Matt Kraken");
   const [email, setEmail] = useState("matt@krakenvault.com");
   const [bio, setBio] = useState("Building a system that actually works. Grocery store manager turned online operator.");
+  const [resetDone, setResetDone] = useState(false);
+  const [, startTransition] = useTransition();
+
+  const handleResetProgress = () => {
+    if (!confirm("Reset ALL your progress? This cannot be undone.")) return;
+    startTransition(async () => {
+      await resetAllProgress().catch(() => null);
+      setResetDone(true);
+    });
+  };
 
   const onPick = (f: File | undefined) => {
     if (!f) return;
@@ -192,9 +203,28 @@ function ProfilePage() {
             </div>
           </section>
 
-          <p className="text-center text-xs text-muted-foreground">
-            UI preview only — backend not connected yet.
-          </p>
+          {/* Progress reset */}
+          <section className="glass-card rounded-3xl p-6 md:p-8 border border-destructive/20">
+            <h2 className="text-lg font-bold tracking-tight mb-1 flex items-center gap-2">
+              <RotateCcw className="h-5 w-5 text-muted-foreground" />
+              Reset Progress
+            </h2>
+            <p className="text-sm text-muted-foreground mb-4">
+              Clear all lesson completion data for your current session. This can't be undone.
+            </p>
+            {resetDone ? (
+              <div className="flex items-center gap-2 text-sm text-primary">
+                <CheckCircle2 className="h-4 w-4" /> Progress reset. Start fresh!
+              </div>
+            ) : (
+              <button
+                onClick={handleResetProgress}
+                className="inline-flex items-center gap-2 rounded-xl border border-destructive/40 bg-destructive/10 hover:bg-destructive/20 text-destructive px-4 py-2.5 text-sm font-medium transition-colors"
+              >
+                <RotateCcw className="h-4 w-4" /> Reset my progress
+              </button>
+            )}
+          </section>
         </div>
       </main>
     </div>

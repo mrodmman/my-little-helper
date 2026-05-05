@@ -1,14 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  Play, Video, FileText, Sparkles, ListChecks, GitBranch, Files,
-  Search, Bell, ChevronRight, Zap,
-} from "lucide-react";
+import { Play, Video, Bell, ChevronRight, Zap, Search } from "lucide-react";
+import { MessageCircle, Send, Database, Mail, Tag } from "lucide-react";
 import { ModuleCard } from "@/components/vault/ModuleCard";
 import { AssetList } from "@/components/vault/AssetList";
-import { ASSETS } from "@/data/assets";
 import { OfferCard } from "@/components/vault/OfferCard";
 import { FastTrackSection } from "@/components/vault/FastTrackSection";
-import { MessageCircle, Send, Database, Mail, Tag } from "lucide-react";
+import { getModules } from "@/server/modules";
+import { getAllAssets } from "@/server/modules";
+import { loadProgressSummary } from "@/server/progress";
+import { MODULES } from "@/data/courseMeta";
+import { ASSETS } from "@/data/assets";
+import type { DbModule, DbAsset } from "@/server/modules";
+import type { ModuleProgressSummary } from "@/server/progress";
 
 const toDataUri = (svg: string) => `data:image/svg+xml,${encodeURIComponent(svg)}`;
 
@@ -56,18 +59,6 @@ const heroFlow = [
   { label: "Email", icon: Mail },
   { label: "Offer", icon: Tag },
 ];
-import { MODULES } from "@/data/courseMeta";
-
-export const Route = createFileRoute("/")({
-  component: VaultDashboard,
-  head: () => ({
-    meta: [
-      { title: "The Kraken Vault — Crack the Code to Generating Income Online" },
-      { name: "description", content: "Your private member vault — 10 modules covering tools, funnels, email, automation, traffic, content, DMs, offers and promotion." },
-    ],
-  }),
-});
-
 
 const offers = [
   { category: "Lead Magnet", title: "The 7-Day Content Map", useCase: "Capture leads from cold content", stage: "Top of Funnel" },
@@ -76,9 +67,70 @@ const offers = [
   { category: "Upsell", title: "Done-With-You Build", useCase: "Hands-on automation install", stage: "Post Purchase" },
 ];
 
+export const Route = createFileRoute("/")({
+  component: VaultDashboard,
+  loader: async () => {
+    // Run in parallel: modules, assets, progress summary
+    const [dbModules, dbAssets, progressData] = await Promise.all([
+      getModules().catch(() => null),
+      getAllAssets().catch(() => null),
+      loadProgressSummary().catch(() => null),
+    ]);
+    return { dbModules, dbAssets, progressData };
+  },
+  head: () => ({
+    meta: [
+      { title: "The Kraken Vault — Crack the Code to Generating Income Online" },
+      { name: "description", content: "Your private member vault — 10 modules covering tools, funnels, email, automation, traffic, content, DMs, offers and promotion." },
+    ],
+  }),
+});
+
+function getModuleImageUrl(dbMod: DbModule | null | undefined): string | null {
+  if (!dbMod?.image_key) return null;
+  return `/api/cdn/${encodeURIComponent(dbMod.image_key)}`;
+}
+
 function VaultDashboard() {
-  const totalLessons = MODULES.reduce((acc, m) => acc + m.sections.length, 0);
-  const firstModule = MODULES[0];
+  const { dbModules, dbAssets, progressData } = Route.useLoaderData();
+
+  // Fall back to static data if D1 unavailable
+  const modules = MODULES;
+  const staticAssets = dbAssets
+    ? dbAssets.map((a: DbAsset) => ({
+        id: a.id,
+        type: a.type,
+        title: a.title,
+        description: a.description ?? undefined,
+        url: a.url ?? undefined,
+        body: a.body ?? undefined,
+        filename: a.filename ?? undefined,
+        size: a.size ?? undefined,
+        format: a.format ?? undefined,
+        source: a.source ?? undefined,
+        duration: a.duration ?? undefined,
+        tags: a.tags ? JSON.parse(a.tags) : [],
+      }))
+    : ASSETS;
+
+  const totalLessons = progressData?.totalLessons ?? modules.reduce((a, m) => a + m.sections.length, 0);
+  const completedLessons = progressData?.completedLessons ?? 0;
+  const progressPct = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+  const dashOffset = 100 - progressPct;
+
+  // Build a quick lookup: module_id → completed count
+  const progressMap = new Map<string, ModuleProgressSummary>(
+    (progressData?.moduleSummaries ?? []).map((s: ModuleProgressSummary) => [s.module_id, s]),
+  );
+
+  const completedModules = (progressData?.moduleSummaries ?? []).filter(
+    (s: ModuleProgressSummary) => s.total > 0 && s.completed >= s.total,
+  ).length;
+
+  const firstModule = modules[0];
+
+  // Merge D1 data with static metadata
+  const dbModuleMap = new Map((dbModules ?? []).map((m: DbModule) => [m.id, m]));
 
   return (
     <div className="min-h-screen text-foreground">
@@ -103,8 +155,8 @@ function VaultDashboard() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Link to="/login" className="hidden sm:inline-flex items-center rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated px-3 py-2 text-xs font-semibold transition-colors">
-              Sign in
+            <Link to="/admin" className="hidden sm:inline-flex items-center rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated px-3 py-2 text-xs font-semibold transition-colors">
+              Admin
             </Link>
             <button aria-label="Notifications" className="h-9 w-9 rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated transition-colors flex items-center justify-center relative">
               <Bell className="h-4 w-4" />
@@ -133,7 +185,7 @@ function VaultDashboard() {
                 The <span className="text-gradient">Kraken Vault</span>
               </h1>
               <p className="mt-5 text-base md:text-lg text-muted-foreground max-w-xl leading-relaxed">
-                Crack the code to generating income online. {MODULES.length} modules, {totalLessons}+ lessons — the exact system, written for people who are tired, busy, and sick of fluff.
+                Crack the code to generating income online. {modules.length} modules, {totalLessons}+ lessons — the exact system, written for people who are tired, busy, and sick of fluff.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -157,12 +209,19 @@ function VaultDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-xs uppercase tracking-wider text-muted-foreground">Course Progress</div>
-                  <div className="text-3xl font-bold mt-1">0%</div>
+                  <div className="text-3xl font-bold mt-1">{progressPct}%</div>
                 </div>
                 <div className="relative h-16 w-16">
                   <svg viewBox="0 0 36 36" className="h-16 w-16 -rotate-90">
                     <circle cx="18" cy="18" r="15.9" fill="none" stroke="oklch(1 0 0 / 0.08)" strokeWidth="3" />
-                    <circle cx="18" cy="18" r="15.9" fill="none" stroke="url(#g1)" strokeWidth="3" strokeLinecap="round" strokeDasharray="100" strokeDashoffset="100" />
+                    <circle
+                      cx="18" cy="18" r="15.9"
+                      fill="none" stroke="url(#g1)" strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeDasharray="100"
+                      strokeDashoffset={dashOffset}
+                      style={{ transition: "stroke-dashoffset 0.6s ease" }}
+                    />
                     <defs>
                       <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
                         <stop offset="0%" stopColor="oklch(0.72 0.19 245)" />
@@ -175,9 +234,9 @@ function VaultDashboard() {
 
               <div className="grid grid-cols-3 gap-3 text-center">
                 {[
-                  { label: "Modules", value: `0/${MODULES.length}` },
-                  { label: "Lessons", value: `0/${totalLessons}` },
-                  { label: "Assets", value: String(ASSETS.length) },
+                  { label: "Modules", value: `${completedModules}/${modules.length}` },
+                  { label: "Lessons", value: `${completedLessons}/${totalLessons}` },
+                  { label: "Assets", value: String(staticAssets.length) },
                 ].map((s) => (
                   <div key={s.label} className="rounded-xl bg-surface/60 border border-border py-3">
                     <div className="text-base font-semibold">{s.value}</div>
@@ -203,6 +262,15 @@ function VaultDashboard() {
                   <ChevronRight className="h-4 w-4 text-muted-foreground" />
                 </Link>
               </div>
+
+              {progressPct > 0 && (
+                <Link
+                  to="/profile"
+                  className="w-full text-center text-xs text-primary hover:underline block"
+                >
+                  Reset my progress →
+                </Link>
+              )}
             </div>
           </div>
 
@@ -242,18 +310,25 @@ function VaultDashboard() {
             description="Each module is a complete playbook. Work through them in order or jump to what you need most."
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {MODULES.map((m) => (
-              <ModuleCard
-                key={m.id}
-                id={m.id}
-                image={m.image}
-                icon={m.icon}
-                title={m.title}
-                subtitle={m.subtitle}
-                tagline={m.tagline}
-                lessonCount={m.sections.length}
-              />
-            ))}
+            {modules.map((m) => {
+              const dbMod = dbModuleMap.get(m.id) as DbModule | undefined;
+              const imageUrl = getModuleImageUrl(dbMod) ?? m.image;
+              const prog = progressMap.get(m.id);
+              return (
+                <ModuleCard
+                  key={m.id}
+                  id={m.id}
+                  image={imageUrl}
+                  icon={m.icon}
+                  title={m.title}
+                  subtitle={m.subtitle}
+                  tagline={m.tagline}
+                  lessonCount={m.sections.length}
+                  completedLessons={prog?.completed ?? 0}
+                  totalLessons={prog?.total ?? m.sections.length}
+                />
+              );
+            })}
           </div>
         </section>
 
@@ -264,7 +339,8 @@ function VaultDashboard() {
             title="Templates, Prompts & Swipe Files"
             description="Plug-and-play resources you can ship today."
           />
-          <AssetList assets={ASSETS} title="All resources" />
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          <AssetList assets={staticAssets as any} title="All resources" />
         </section>
 
         {/* OFFER VAULT */}
@@ -278,8 +354,6 @@ function VaultDashboard() {
             {offers.map((o) => <OfferCard key={o.title} {...o} />)}
           </div>
         </section>
-
-
 
         <footer className="pt-10 pb-6 border-t border-border text-center text-xs text-muted-foreground">
           © Kraken Vault · Private member access
