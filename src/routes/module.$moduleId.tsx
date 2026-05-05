@@ -284,6 +284,29 @@ function ModulePage() {
 
               <AssetList assets={getLessonAssets(mod.id, activeIdx)} />
 
+              {progress === 100 && (
+                <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/10 p-4">
+                  <div className="text-sm font-semibold mb-3">Module complete. Keep your momentum.</div>
+                  <div className="flex flex-wrap gap-2">
+                    <Link
+                      to="/"
+                      className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium border border-border bg-surface/60 hover:bg-surface-elevated"
+                    >
+                      <ArrowLeft className="h-4 w-4" /> Back to The Vault
+                    </Link>
+                    {nextMod && (
+                      <Link
+                        to="/module/$moduleId"
+                        params={{ moduleId: nextMod.id }}
+                        className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold bg-gradient-primary text-primary-foreground shadow-glow"
+                      >
+                        Next Module <ChevronRight className="h-4 w-4" />
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* Lesson footer actions */}
               <div className="mt-10 pt-6 border-t border-border flex flex-wrap items-center justify-between gap-4">
                 <button

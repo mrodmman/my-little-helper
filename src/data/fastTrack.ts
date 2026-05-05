@@ -29,11 +29,31 @@ export const FAST_TRACK: FastTrackTile[] = [
     title: "Just Start",
     tagline: "Momentum beats mastery.",
     icon: Rocket,
-    bullets: [
-      "Not trying to master everything right away",
-      "Feeling overwhelmed is normal",
-      "You don't need a full system yet",
-    ],
+    intro: `Do you actually like your job?
+Taking breaks when you’re told…
+Going to lunch when you’re allowed…
+Dealing with people you can’t stand…
+
+Truth is — you already do things you hate every day.
+
+This won’t always be easy.
+Sometimes it’ll click… sometimes it won’t.
+Some days it’ll feel like work… because it is.
+
+But remind yourself:
+The work you’re putting in here is different.
+
+You’re not just working…
+You’re building a system.
+A machine.
+Something that works for you — not the other way around.
+
+For you.
+For your future.
+For your kids.
+
+If you can handle the daily grind you didn’t choose…
+You can handle building something you did.`,
     closer: "Take simple steps and build momentum.",
   },
   {
@@ -210,8 +230,25 @@ export const FAST_TRACK: FastTrackTile[] = [
     closer: "Sales come from repetition + time.",
   },
   {
-    id: "speed-it-up",
+    id: "30-day-calendar",
     step: 7,
+    emoji: "🗓️",
+    title: "30 Day Calendar",
+    tagline: "Randomize TikTok + Amazon ideas into a simple daily posting plan.",
+    icon: Timer,
+    bullets: [
+      "Pick 1 TikTok Shop strategy prompt per day",
+      "Pick 1 Amazon Curation strategy prompt per day",
+      "Alternate the opening hook style so content feels fresh",
+      "Batch-record every 3 days, then schedule daily posts",
+      "Track what got clicks/saves and reuse winners in week 3 and 4",
+      "Miss a day? Resume the next day — no restart needed",
+    ],
+    closer: "Use this calendar to remove decision fatigue and just execute.",
+  },
+  {
+    id: "speed-it-up",
+    step: 8,
     emoji: "⚡",
     title: "Speed It Up",
     tagline: "Use Content Kraken to remove friction.",
