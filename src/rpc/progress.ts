@@ -27,7 +27,7 @@ export type ModuleProgressSummary = {
  * Returns: { rows, sessionId }
  */
 export const loadAllProgress = createServerFn().handler(async () => {
-  const env = getEnv();
+  const env = await getEnv();
   const sessionId = getOrCreateSessionId();
 
   const { results } = await env.DB.prepare(
@@ -45,7 +45,7 @@ export const loadAllProgress = createServerFn().handler(async () => {
 export const loadModuleProgress = createServerFn()
   .validator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
-    const env = getEnv();
+    const env = await getEnv();
     const sessionId = getOrCreateSessionId();
 
     const { results } = await env.DB.prepare(
@@ -63,7 +63,7 @@ export const loadModuleProgress = createServerFn()
 export const markLessonComplete = createServerFn()
   .validator((data: { module_id: string; lesson_idx: number }) => data)
   .handler(async ({ data }) => {
-    const env = getEnv();
+    const env = await getEnv();
     const sessionId = getOrCreateSessionId();
 
     await env.DB.prepare(
@@ -81,7 +81,7 @@ export const markLessonComplete = createServerFn()
 export const markLessonIncomplete = createServerFn()
   .validator((data: { module_id: string; lesson_idx: number }) => data)
   .handler(async ({ data }) => {
-    const env = getEnv();
+    const env = await getEnv();
     const sessionId = getSessionId();
     if (!sessionId) return { ok: true };
 
@@ -100,7 +100,7 @@ export const markLessonIncomplete = createServerFn()
 export const resetModuleProgress = createServerFn()
   .validator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
-    const env = getEnv();
+    const env = await getEnv();
     const sessionId = getSessionId();
     if (!sessionId) return { ok: true };
 
@@ -117,7 +117,7 @@ export const resetModuleProgress = createServerFn()
  * Reset ALL progress for the current session.
  */
 export const resetAllProgress = createServerFn().handler(async () => {
-  const env = getEnv();
+  const env = await getEnv();
   const sessionId = getSessionId();
   if (!sessionId) return { ok: true };
 
@@ -133,7 +133,7 @@ export const resetAllProgress = createServerFn().handler(async () => {
  * Returns { module_id, completed, total } for each module.
  */
 export const loadProgressSummary = createServerFn().handler(async () => {
-  const env = getEnv();
+  const env = await getEnv();
   const sessionId = getOrCreateSessionId();
 
   // Completed counts per module

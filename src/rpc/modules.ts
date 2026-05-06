@@ -53,7 +53,7 @@ export type DbModuleAsset = {
 // ---- Read functions ----
 
 export const getModules = createServerFn().handler(async () => {
-  const env = getEnv();
+  const env = await getEnv();
   const { results } = await env.DB.prepare(
     "SELECT * FROM modules WHERE visible = 1 ORDER BY idx ASC",
   ).all<DbModule>();
@@ -61,7 +61,7 @@ export const getModules = createServerFn().handler(async () => {
 });
 
 export const getAllModulesAdmin = createServerFn().handler(async () => {
-  const env = getEnv();
+  const env = await getEnv();
   const { results } = await env.DB.prepare(
     "SELECT * FROM modules ORDER BY idx ASC",
   ).all<DbModule>();
@@ -71,7 +71,7 @@ export const getAllModulesAdmin = createServerFn().handler(async () => {
 export const getLessons = createServerFn()
   .validator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
-    const env = getEnv();
+    const env = await getEnv();
     const { results } = await env.DB.prepare(
       "SELECT * FROM lessons WHERE module_id = ? ORDER BY idx ASC",
     )
@@ -83,7 +83,7 @@ export const getLessons = createServerFn()
 export const getModuleWithLessons = createServerFn()
   .validator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
-    const env = getEnv();
+    const env = await getEnv();
     const [modRow, lessonsRes] = await Promise.all([
       env.DB.prepare("SELECT * FROM modules WHERE id = ?").bind(moduleId).first<DbModule>(),
       env.DB.prepare("SELECT * FROM lessons WHERE module_id = ? ORDER BY idx ASC")
@@ -95,7 +95,7 @@ export const getModuleWithLessons = createServerFn()
   });
 
 export const getAllAssets = createServerFn().handler(async () => {
-  const env = getEnv();
+  const env = await getEnv();
   const { results } = await env.DB.prepare("SELECT * FROM assets ORDER BY rowid ASC").all<DbAsset>();
   return results;
 });
@@ -103,7 +103,7 @@ export const getAllAssets = createServerFn().handler(async () => {
 export const getModuleAssets = createServerFn()
   .validator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
-    const env = getEnv();
+    const env = await getEnv();
     const { results } = await env.DB.prepare(
       `SELECT ma.*, a.* FROM module_assets ma
        JOIN assets a ON a.id = ma.asset_id
@@ -121,7 +121,7 @@ export const updateModule = createServerFn()
     (data: Partial<Omit<DbModule, "id">> & { id: string }) => data,
   )
   .handler(async ({ data }) => {
-    const env = getEnv();
+    const env = await getEnv();
     const fields: string[] = [];
     const vals: unknown[] = [];
     if (data.title !== undefined)    { fields.push("title = ?");    vals.push(data.title); }
@@ -139,7 +139,7 @@ export const updateModule = createServerFn()
 export const reorderModules = createServerFn()
   .validator((ids: string[]) => ids)
   .handler(async ({ data: ids }) => {
-    const env = getEnv();
+    const env = await getEnv();
     const stmts = ids.map((id, i) =>
       env.DB.prepare("UPDATE modules SET idx = ? WHERE id = ?").bind(i, id),
     );
@@ -149,7 +149,7 @@ export const reorderModules = createServerFn()
 export const deleteModule = createServerFn()
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
-    const env = getEnv();
+    const env = await getEnv();
     await env.DB.prepare("DELETE FROM modules WHERE id = ?").bind(id).run();
   });
 
@@ -159,7 +159,7 @@ export const upsertLesson = createServerFn()
       data,
   )
   .handler(async ({ data }) => {
-    const env = getEnv();
+    const env = await getEnv();
     if (data.id) {
       await env.DB.prepare(
         "UPDATE lessons SET title = ?, content = ?, idx = ? WHERE id = ?",
@@ -179,14 +179,14 @@ export const upsertLesson = createServerFn()
 export const deleteLesson = createServerFn()
   .validator((id: number) => id)
   .handler(async ({ data: id }) => {
-    const env = getEnv();
+    const env = await getEnv();
     await env.DB.prepare("DELETE FROM lessons WHERE id = ?").bind(id).run();
   });
 
 export const reorderLessons = createServerFn()
   .validator((ids: number[]) => ids)
   .handler(async ({ data: ids }) => {
-    const env = getEnv();
+    const env = await getEnv();
     const stmts = ids.map((id, i) =>
       env.DB.prepare("UPDATE lessons SET idx = ? WHERE id = ?").bind(i, id),
     );
@@ -196,7 +196,7 @@ export const reorderLessons = createServerFn()
 export const upsertAsset = createServerFn()
   .validator((data: Partial<DbAsset> & { id: string }) => data)
   .handler(async ({ data }) => {
-    const env = getEnv();
+    const env = await getEnv();
     await env.DB.prepare(
       `INSERT INTO assets (id, type, title, description, url, body, filename, size, format, source, duration, tags, image_key)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -218,7 +218,7 @@ export const upsertAsset = createServerFn()
 export const deleteAsset = createServerFn()
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {
-    const env = getEnv();
+    const env = await getEnv();
     await env.DB.prepare("DELETE FROM assets WHERE id = ?").bind(id).run();
   });
 
@@ -227,7 +227,7 @@ export const upsertModuleAsset = createServerFn()
     (data: { module_id: string; asset_id: string; lesson_idx: number | null }) => data,
   )
   .handler(async ({ data }) => {
-    const env = getEnv();
+    const env = await getEnv();
     await env.DB.prepare(
       "INSERT OR IGNORE INTO module_assets (module_id, asset_id, lesson_idx) VALUES (?, ?, ?)",
     )
@@ -238,14 +238,14 @@ export const upsertModuleAsset = createServerFn()
 export const deleteModuleAsset = createServerFn()
   .validator((id: number) => id)
   .handler(async ({ data: id }) => {
-    const env = getEnv();
+    const env = await getEnv();
     await env.DB.prepare("DELETE FROM module_assets WHERE id = ?").bind(id).run();
   });
 
 // ---- JSON Import / Export ----
 
 export const exportCourseJson = createServerFn().handler(async () => {
-  const env = getEnv();
+  const env = await getEnv();
   const [modsRes, lessonsRes, assetsRes, maRes] = await env.DB.batch([
     env.DB.prepare("SELECT * FROM modules ORDER BY idx ASC"),
     env.DB.prepare("SELECT * FROM lessons ORDER BY module_id ASC, idx ASC"),
@@ -270,7 +270,7 @@ export const importCourseJson = createServerFn()
     }) => data,
   )
   .handler(async ({ data }) => {
-    const env = getEnv();
+    const env = await getEnv();
     // Clear existing
     await env.DB.batch([
       env.DB.prepare("DELETE FROM module_assets"),
@@ -312,7 +312,7 @@ export const importCourseJson = createServerFn()
 export const updateModuleImageKey = createServerFn()
   .validator((data: { module_id: string; image_key: string }) => data)
   .handler(async ({ data }) => {
-    const env = getEnv();
+    const env = await getEnv();
     await env.DB.prepare("UPDATE modules SET image_key = ? WHERE id = ?")
       .bind(data.image_key, data.module_id)
       .run();
