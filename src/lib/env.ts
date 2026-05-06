@@ -22,7 +22,8 @@ let _modulePromise: Promise<WorkersModule | null> | undefined;
 
 function loadWorkersModule(): Promise<WorkersModule | null> {
   if (!_modulePromise) {
-    _modulePromise = import("cloudflare:workers")
+    const dynamicImport = new Function("specifier", "return import(specifier)") as (specifier: string) => Promise<WorkersModule>
+    _modulePromise = dynamicImport("cloudflare:workers")
       .then((m) => m as WorkersModule)
       .catch(() => null);
   }
