@@ -7,6 +7,10 @@ import { OfferCard } from "@/components/vault/OfferCard";
 import { FastTrackSection } from "@/components/vault/FastTrackSection";
 import { MODULES } from "@/data/courseMeta";
 import { ASSETS } from "@/data/assets";
+import { getModules, getAllAssets } from "@/rpc/modules";
+import { loadProgressSummary } from "@/rpc/progress";
+import type { DbModule, DbAsset } from "@/rpc/modules";
+import type { ModuleProgressSummary } from "@/rpc/progress";
 
 const toDataUri = (svg: string) => `data:image/svg+xml,${encodeURIComponent(svg)}`;
 
@@ -82,12 +86,6 @@ const offers = [
 export const Route = createFileRoute("/")({
   component: VaultDashboard,
   loader: async () => {
-    // Dynamically import server fns to avoid client-side direct /server imports
-    const [{ getModules, getAllAssets }, { loadProgressSummary }] = await Promise.all([
-      import("@/rpc/modules"),
-      import("@/rpc/progress"),
-    ]);
-
     const [dbModules, dbAssets, progressData] = await Promise.all([
       getModules().catch(() => null),
       getAllAssets().catch(() => null),
