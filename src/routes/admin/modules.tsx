@@ -10,9 +10,9 @@ import {
 } from "lucide-react";
 import {
   getAllModulesAdmin, updateModule, reorderModules, deleteModule, updateModuleImageKey,
-} from "@/server/modules";
-import { exportCourseJson, importCourseJson } from "@/server/modules";
-import type { DbModule } from "@/server/modules";
+} from "@/rpc/modules";
+import { exportCourseJson, importCourseJson } from "@/rpc/modules";
+import type { DbModule } from "@/rpc/modules";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/modules")({

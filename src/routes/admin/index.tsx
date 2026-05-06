@@ -3,7 +3,7 @@
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpen, Package, Users, TrendingUp, ArrowRight } from "lucide-react";
-import { getAllModulesAdmin, getAllAssets } from "@/server/modules";
+import { getAllModulesAdmin, getAllAssets } from "@/rpc/modules";
 
 export const Route = createFileRoute("/admin/")({
   component: AdminDashboard,

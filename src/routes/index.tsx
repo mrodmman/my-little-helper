@@ -5,15 +5,27 @@ import { ModuleCard } from "@/components/vault/ModuleCard";
 import { AssetList } from "@/components/vault/AssetList";
 import { OfferCard } from "@/components/vault/OfferCard";
 import { FastTrackSection } from "@/components/vault/FastTrackSection";
-import { getModules } from "@/server/modules";
-import { getAllAssets } from "@/server/modules";
-import { loadProgressSummary } from "@/server/progress";
 import { MODULES } from "@/data/courseMeta";
 import { ASSETS } from "@/data/assets";
-import type { DbModule, DbAsset } from "@/server/modules";
-import type { ModuleProgressSummary } from "@/server/progress";
 
 const toDataUri = (svg: string) => `data:image/svg+xml,${encodeURIComponent(svg)}`;
+
+type DbModule = { id: string; image_key: string | null };
+type DbAsset = {
+  id: string;
+  type: string;
+  title: string;
+  description: string | null;
+  url: string | null;
+  body: string | null;
+  filename: string | null;
+  size: string | null;
+  format: string | null;
+  source: string | null;
+  duration: string | null;
+  tags: string | null;
+};
+type ModuleProgressSummary = { module_id: string; completed: number; total: number };
 
 const logo = toDataUri(`
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'>
@@ -70,12 +82,18 @@ const offers = [
 export const Route = createFileRoute("/")({
   component: VaultDashboard,
   loader: async () => {
-    // Run in parallel: modules, assets, progress summary
+    // Dynamically import server fns to avoid client-side direct /server imports
+    const [{ getModules, getAllAssets }, { loadProgressSummary }] = await Promise.all([
+      import("@/rpc/modules"),
+      import("@/rpc/progress"),
+    ]);
+
     const [dbModules, dbAssets, progressData] = await Promise.all([
       getModules().catch(() => null),
       getAllAssets().catch(() => null),
       loadProgressSummary().catch(() => null),
     ]);
+
     return { dbModules, dbAssets, progressData };
   },
   head: () => ({

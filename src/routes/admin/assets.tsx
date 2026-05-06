@@ -6,8 +6,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useTransition } from "react";
 import { Plus, Trash2, Check, X, Edit2, Video, FileText, Link2, Zap } from "lucide-react";
-import { getAllAssets, upsertAsset, deleteAsset } from "@/server/modules";
-import type { DbAsset } from "@/server/modules";
+import { getAllAssets, upsertAsset, deleteAsset } from "@/rpc/modules";
+import type { DbAsset } from "@/rpc/modules";
 import { cn } from "@/lib/utils";
 
 const TYPE_ICONS = {
@@ -207,7 +207,7 @@ function AssetsManager() {
 
       {filtered.length === 0 && editingId !== "new" && (
         <div className="text-center py-12 text-muted-foreground text-sm">
-          {filterType === "all" ? "No assets found. Click "Add Asset" to create one." : `No ${filterType} assets.`}
+          {filterType === "all" ? "No assets found. Click ‘Add Asset’ to create one." : `No ${filterType} assets.`}
         </div>
       )}
     </div>

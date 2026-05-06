@@ -5,7 +5,7 @@
 import { createFileRoute, Link, Outlet, useRouter } from "@tanstack/react-router";
 import { useState, useTransition } from "react";
 import { LayoutDashboard, BookOpen, Package, LogOut, Settings } from "lucide-react";
-import { checkAdminAuth, adminLogin, adminLogout } from "@/server/admin";
+import { checkAdminAuth, adminLogin, adminLogout } from "@/rpc/admin";
 
 export const Route = createFileRoute("/admin")({
   component: AdminLayout,

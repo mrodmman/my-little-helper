@@ -13,8 +13,13 @@ import { Route as VaultRouteImport } from './routes/vault'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FastTrackRouteImport } from './routes/fast-track'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ModuleModuleIdRouteImport } from './routes/module.$moduleId'
+import { Route as AdminModulesRouteImport } from './routes/admin/modules'
+import { Route as AdminAssetsRouteImport } from './routes/admin/assets'
+import { Route as AdminModulesModuleIdRouteImport } from './routes/admin/modules.$moduleId'
 
 const VaultRoute = VaultRouteImport.update({
   id: '/vault',
@@ -36,24 +41,54 @@ const FastTrackRoute = FastTrackRouteImport.update({
   path: '/fast-track',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const ModuleModuleIdRoute = ModuleModuleIdRouteImport.update({
   id: '/module/$moduleId',
   path: '/module/$moduleId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminModulesRoute = AdminModulesRouteImport.update({
+  id: '/modules',
+  path: '/modules',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAssetsRoute = AdminAssetsRouteImport.update({
+  id: '/assets',
+  path: '/assets',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminModulesModuleIdRoute = AdminModulesModuleIdRouteImport.update({
+  id: '/$moduleId',
+  path: '/$moduleId',
+  getParentRoute: () => AdminModulesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/fast-track': typeof FastTrackRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/vault': typeof VaultRoute
+  '/admin/assets': typeof AdminAssetsRoute
+  '/admin/modules': typeof AdminModulesRouteWithChildren
   '/module/$moduleId': typeof ModuleModuleIdRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -61,26 +96,40 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/vault': typeof VaultRoute
+  '/admin/assets': typeof AdminAssetsRoute
+  '/admin/modules': typeof AdminModulesRouteWithChildren
   '/module/$moduleId': typeof ModuleModuleIdRoute
+  '/admin': typeof AdminIndexRoute
+  '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/fast-track': typeof FastTrackRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/vault': typeof VaultRoute
+  '/admin/assets': typeof AdminAssetsRoute
+  '/admin/modules': typeof AdminModulesRouteWithChildren
   '/module/$moduleId': typeof ModuleModuleIdRoute
+  '/admin/': typeof AdminIndexRoute
+  '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/fast-track'
     | '/login'
     | '/profile'
     | '/vault'
+    | '/admin/assets'
+    | '/admin/modules'
     | '/module/$moduleId'
+    | '/admin/'
+    | '/admin/modules/$moduleId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -88,19 +137,29 @@ export interface FileRouteTypes {
     | '/login'
     | '/profile'
     | '/vault'
+    | '/admin/assets'
+    | '/admin/modules'
     | '/module/$moduleId'
+    | '/admin'
+    | '/admin/modules/$moduleId'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/fast-track'
     | '/login'
     | '/profile'
     | '/vault'
+    | '/admin/assets'
+    | '/admin/modules'
     | '/module/$moduleId'
+    | '/admin/'
+    | '/admin/modules/$moduleId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   FastTrackRoute: typeof FastTrackRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
@@ -138,12 +197,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FastTrackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/module/$moduleId': {
       id: '/module/$moduleId'
@@ -152,11 +225,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleModuleIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/modules': {
+      id: '/admin/modules'
+      path: '/modules'
+      fullPath: '/admin/modules'
+      preLoaderRoute: typeof AdminModulesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/assets': {
+      id: '/admin/assets'
+      path: '/assets'
+      fullPath: '/admin/assets'
+      preLoaderRoute: typeof AdminAssetsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/modules/$moduleId': {
+      id: '/admin/modules/$moduleId'
+      path: '/$moduleId'
+      fullPath: '/admin/modules/$moduleId'
+      preLoaderRoute: typeof AdminModulesModuleIdRouteImport
+      parentRoute: typeof AdminModulesRoute
+    }
   }
 }
 
+interface AdminModulesRouteChildren {
+  AdminModulesModuleIdRoute: typeof AdminModulesModuleIdRoute
+}
+
+const AdminModulesRouteChildren: AdminModulesRouteChildren = {
+  AdminModulesModuleIdRoute: AdminModulesModuleIdRoute,
+}
+
+const AdminModulesRouteWithChildren = AdminModulesRoute._addFileChildren(
+  AdminModulesRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminAssetsRoute: typeof AdminAssetsRoute
+  AdminModulesRoute: typeof AdminModulesRouteWithChildren
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAssetsRoute: AdminAssetsRoute,
+  AdminModulesRoute: AdminModulesRouteWithChildren,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   FastTrackRoute: FastTrackRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
@@ -166,3 +287,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
