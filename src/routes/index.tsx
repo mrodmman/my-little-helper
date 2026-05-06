@@ -5,13 +5,12 @@ import { ModuleCard } from "@/components/vault/ModuleCard";
 import { AssetList } from "@/components/vault/AssetList";
 import { OfferCard } from "@/components/vault/OfferCard";
 import { FastTrackSection } from "@/components/vault/FastTrackSection";
-import { getModules } from "@/server/modules";
-import { getAllAssets } from "@/server/modules";
-import { loadProgressSummary } from "@/server/progress";
 import { MODULES } from "@/data/courseMeta";
 import { ASSETS } from "@/data/assets";
-import type { DbModule, DbAsset } from "@/server/modules";
-import type { ModuleProgressSummary } from "@/server/progress";
+import { getModules, getAllAssets } from "@/rpc/modules";
+import { loadProgressSummary } from "@/rpc/progress";
+import type { DbModule, DbAsset } from "@/rpc/modules";
+import type { ModuleProgressSummary } from "@/rpc/progress";
 
 const toDataUri = (svg: string) => `data:image/svg+xml,${encodeURIComponent(svg)}`;
 
@@ -70,12 +69,12 @@ const offers = [
 export const Route = createFileRoute("/")({
   component: VaultDashboard,
   loader: async () => {
-    // Run in parallel: modules, assets, progress summary
     const [dbModules, dbAssets, progressData] = await Promise.all([
       getModules().catch(() => null),
       getAllAssets().catch(() => null),
       loadProgressSummary().catch(() => null),
     ]);
+
     return { dbModules, dbAssets, progressData };
   },
   head: () => ({

@@ -9,9 +9,9 @@ import { LessonRenderer } from "@/components/vault/LessonRenderer";
 import { AssetList } from "@/components/vault/AssetList";
 import { getLessonAssets } from "@/data/assets";
 import { cn } from "@/lib/utils";
-import { loadModuleProgress, markLessonComplete, markLessonIncomplete, resetModuleProgress } from "@/server/progress";
-import { getModuleWithLessons } from "@/server/modules";
-import type { DbLesson } from "@/server/modules";
+import { loadModuleProgress, markLessonComplete, markLessonIncomplete, resetModuleProgress } from "@/rpc/progress";
+import { getModuleWithLessons } from "@/rpc/modules";
+import type { DbLesson } from "@/rpc/modules";
 
 export const Route = createFileRoute("/module/$moduleId")({
   component: ModulePage,

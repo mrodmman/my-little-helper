@@ -3,7 +3,7 @@
  * No login required; session is used to track lesson progress anonymously.
  */
 
-import { parseCookies, setCookie } from "@tanstack/react-start/server";
+import { getCookies, setCookie } from "@tanstack/react-start/server";
 
 const COOKIE_NAME = "vault_session";
 const MAX_AGE = 60 * 60 * 24 * 365 * 2; // 2 years
@@ -13,7 +13,7 @@ const MAX_AGE = 60 * 60 * 24 * 365 * 2; // 2 years
  * Must be called from a server function or loader (i.e. on the server side).
  */
 export function getOrCreateSessionId(): string {
-  const cookies = parseCookies();
+  const cookies = getCookies();
   const existing = cookies[COOKIE_NAME];
   if (existing && /^[0-9a-f-]{36}$/.test(existing)) return existing;
 
@@ -32,7 +32,7 @@ export function getOrCreateSessionId(): string {
  * Returns the current session ID from the cookie, or null if not set.
  */
 export function getSessionId(): string | null {
-  const cookies = parseCookies();
+  const cookies = getCookies();
   const val = cookies[COOKIE_NAME];
   return val && /^[0-9a-f-]{36}$/.test(val) ? val : null;
 }
@@ -41,7 +41,7 @@ export function getSessionId(): string | null {
 const ADMIN_COOKIE = "vault_admin";
 
 export function getAdminSession(): string | null {
-  const cookies = parseCookies();
+  const cookies = getCookies();
   return cookies[ADMIN_COOKIE] ?? null;
 }
 
