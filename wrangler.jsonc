@@ -20,6 +20,6 @@
     }
   ],
   "vars": {
-    "ADMIN_SECRET": "change-me-before-deploy"
+    "ADMIN_SECRET": "M9640940"
   }
 }
