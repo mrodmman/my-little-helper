@@ -1,10 +1,8 @@
 /**
  * Cloudflare Workers environment access.
  *
- * `cloudflare:workers` is a built-in module available in the CF Workers runtime.
- * @cloudflare/vite-plugin proxies it during local dev (`wrangler dev`).
- *
- * Types are provided by @cloudflare/workers-types (devDependency).
+ * Uses cloudflare:workers getRequestContext() to access D1/R2 bindings.
+ * The @cloudflare/vite-plugin externalises this module at build time.
  */
 
 export interface Env {
@@ -13,29 +11,52 @@ export interface Env {
   ADMIN_SECRET: string;
 }
 
-type CloudflareWorkersModule = {
-  env?: Env;
+type WorkersModule = {
   getRequestContext?: () => { env: Env };
+  env?: Env;
 };
 
-const cloudflareWorkersModule: CloudflareWorkersModule | null = await import("cloudflare:workers")
-  .then((mod) => mod as CloudflareWorkersModule)
-  .catch(() => null);
+// Cached promise — avoids re-importing on every call while staying off the
+// module-level critical path (no top-level await that could break the bundle).
+let _modulePromise: Promise<WorkersModule | null> | undefined;
 
-export function getEnv(): Env {
-  if (cloudflareWorkersModule?.env) {
-    return cloudflareWorkersModule.env;
+function loadWorkersModule(): Promise<WorkersModule | null> {
+  if (!_modulePromise) {
+    _modulePromise = import("cloudflare:workers")
+      .then((m) => m as WorkersModule)
+      .catch(() => null);
+  }
+  return _modulePromise;
+}
+
+export async function getEnv(): Promise<Env> {
+  let mod: WorkersModule | null = null;
+  try {
+    mod = await loadWorkersModule();
+  } catch {
+    // import failed — fall through to proxy
   }
 
-  if (cloudflareWorkersModule?.getRequestContext) {
-    return cloudflareWorkersModule.getRequestContext().env as Env;
+  // Some CF Workers builds expose env directly on the module
+  if (mod?.env) return mod.env;
+
+  // Standard approach: per-request context
+  if (mod?.getRequestContext) {
+    try {
+      return mod.getRequestContext().env as Env;
+    } catch {
+      // getRequestContext() is only valid inside a request handler;
+      // outside that scope we fall through to the proxy.
+    }
   }
 
+  // Outside CF Workers / no active request — return a proxy that fails loudly
+  // on property access so callers get a meaningful error message.
   return new Proxy({} as Env, {
-    get(_, key: string) {
+    get(_: unknown, key: string) {
       throw new Error(
-        `Cloudflare binding "${key}" is not available outside a Cloudflare Worker. ` +
-          "Run via `wrangler dev` or deploy to Cloudflare to access D1/R2 bindings.",
+        `Cloudflare binding "${key}" is not available. ` +
+          "Run via `wrangler dev` or deploy to Cloudflare Workers.",
       );
     },
   });
