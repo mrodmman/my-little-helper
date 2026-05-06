@@ -13,25 +13,22 @@ export interface Env {
   ADMIN_SECRET: string;
 }
 
-type RequestContextModule = {
-  getRequestContext: () => { env: Env };
+type CloudflareWorkersModule = {
+  env?: Env;
+  getRequestContext?: () => { env: Env };
 };
 
-let workersModulePromise: Promise<RequestContextModule | null> | null = null;
+const cloudflareWorkersModule: CloudflareWorkersModule | null = await import("cloudflare:workers")
+  .then((mod) => mod as CloudflareWorkersModule)
+  .catch(() => null);
 
-async function getWorkersModule(): Promise<RequestContextModule | null> {
-  if (!workersModulePromise) {
-    workersModulePromise = import("cloudflare:workers")
-      .then((mod) => mod as RequestContextModule)
-      .catch(() => null);
+export function getEnv(): Env {
+  if (cloudflareWorkersModule?.env) {
+    return cloudflareWorkersModule.env;
   }
-  return workersModulePromise;
-}
 
-export async function getEnv(): Promise<Env> {
-  const workersModule = await getWorkersModule();
-  if (workersModule) {
-    return workersModule.getRequestContext().env as Env;
+  if (cloudflareWorkersModule?.getRequestContext) {
+    return cloudflareWorkersModule.getRequestContext().env as Env;
   }
 
   return new Proxy({} as Env, {
