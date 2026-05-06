@@ -8,7 +8,7 @@ import { getEnv } from "@/lib/env";
 import { getAdminSession, setAdminSession, clearAdminSession } from "@/lib/session";
 
 export const checkAdminAuth = createServerFn().handler(async () => {
-  const env = getEnv();
+  const env = await getEnv();
   const session = getAdminSession();
   return { authenticated: session === env.ADMIN_SECRET };
 });
@@ -16,7 +16,7 @@ export const checkAdminAuth = createServerFn().handler(async () => {
 export const adminLogin = createServerFn()
   .validator((password: string) => password)
   .handler(async ({ data: password }) => {
-    const env = getEnv();
+    const env = await getEnv();
     if (password !== env.ADMIN_SECRET) {
       return { ok: false, error: "Incorrect password" };
     }
