@@ -13,14 +13,25 @@ export interface Env {
   ADMIN_SECRET: string;
 }
 
-export function getEnv(): Env {
-  // Try the cloudflare:workers module (available in CF Workers runtime + vite-plugin dev proxy)
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { getRequestContext } = require("cloudflare:workers");
-    return getRequestContext().env as Env;
-  } catch {
-    // Not in a Workers environment — return a proxy that fails loudly on access
+type RequestContextModule = {
+  getRequestContext: () => { env: Env };
+};
+
+let workersModulePromise: Promise<RequestContextModule | null> | null = null;
+
+async function getWorkersModule(): Promise<RequestContextModule | null> {
+  if (!workersModulePromise) {
+    workersModulePromise = import("cloudflare:workers")
+      .then((mod) => mod as RequestContextModule)
+      .catch(() => null);
+  }
+  return workersModulePromise;
+}
+
+export async function getEnv(): Promise<Env> {
+  const workersModule = await getWorkersModule();
+  if (workersModule) {
+    return workersModule.getRequestContext().env as Env;
   }
 
   return new Proxy({} as Env, {

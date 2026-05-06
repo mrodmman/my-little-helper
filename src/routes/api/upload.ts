@@ -14,7 +14,7 @@ export const APIRoute = createAPIFileRoute("/api/upload")({
   POST: async ({ request }) => {
     // Require admin session
     const adminSession = getAdminSession();
-    const env = getEnv();
+    const env = await getEnv();
     if (!adminSession || adminSession !== env.ADMIN_SECRET) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,

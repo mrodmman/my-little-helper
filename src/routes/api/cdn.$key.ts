@@ -12,7 +12,7 @@ export const APIRoute = createAPIFileRoute("/api/cdn/$key")({
       return new Response("Not found", { status: 404 });
     }
 
-    const env = getEnv();
+    const env = await getEnv();
     const object = await env.R2_BUCKET.get(decodeURIComponent(key));
 
     if (!object) {
