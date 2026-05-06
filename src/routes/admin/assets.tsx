@@ -207,7 +207,7 @@ function AssetsManager() {
 
       {filtered.length === 0 && editingId !== "new" && (
         <div className="text-center py-12 text-muted-foreground text-sm">
-          {filterType === "all" ? "No assets found. Click "Add Asset" to create one." : `No ${filterType} assets.`}
+          {filterType === "all" ? "No assets found. Click ‘Add Asset’ to create one." : `No ${filterType} assets.`}
         </div>
       )}
     </div>
