@@ -9,8 +9,8 @@ import {
 } from "lucide-react";
 import {
   getModuleWithLessons, upsertLesson, deleteLesson, reorderLessons, updateModuleImageKey,
-} from "@/server/modules";
-import type { DbLesson } from "@/server/modules";
+} from "@/rpc/modules";
+import type { DbLesson } from "@/rpc/modules";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/admin/modules/$moduleId")({

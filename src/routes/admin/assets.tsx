@@ -6,8 +6,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useTransition } from "react";
 import { Plus, Trash2, Check, X, Edit2, Video, FileText, Link2, Zap } from "lucide-react";
-import { getAllAssets, upsertAsset, deleteAsset } from "@/server/modules";
-import type { DbAsset } from "@/server/modules";
+import { getAllAssets, upsertAsset, deleteAsset } from "@/rpc/modules";
+import type { DbAsset } from "@/rpc/modules";
 import { cn } from "@/lib/utils";
 
 const TYPE_ICONS = {
