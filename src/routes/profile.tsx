@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef, useState, useTransition } from "react";
-import { ArrowLeft, Camera, CheckCircle2, CreditCard, Crown, Mail, User, Bell, Shield, RotateCcw } from "lucide-react";
+import { ArrowLeft, Camera, CheckCircle2, CreditCard, Crown, Mail, User, Bell, Shield, RotateCcw, LogOut } from "lucide-react";
 import { resetAllProgress } from "@/rpc/progress";
 
 export const Route = createFileRoute("/profile")({
