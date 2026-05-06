@@ -10,7 +10,7 @@
     {
       "binding": "DB",
       "database_name": "kraken-vault-db",
-      "database_id": "placeholder-replace-with-real-id"
+      "database_id": "2e1c02c5-4083-4045-bd0d-aa9167196adf"
     }
   ],
   "r2_buckets": [
