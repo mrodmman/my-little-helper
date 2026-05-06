@@ -14,23 +14,6 @@ import type { ModuleProgressSummary } from "@/rpc/progress";
 
 const toDataUri = (svg: string) => `data:image/svg+xml,${encodeURIComponent(svg)}`;
 
-type DbModule = { id: string; image_key: string | null };
-type DbAsset = {
-  id: string;
-  type: string;
-  title: string;
-  description: string | null;
-  url: string | null;
-  body: string | null;
-  filename: string | null;
-  size: string | null;
-  format: string | null;
-  source: string | null;
-  duration: string | null;
-  tags: string | null;
-};
-type ModuleProgressSummary = { module_id: string; completed: number; total: number };
-
 const logo = toDataUri(`
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'>
   <defs>
