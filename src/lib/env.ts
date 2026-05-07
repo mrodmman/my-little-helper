@@ -11,44 +11,22 @@ export interface Env {
   ADMIN_SECRET: string;
 }
 
-type WorkersModule = {
-  getRequestContext?: () => { env: Env };
+type CloudflareWorkersModule = {
   env?: Env;
+  getRequestContext?: () => { env: Env };
 };
 
-// Cached promise — avoids re-importing on every call while staying off the
-// module-level critical path (no top-level await that could break the bundle).
-let _modulePromise: Promise<WorkersModule | null> | undefined;
+const cloudflareWorkersModule: CloudflareWorkersModule | null = await import("cloudflare:workers")
+  .then((mod) => mod as CloudflareWorkersModule)
+  .catch(() => null);
 
-function loadWorkersModule(): Promise<WorkersModule | null> {
-  if (!_modulePromise) {
-    const dynamicImport = new Function("specifier", "return import(specifier)") as (specifier: string) => Promise<WorkersModule>
-    _modulePromise = dynamicImport("cloudflare:workers")
-      .then((m) => m as WorkersModule)
-      .catch(() => null);
-  }
-  return _modulePromise;
-}
-
-export async function getEnv(): Promise<Env> {
-  let mod: WorkersModule | null = null;
-  try {
-    mod = await loadWorkersModule();
-  } catch {
-    // import failed — fall through to proxy
+export function getEnv(): Env {
+  if (cloudflareWorkersModule?.env) {
+    return cloudflareWorkersModule.env;
   }
 
-  // Some CF Workers builds expose env directly on the module
-  if (mod?.env) return mod.env;
-
-  // Standard approach: per-request context
-  if (mod?.getRequestContext) {
-    try {
-      return mod.getRequestContext().env as Env;
-    } catch {
-      // getRequestContext() is only valid inside a request handler;
-      // outside that scope we fall through to the proxy.
-    }
+  if (cloudflareWorkersModule?.getRequestContext) {
+    return cloudflareWorkersModule.getRequestContext().env as Env;
   }
 
   // Outside CF Workers / no active request — return a proxy that fails loudly
