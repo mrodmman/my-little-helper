@@ -10,8 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VaultRouteImport } from './routes/vault'
+import { Route as ThankYouRouteImport } from './routes/thank-you'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as OfferRouteImport } from './routes/offer'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as FunnelRouteImport } from './routes/funnel'
 import { Route as FastTrackRouteImport } from './routes/fast-track'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -26,14 +29,29 @@ const VaultRoute = VaultRouteImport.update({
   path: '/vault',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ThankYouRoute = ThankYouRouteImport.update({
+  id: '/thank-you',
+  path: '/thank-you',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OfferRoute = OfferRouteImport.update({
+  id: '/offer',
+  path: '/offer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FunnelRoute = FunnelRouteImport.update({
+  id: '/funnel',
+  path: '/funnel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FastTrackRoute = FastTrackRouteImport.update({
@@ -81,8 +99,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/fast-track': typeof FastTrackRoute
+  '/funnel': typeof FunnelRoute
   '/login': typeof LoginRoute
+  '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
+  '/thank-you': typeof ThankYouRoute
   '/vault': typeof VaultRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
@@ -93,8 +114,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/fast-track': typeof FastTrackRoute
+  '/funnel': typeof FunnelRoute
   '/login': typeof LoginRoute
+  '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
+  '/thank-you': typeof ThankYouRoute
   '/vault': typeof VaultRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
@@ -107,8 +131,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/fast-track': typeof FastTrackRoute
+  '/funnel': typeof FunnelRoute
   '/login': typeof LoginRoute
+  '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
+  '/thank-you': typeof ThankYouRoute
   '/vault': typeof VaultRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
@@ -122,8 +149,11 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/fast-track'
+    | '/funnel'
     | '/login'
+    | '/offer'
     | '/profile'
+    | '/thank-you'
     | '/vault'
     | '/admin/assets'
     | '/admin/modules'
@@ -134,8 +164,11 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/fast-track'
+    | '/funnel'
     | '/login'
+    | '/offer'
     | '/profile'
+    | '/thank-you'
     | '/vault'
     | '/admin/assets'
     | '/admin/modules'
@@ -147,8 +180,11 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/fast-track'
+    | '/funnel'
     | '/login'
+    | '/offer'
     | '/profile'
+    | '/thank-you'
     | '/vault'
     | '/admin/assets'
     | '/admin/modules'
@@ -161,8 +197,11 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   FastTrackRoute: typeof FastTrackRoute
+  FunnelRoute: typeof FunnelRoute
   LoginRoute: typeof LoginRoute
+  OfferRoute: typeof OfferRoute
   ProfileRoute: typeof ProfileRoute
+  ThankYouRoute: typeof ThankYouRoute
   VaultRoute: typeof VaultRoute
   ModuleModuleIdRoute: typeof ModuleModuleIdRoute
 }
@@ -176,6 +215,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VaultRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/thank-you': {
+      id: '/thank-you'
+      path: '/thank-you'
+      fullPath: '/thank-you'
+      preLoaderRoute: typeof ThankYouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -183,11 +229,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/offer': {
+      id: '/offer'
+      path: '/offer'
+      fullPath: '/offer'
+      preLoaderRoute: typeof OfferRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/funnel': {
+      id: '/funnel'
+      path: '/funnel'
+      fullPath: '/funnel'
+      preLoaderRoute: typeof FunnelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fast-track': {
@@ -279,20 +339,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   FastTrackRoute: FastTrackRoute,
+  FunnelRoute: FunnelRoute,
   LoginRoute: LoginRoute,
+  OfferRoute: OfferRoute,
   ProfileRoute: ProfileRoute,
+  ThankYouRoute: ThankYouRoute,
   VaultRoute: VaultRoute,
   ModuleModuleIdRoute: ModuleModuleIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
