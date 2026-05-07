@@ -1,10 +1,8 @@
 /**
  * Cloudflare Workers environment access.
  *
- * `cloudflare:workers` is a built-in module available in the CF Workers runtime.
- * @cloudflare/vite-plugin proxies it during local dev (`wrangler dev`).
- *
- * Types are provided by @cloudflare/workers-types (devDependency).
+ * Uses cloudflare:workers getRequestContext() to access D1/R2 bindings.
+ * The @cloudflare/vite-plugin externalises this module at build time.
  */
 
 export interface Env {
@@ -31,11 +29,13 @@ export function getEnv(): Env {
     return cloudflareWorkersModule.getRequestContext().env as Env;
   }
 
+  // Outside CF Workers / no active request — return a proxy that fails loudly
+  // on property access so callers get a meaningful error message.
   return new Proxy({} as Env, {
-    get(_, key: string) {
+    get(_: unknown, key: string) {
       throw new Error(
-        `Cloudflare binding "${key}" is not available outside a Cloudflare Worker. ` +
-          "Run via `wrangler dev` or deploy to Cloudflare to access D1/R2 bindings.",
+        `Cloudflare binding "${key}" is not available. ` +
+          "Run via `wrangler dev` or deploy to Cloudflare Workers.",
       );
     },
   });

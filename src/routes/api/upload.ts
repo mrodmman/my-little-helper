@@ -13,8 +13,16 @@ import { getAdminSession } from "@/lib/session";
 export const APIRoute = createAPIFileRoute("/api/upload")({
   POST: async ({ request }) => {
     // Require admin session
+    let env;
+    try {
+      env = await getEnv();
+    } catch {
+      return new Response(JSON.stringify({ error: "Server configuration error" }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
     const adminSession = getAdminSession();
-    const env = getEnv();
     if (!adminSession || adminSession !== env.ADMIN_SECRET) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
