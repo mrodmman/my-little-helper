@@ -129,7 +129,7 @@ function ModulesManager() {
       try {
         const data = JSON.parse(ev.target?.result as string);
         if (!data.modules || !data.lessons) throw new Error("Invalid format");
-        if (!confirm("This will REPLACE all course data. Continue?")) return;
+        if (!confirm("This REPLACES all modules, lessons, assets, and module-asset links in D1. Continue?")) return;
         startTransition(async () => {
           await importCourseJson({ data }).catch((err) => setImportError(String(err)));
           router.invalidate();
@@ -147,7 +147,7 @@ function ModulesManager() {
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Modules</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Drag to reorder · click edit to change title/tagline · toggle visibility</p>
+          <p className="text-sm text-muted-foreground mt-0.5">Drag to reorder · edit metadata + image · toggle visibility</p>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -157,7 +157,7 @@ function ModulesManager() {
             Export JSON
           </button>
           <label className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated px-3 py-2 text-xs font-medium transition-all cursor-pointer">
-            Import JSON
+            Import JSON (Replaces ALL modules/lessons/assets)
             <input type="file" accept=".json" onChange={handleImport} className="sr-only" />
           </label>
         </div>

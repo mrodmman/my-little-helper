@@ -4,7 +4,7 @@
  * Image upload to R2, JSON import/export.
  */
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { Plus, Trash2, Check, X, Edit2, Video, FileText, Link2, Zap } from "lucide-react";
 import { getAllAssets, upsertAsset, deleteAsset } from "@/rpc/modules";
 import type { DbAsset } from "@/rpc/modules";
@@ -45,6 +45,7 @@ function AssetsManager() {
   const [filterType, setFilterType] = useState<string>("all");
   const [, startTransition] = useTransition();
   const [saving, setSaving] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const filtered = filterType === "all" ? assets : assets.filter((a) => a.type === filterType);
 
@@ -89,6 +90,23 @@ function AssetsManager() {
     setDraft((d) => ({ ...d, [field]: value }));
   };
 
+  const handleAssetFileUpload = async (file: File) => {
+    const form = new FormData();
+    form.append("file", file);
+    form.append("prefix", "assets/");
+    const res = await fetch("/api/upload", { method: "POST", body: form });
+    if (!res.ok) { alert("File upload failed"); return; }
+    const { key } = await res.json() as { key: string };
+    setDraft((d) => ({
+      ...d,
+      type: "file",
+      url: `/api/cdn/${encodeURIComponent(key)}`,
+      filename: d.filename || file.name,
+      size: d.size || `${Math.round(file.size / 1024)} KB`,
+      format: d.format || (file.name.split(".").pop()?.toUpperCase() ?? "FILE"),
+    }));
+  };
+
   return (
     <div className="space-y-6 max-w-4xl">
       <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -103,6 +121,11 @@ function AssetsManager() {
         >
           <Plus className="h-4 w-4" /> Add Asset
         </button>
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="inline-flex items-center gap-1.5 rounded-xl border border-border bg-surface/60 px-4 py-2 text-sm font-medium hover:bg-surface-elevated transition-colors"
+        >Upload File Asset</button>
+        <input ref={fileInputRef} type="file" className="hidden" onChange={(e)=>{const f=e.target.files?.[0]; if(f) handleAssetFileUpload(f).catch(console.error); e.currentTarget.value="";}} />
       </div>
 
       {/* Filter tabs */}
