@@ -9,6 +9,7 @@ export interface Env {
   DB: D1Database;
   R2_BUCKET: R2Bucket;
   ADMIN_SECRET: string;
+  RESEND_API_KEY: string;
 }
 
 type CloudflareWorkersModule = {
