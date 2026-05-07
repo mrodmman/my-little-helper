@@ -8,23 +8,35 @@ import { getEnv } from "@/lib/env";
 import { getAdminSession, setAdminSession, clearAdminSession } from "@/lib/session";
 
 export const checkAdminAuth = createServerFn().handler(async () => {
-  const env = getEnv();
-  const session = getAdminSession();
-  return { authenticated: session === env.ADMIN_SECRET };
+  try {
+    const env = await getEnv();
+    const session = getAdminSession();
+    return { authenticated: session === env.ADMIN_SECRET };
+  } catch {
+    return { authenticated: false };
+  }
 });
 
 export const adminLogin = createServerFn()
   .inputValidator((password: string) => password)
   .handler(async ({ data: password }) => {
-    const env = getEnv();
-    if (password !== env.ADMIN_SECRET) {
-      return { ok: false, error: "Incorrect password" };
+    try {
+      const env = await getEnv();
+      if (password !== env.ADMIN_SECRET) {
+        return { ok: false, error: "Incorrect password" };
+      }
+      setAdminSession(env.ADMIN_SECRET);
+      return { ok: true };
+    } catch {
+      return { ok: false, error: "Server error" };
     }
-    setAdminSession(env.ADMIN_SECRET);
-    return { ok: true };
   });
 
 export const adminLogout = createServerFn().handler(async () => {
-  clearAdminSession();
+  try {
+    clearAdminSession();
+  } catch {
+    // silently fail
+  }
   return { ok: true };
 });
