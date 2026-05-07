@@ -20,8 +20,10 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ModuleModuleIdRouteImport } from './routes/module.$moduleId'
+import { Route as ApiUploadRouteImport } from './routes/api/upload'
 import { Route as AdminModulesRouteImport } from './routes/admin/modules'
 import { Route as AdminAssetsRouteImport } from './routes/admin/assets'
+import { Route as ApiCdnKeyRouteImport } from './routes/api/cdn.$key'
 import { Route as AdminModulesModuleIdRouteImport } from './routes/admin/modules.$moduleId'
 
 const VaultRoute = VaultRouteImport.update({
@@ -79,6 +81,11 @@ const ModuleModuleIdRoute = ModuleModuleIdRouteImport.update({
   path: '/module/$moduleId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiUploadRoute = ApiUploadRouteImport.update({
+  id: '/api/upload',
+  path: '/api/upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminModulesRoute = AdminModulesRouteImport.update({
   id: '/modules',
   path: '/modules',
@@ -88,6 +95,11 @@ const AdminAssetsRoute = AdminAssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
   getParentRoute: () => AdminRoute,
+} as any)
+const ApiCdnKeyRoute = ApiCdnKeyRouteImport.update({
+  id: '/api/cdn/$key',
+  path: '/api/cdn/$key',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminModulesModuleIdRoute = AdminModulesModuleIdRouteImport.update({
   id: '/$moduleId',
@@ -107,9 +119,11 @@ export interface FileRoutesByFullPath {
   '/vault': typeof VaultRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
+  '/api/upload': typeof ApiUploadRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
+  '/api/cdn/$key': typeof ApiCdnKeyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -122,9 +136,11 @@ export interface FileRoutesByTo {
   '/vault': typeof VaultRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
+  '/api/upload': typeof ApiUploadRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
   '/admin': typeof AdminIndexRoute
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
+  '/api/cdn/$key': typeof ApiCdnKeyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -139,9 +155,11 @@ export interface FileRoutesById {
   '/vault': typeof VaultRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
+  '/api/upload': typeof ApiUploadRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
+  '/api/cdn/$key': typeof ApiCdnKeyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -157,9 +175,11 @@ export interface FileRouteTypes {
     | '/vault'
     | '/admin/assets'
     | '/admin/modules'
+    | '/api/upload'
     | '/module/$moduleId'
     | '/admin/'
     | '/admin/modules/$moduleId'
+    | '/api/cdn/$key'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -172,9 +192,11 @@ export interface FileRouteTypes {
     | '/vault'
     | '/admin/assets'
     | '/admin/modules'
+    | '/api/upload'
     | '/module/$moduleId'
     | '/admin'
     | '/admin/modules/$moduleId'
+    | '/api/cdn/$key'
   id:
     | '__root__'
     | '/'
@@ -188,9 +210,11 @@ export interface FileRouteTypes {
     | '/vault'
     | '/admin/assets'
     | '/admin/modules'
+    | '/api/upload'
     | '/module/$moduleId'
     | '/admin/'
     | '/admin/modules/$moduleId'
+    | '/api/cdn/$key'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -203,7 +227,9 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   ThankYouRoute: typeof ThankYouRoute
   VaultRoute: typeof VaultRoute
+  ApiUploadRoute: typeof ApiUploadRoute
   ModuleModuleIdRoute: typeof ModuleModuleIdRoute
+  ApiCdnKeyRoute: typeof ApiCdnKeyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -285,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleModuleIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/upload': {
+      id: '/api/upload'
+      path: '/api/upload'
+      fullPath: '/api/upload'
+      preLoaderRoute: typeof ApiUploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/modules': {
       id: '/admin/modules'
       path: '/modules'
@@ -298,6 +331,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/assets'
       preLoaderRoute: typeof AdminAssetsRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/api/cdn/$key': {
+      id: '/api/cdn/$key'
+      path: '/api/cdn/$key'
+      fullPath: '/api/cdn/$key'
+      preLoaderRoute: typeof ApiCdnKeyRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/modules/$moduleId': {
       id: '/admin/modules/$moduleId'
@@ -345,8 +385,19 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   ThankYouRoute: ThankYouRoute,
   VaultRoute: VaultRoute,
+  ApiUploadRoute: ApiUploadRoute,
   ModuleModuleIdRoute: ModuleModuleIdRoute,
+  ApiCdnKeyRoute: ApiCdnKeyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
