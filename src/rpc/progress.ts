@@ -43,7 +43,7 @@ export const loadAllProgress = createServerFn().handler(async () => {
  * Load progress for a single module.
  */
 export const loadModuleProgress = createServerFn()
-  .validator((moduleId: string) => moduleId)
+  .inputValidator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
     const env = getEnv();
     const sessionId = getOrCreateSessionId();
@@ -61,7 +61,7 @@ export const loadModuleProgress = createServerFn()
  * Mark a lesson complete (idempotent).
  */
 export const markLessonComplete = createServerFn()
-  .validator((data: { module_id: string; lesson_idx: number }) => data)
+  .inputValidator((data: { module_id: string; lesson_idx: number }) => data)
   .handler(async ({ data }) => {
     const env = getEnv();
     const sessionId = getOrCreateSessionId();
@@ -79,7 +79,7 @@ export const markLessonComplete = createServerFn()
  * Mark a lesson incomplete.
  */
 export const markLessonIncomplete = createServerFn()
-  .validator((data: { module_id: string; lesson_idx: number }) => data)
+  .inputValidator((data: { module_id: string; lesson_idx: number }) => data)
   .handler(async ({ data }) => {
     const env = getEnv();
     const sessionId = getSessionId();
@@ -98,7 +98,7 @@ export const markLessonIncomplete = createServerFn()
  * Reset all progress for the current session's module.
  */
 export const resetModuleProgress = createServerFn()
-  .validator((moduleId: string) => moduleId)
+  .inputValidator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
     const env = getEnv();
     const sessionId = getSessionId();

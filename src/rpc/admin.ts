@@ -14,7 +14,7 @@ export const checkAdminAuth = createServerFn().handler(async () => {
 });
 
 export const adminLogin = createServerFn()
-  .validator((password: string) => password)
+  .inputValidator((password: string) => password)
   .handler(async ({ data: password }) => {
     const env = getEnv();
     if (password !== env.ADMIN_SECRET) {
