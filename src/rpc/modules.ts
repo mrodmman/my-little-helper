@@ -77,7 +77,7 @@ export const getAllModulesAdmin = createServerFn().handler(async () => {
 });
 
 export const getLessons = createServerFn()
-  .validator((moduleId: string) => moduleId)
+  .inputValidator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
     try {
       const env = await getEnv();
@@ -93,7 +93,7 @@ export const getLessons = createServerFn()
   });
 
 export const getModuleWithLessons = createServerFn()
-  .validator((moduleId: string) => moduleId)
+  .inputValidator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
     try {
       const env = await getEnv();
@@ -121,7 +121,7 @@ export const getAllAssets = createServerFn().handler(async () => {
 });
 
 export const getModuleAssets = createServerFn()
-  .validator((moduleId: string) => moduleId)
+  .inputValidator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
     try {
       const env = await getEnv();
@@ -141,7 +141,7 @@ export const getModuleAssets = createServerFn()
 // ---- Admin write functions ----
 
 export const updateModule = createServerFn()
-  .validator(
+  .inputValidator(
     (data: Partial<Omit<DbModule, "id">> & { id: string }) => data,
   )
   .handler(async ({ data }) => {
@@ -165,7 +165,7 @@ export const updateModule = createServerFn()
   });
 
 export const reorderModules = createServerFn()
-  .validator((ids: string[]) => ids)
+  .inputValidator((ids: string[]) => ids)
   .handler(async ({ data: ids }) => {
     try {
       const env = await getEnv();
@@ -179,7 +179,7 @@ export const reorderModules = createServerFn()
   });
 
 export const deleteModule = createServerFn()
-  .validator((id: string) => id)
+  .inputValidator((id: string) => id)
   .handler(async ({ data: id }) => {
     try {
       const env = await getEnv();
@@ -190,7 +190,7 @@ export const deleteModule = createServerFn()
   });
 
 export const upsertLesson = createServerFn()
-  .validator(
+  .inputValidator(
     (data: { id?: number; module_id: string; idx: number; title: string; content: string }) =>
       data,
   )
@@ -217,7 +217,7 @@ export const upsertLesson = createServerFn()
   });
 
 export const deleteLesson = createServerFn()
-  .validator((id: number) => id)
+  .inputValidator((id: number) => id)
   .handler(async ({ data: id }) => {
     try {
       const env = await getEnv();
@@ -228,7 +228,7 @@ export const deleteLesson = createServerFn()
   });
 
 export const reorderLessons = createServerFn()
-  .validator((ids: number[]) => ids)
+  .inputValidator((ids: number[]) => ids)
   .handler(async ({ data: ids }) => {
     try {
       const env = await getEnv();
@@ -242,7 +242,7 @@ export const reorderLessons = createServerFn()
   });
 
 export const upsertAsset = createServerFn()
-  .validator((data: Partial<DbAsset> & { id: string }) => data)
+  .inputValidator((data: Partial<DbAsset> & { id: string }) => data)
   .handler(async ({ data }) => {
     try {
       const env = await getEnv();
@@ -268,7 +268,7 @@ export const upsertAsset = createServerFn()
   });
 
 export const deleteAsset = createServerFn()
-  .validator((id: string) => id)
+  .inputValidator((id: string) => id)
   .handler(async ({ data: id }) => {
     try {
       const env = await getEnv();
@@ -279,7 +279,7 @@ export const deleteAsset = createServerFn()
   });
 
 export const upsertModuleAsset = createServerFn()
-  .validator(
+  .inputValidator(
     (data: { module_id: string; asset_id: string; lesson_idx: number | null }) => data,
   )
   .handler(async ({ data }) => {
@@ -296,7 +296,7 @@ export const upsertModuleAsset = createServerFn()
   });
 
 export const deleteModuleAsset = createServerFn()
-  .validator((id: number) => id)
+  .inputValidator((id: number) => id)
   .handler(async ({ data: id }) => {
     try {
       const env = await getEnv();
@@ -329,7 +329,7 @@ export const exportCourseJson = createServerFn().handler(async () => {
 });
 
 export const importCourseJson = createServerFn()
-  .validator(
+  .inputValidator(
     (data: {
       modules: DbModule[];
       lessons: DbLesson[];
@@ -382,7 +382,7 @@ export const importCourseJson = createServerFn()
   });
 
 export const updateModuleImageKey = createServerFn()
-  .validator((data: { module_id: string; image_key: string }) => data)
+  .inputValidator((data: { module_id: string; image_key: string }) => data)
   .handler(async ({ data }) => {
     try {
       const env = await getEnv();

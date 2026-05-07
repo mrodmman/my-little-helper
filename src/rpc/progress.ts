@@ -39,7 +39,7 @@ export const loadAllProgress = createServerFn().handler(async () => {
 });
 
 export const loadModuleProgress = createServerFn()
-  .validator((moduleId: string) => moduleId)
+  .inputValidator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
     try {
       const env = await getEnv();
@@ -58,7 +58,7 @@ export const loadModuleProgress = createServerFn()
   });
 
 export const markLessonComplete = createServerFn()
-  .validator((data: { module_id: string; lesson_idx: number }) => data)
+  .inputValidator((data: { module_id: string; lesson_idx: number }) => data)
   .handler(async ({ data }) => {
     try {
       const env = await getEnv();
@@ -77,7 +77,7 @@ export const markLessonComplete = createServerFn()
   });
 
 export const markLessonIncomplete = createServerFn()
-  .validator((data: { module_id: string; lesson_idx: number }) => data)
+  .inputValidator((data: { module_id: string; lesson_idx: number }) => data)
   .handler(async ({ data }) => {
     try {
       const env = await getEnv();
@@ -97,7 +97,7 @@ export const markLessonIncomplete = createServerFn()
   });
 
 export const resetModuleProgress = createServerFn()
-  .validator((moduleId: string) => moduleId)
+  .inputValidator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
     try {
       const env = await getEnv();
