@@ -69,7 +69,7 @@ export const getAllModulesAdmin = createServerFn().handler(async () => {
 });
 
 export const getLessons = createServerFn()
-  .validator((moduleId: string) => moduleId)
+  .inputValidator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
     const env = getEnv();
     const { results } = await env.DB.prepare(
@@ -81,7 +81,7 @@ export const getLessons = createServerFn()
   });
 
 export const getModuleWithLessons = createServerFn()
-  .validator((moduleId: string) => moduleId)
+  .inputValidator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
     const env = getEnv();
     const [modRow, lessonsRes] = await Promise.all([
@@ -101,7 +101,7 @@ export const getAllAssets = createServerFn().handler(async () => {
 });
 
 export const getModuleAssets = createServerFn()
-  .validator((moduleId: string) => moduleId)
+  .inputValidator((moduleId: string) => moduleId)
   .handler(async ({ data: moduleId }) => {
     const env = getEnv();
     const { results } = await env.DB.prepare(
@@ -117,7 +117,7 @@ export const getModuleAssets = createServerFn()
 // ---- Admin write functions ----
 
 export const updateModule = createServerFn()
-  .validator(
+  .inputValidator(
     (data: Partial<Omit<DbModule, "id">> & { id: string }) => data,
   )
   .handler(async ({ data }) => {
@@ -137,7 +137,7 @@ export const updateModule = createServerFn()
   });
 
 export const reorderModules = createServerFn()
-  .validator((ids: string[]) => ids)
+  .inputValidator((ids: string[]) => ids)
   .handler(async ({ data: ids }) => {
     const env = getEnv();
     const stmts = ids.map((id, i) =>
@@ -147,14 +147,14 @@ export const reorderModules = createServerFn()
   });
 
 export const deleteModule = createServerFn()
-  .validator((id: string) => id)
+  .inputValidator((id: string) => id)
   .handler(async ({ data: id }) => {
     const env = getEnv();
     await env.DB.prepare("DELETE FROM modules WHERE id = ?").bind(id).run();
   });
 
 export const upsertLesson = createServerFn()
-  .validator(
+  .inputValidator(
     (data: { id?: number; module_id: string; idx: number; title: string; content: string }) =>
       data,
   )
@@ -177,14 +177,14 @@ export const upsertLesson = createServerFn()
   });
 
 export const deleteLesson = createServerFn()
-  .validator((id: number) => id)
+  .inputValidator((id: number) => id)
   .handler(async ({ data: id }) => {
     const env = getEnv();
     await env.DB.prepare("DELETE FROM lessons WHERE id = ?").bind(id).run();
   });
 
 export const reorderLessons = createServerFn()
-  .validator((ids: number[]) => ids)
+  .inputValidator((ids: number[]) => ids)
   .handler(async ({ data: ids }) => {
     const env = getEnv();
     const stmts = ids.map((id, i) =>
@@ -194,7 +194,7 @@ export const reorderLessons = createServerFn()
   });
 
 export const upsertAsset = createServerFn()
-  .validator((data: Partial<DbAsset> & { id: string }) => data)
+  .inputValidator((data: Partial<DbAsset> & { id: string }) => data)
   .handler(async ({ data }) => {
     const env = getEnv();
     await env.DB.prepare(
@@ -216,14 +216,14 @@ export const upsertAsset = createServerFn()
   });
 
 export const deleteAsset = createServerFn()
-  .validator((id: string) => id)
+  .inputValidator((id: string) => id)
   .handler(async ({ data: id }) => {
     const env = getEnv();
     await env.DB.prepare("DELETE FROM assets WHERE id = ?").bind(id).run();
   });
 
 export const upsertModuleAsset = createServerFn()
-  .validator(
+  .inputValidator(
     (data: { module_id: string; asset_id: string; lesson_idx: number | null }) => data,
   )
   .handler(async ({ data }) => {
@@ -236,7 +236,7 @@ export const upsertModuleAsset = createServerFn()
   });
 
 export const deleteModuleAsset = createServerFn()
-  .validator((id: number) => id)
+  .inputValidator((id: number) => id)
   .handler(async ({ data: id }) => {
     const env = getEnv();
     await env.DB.prepare("DELETE FROM module_assets WHERE id = ?").bind(id).run();
@@ -261,7 +261,7 @@ export const exportCourseJson = createServerFn().handler(async () => {
 });
 
 export const importCourseJson = createServerFn()
-  .validator(
+  .inputValidator(
     (data: {
       modules: DbModule[];
       lessons: DbLesson[];
@@ -310,7 +310,7 @@ export const importCourseJson = createServerFn()
   });
 
 export const updateModuleImageKey = createServerFn()
-  .validator((data: { module_id: string; image_key: string }) => data)
+  .inputValidator((data: { module_id: string; image_key: string }) => data)
   .handler(async ({ data }) => {
     const env = getEnv();
     await env.DB.prepare("UPDATE modules SET image_key = ? WHERE id = ?")
