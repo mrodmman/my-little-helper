@@ -1,1 +1,3 @@
-export { getStartManifest as getRouterManifest } from '@tanstack/start-server-core';
+import { getStartManifest } from "../../node_modules/@tanstack/start-server-core/dist/esm/router-manifest.js";
+
+export const getRouterManifest = getStartManifest;

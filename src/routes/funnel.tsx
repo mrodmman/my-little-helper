@@ -1,58 +1,102 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   ArrowRight,
-  CheckCircle2,
   Zap,
   Mail,
   ShieldCheck,
-  Sparkles,
   AlertTriangle,
-  Layers,
   Compass,
-  Quote,
+  Layers,
+  Clock,
+  CheckCircle2,
+  Calendar,
+  Rocket,
 } from "lucide-react";
 
 export const Route = createFileRoute("/funnel")({ component: FunnelPage });
+
+const PAINS = [
+  "Too many tools, none of them connected",
+  "No clear order — what do I even build first?",
+  "Guru content that sells the dream and skips the steps",
+  "Burned out before you ship anything real",
+];
+
+const COLUMNS = [
+  {
+    icon: Compass,
+    title: "A clear path",
+    body: "One sequence. You always know what step you're on and what comes next. No more scrolling YouTube at 11pm hoping for a sign.",
+  },
+  {
+    icon: Layers,
+    title: "Real assets",
+    body: "Funnel, email list, automation. You build things that exist after you close the laptop — not notebooks full of tactics.",
+  },
+  {
+    icon: Clock,
+    title: "Built for tired people",
+    body: "Designed for nights, lunch breaks, and exhausted weekends. 45 minutes a day is enough when the order is right.",
+  },
+];
+
+const DAY1 = [
+  {
+    icon: Rocket,
+    title: "Day 1 action",
+    body: "One specific move you can do tonight. Not theory. Not warm-up. The real first rep.",
+  },
+  {
+    icon: Calendar,
+    title: "The full 7-day plan",
+    body: "Every day mapped out. One action, ~45 minutes, no decisions to make about what to do next.",
+  },
+  {
+    icon: Zap,
+    title: "No waiting — instant access",
+    body: "It hits your inbox in under a minute. Open it, read Day 1, do the thing. That's the whole loop.",
+  },
+];
 
 function FunnelPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
 
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    navigate({ to: "/thank-you", search: { email, name } as never });
+  };
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       {/* HERO */}
-      <section className="relative overflow-hidden px-6 pt-20 pb-16 md:pt-28 md:pb-24">
-        <div className="absolute inset-0 -z-10 opacity-60"
-          style={{
-            background:
-              "radial-gradient(ellipse at 15% 0%, oklch(0.45 0.2 245 / 0.35), transparent 55%), radial-gradient(ellipse at 85% 20%, oklch(0.55 0.22 285 / 0.25), transparent 55%)",
-          }}
-        />
+      <section className="relative overflow-hidden px-6 pt-16 pb-20 md:pt-24">
         <div className="mx-auto max-w-6xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs uppercase tracking-[0.22em] text-primary">
-            <Sparkles className="h-3.5 w-3.5" /> Free training
+          <div className="inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
+            Free Resource · Kraken Vault
           </div>
 
-          <div className="mt-6 grid gap-12 md:grid-cols-2 md:items-center">
+          <div className="mt-6 grid gap-12 md:grid-cols-2 md:items-start">
             <div>
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.05]">
-                Stop collecting courses.{" "}
-                <span className="text-gradient">Start building a system.</span>
+              <h1 className="font-display uppercase text-4xl md:text-6xl font-black tracking-tight leading-[0.95] text-white">
+                You already work hard every day.{" "}
+                <span className="text-primary">None of it is yours yet.</span>
               </h1>
-              <p className="mt-5 text-lg text-muted-foreground max-w-xl">
-                A no-fluff blueprint for beginners who are tired of guru noise, drowning in tools,
-                and just want a clear path from zero to a working online business.
+              <p className="mt-6 text-lg text-muted-foreground max-w-xl leading-relaxed">
+                A no-fluff 7-day jumpstart for people who are tired of working for someone else's
+                business. 45 minutes a day. Built for real life.
               </p>
 
-              <ul className="mt-6 grid gap-2 text-sm text-foreground/80">
+              <ul className="mt-8 grid gap-2.5 text-sm text-foreground/85">
                 {[
-                  "The 3-step income system, broken down step by step",
-                  "Skip the tool overwhelm — only what you actually need",
-                  "Built for real life, not 14-hour content sprints",
+                  "One action per day — not a curriculum",
+                  "Beginner-proof tools (mostly free tiers)",
+                  "Built for nights, lunch breaks, exhausted weekends",
                 ].map((b) => (
-                  <li key={b} className="flex items-start gap-2">
+                  <li key={b} className="flex items-start gap-2.5">
                     <CheckCircle2 className="h-4 w-4 mt-0.5 text-primary shrink-0" />
                     <span>{b}</span>
                   </li>
@@ -62,65 +106,55 @@ function FunnelPage() {
 
             {/* FORM CARD */}
             <div className="relative">
-              <div className="glass-card border-glow rounded-2xl p-6 md:p-8 shadow-glow">
-                <div className="text-xs uppercase tracking-[0.2em] text-primary mb-2">
-                  Instant access
-                </div>
-                <h2 className="text-2xl font-semibold tracking-tight">
-                  Get the Kraken 3-Step System
+              <div className="rounded-lg border border-[#1f1f1f] bg-surface p-6 md:p-8 shadow-glow">
+                <h2 className="font-display uppercase text-2xl font-black tracking-tight text-white">
+                  Get Instant Access
                 </h2>
-                <p className="mt-1.5 text-sm text-muted-foreground">
-                  Quickstart guide + checklists. Delivered to your inbox in under a minute.
+                <p className="mt-2 text-sm text-muted-foreground">
+                  The 7-Day Affiliate Jumpstart — delivered to your inbox in under a minute.
                 </p>
 
-                <form
-                  className="mt-6 grid gap-3"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (!email.trim()) return;
-                    navigate({ to: "/thank-you", search: { email, name } as never });
-                  }}
-                >
+                <form className="mt-6 grid gap-3" onSubmit={onSubmit}>
                   <label className="grid gap-1.5">
-                    <span className="text-xs text-muted-foreground">First name</span>
+                    <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                      First name
+                    </span>
                     <input
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Alex"
-                      className="rounded-xl border border-border bg-surface/60 px-4 py-3 text-sm outline-none focus:border-primary/50 focus:ring-2 focus:ring-ring"
+                      className="rounded-md border border-[#222] bg-[#0d0d0d] px-4 py-3 text-sm text-white outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                     />
                   </label>
                   <label className="grid gap-1.5">
-                    <span className="text-xs text-muted-foreground">Best email</span>
+                    <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
+                      Best email
+                    </span>
                     <input
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       type="email"
                       required
                       placeholder="you@domain.com"
-                      className="rounded-xl border border-border bg-surface/60 px-4 py-3 text-sm outline-none focus:border-primary/50 focus:ring-2 focus:ring-ring"
+                      className="rounded-md border border-[#222] bg-[#0d0d0d] px-4 py-3 text-sm text-white outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                     />
                   </label>
                   <button
                     type="submit"
-                    className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-primary text-primary-foreground px-5 py-3.5 font-semibold shadow-glow hover:opacity-95 transition-opacity"
+                    className="mt-2 inline-flex items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground px-5 py-3.5 text-sm font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition"
                   >
-                    Send me the system <ArrowRight className="h-4 w-4" />
+                    Send me the jumpstart <ArrowRight className="h-4 w-4" />
                   </button>
                 </form>
 
-                {/* TRUST ROW */}
-                <div className="mt-5 grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] text-muted-foreground">
-                  {[
-                    { icon: Zap, label: "Instant access" },
-                    { icon: Mail, label: "No spam" },
-                    { icon: ShieldCheck, label: "100% free" },
-                    { icon: Sparkles, label: "Beginner-friendly" },
-                  ].map(({ icon: Icon, label }) => (
-                    <div key={label} className="flex items-center gap-1.5 rounded-lg border border-border bg-surface/40 px-2.5 py-2">
-                      <Icon className="h-3.5 w-3.5 text-primary" /> {label}
-                    </div>
-                  ))}
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
+                  <span className="inline-flex items-center gap-1"><Zap className="h-3 w-3 text-primary" /> Instant access</span>
+                  <span className="opacity-40">·</span>
+                  <span className="inline-flex items-center gap-1"><Mail className="h-3 w-3 text-primary" /> No spam</span>
+                  <span className="opacity-40">·</span>
+                  <span className="inline-flex items-center gap-1"><ShieldCheck className="h-3 w-3 text-primary" /> 100% free</span>
+                  <span className="opacity-40">·</span>
+                  <span>Built for beginners</span>
                 </div>
               </div>
             </div>
@@ -128,41 +162,52 @@ function FunnelPage() {
         </div>
       </section>
 
-      {/* BENEFITS */}
-      <section className="px-6 py-16">
+      {/* SOUND FAMILIAR */}
+      <section className="px-6 py-20 border-t border-[#1a1a1a]">
         <div className="mx-auto max-w-6xl">
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-              Less noise. <span className="text-gradient">More signal.</span>
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-destructive">
+              <AlertTriangle className="h-3.5 w-3.5" /> Sound familiar?
+            </div>
+            <h2 className="mt-5 font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-white">
+              You've been working. <span className="text-primary">Just not on anything that's yours.</span>
             </h2>
-            <p className="mt-3 text-muted-foreground">
-              Three things you actually walk away with — not 47 tabs and a headache.
+          </div>
+
+          <div className="mt-10 grid gap-4 sm:grid-cols-2">
+            {PAINS.map((p) => (
+              <div key={p} className="rounded-lg border border-[#1f1f1f] bg-surface p-5 flex items-start gap-3">
+                <span className="mt-1 h-2 w-2 rounded-full bg-destructive shrink-0" />
+                <span className="text-[15px] text-foreground/90">{p}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SYSTEM PROBLEM */}
+      <section className="px-6 py-20 border-t border-[#1a1a1a]">
+        <div className="mx-auto max-w-6xl">
+          <div className="max-w-3xl">
+            <h2 className="font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-white">
+              You don't have a motivation problem.{" "}
+              <span className="text-primary">You have a system problem.</span>
+            </h2>
+            <p className="mt-5 text-lg text-muted-foreground leading-relaxed">
+              You've watched the videos. You've taken the notes. You've opened 12 tools and finished
+              none of them. It's not you — it's the missing blueprint.
             </p>
           </div>
 
-          <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {[
-              {
-                icon: Compass,
-                title: "A clear path",
-                body: "Know exactly what step you're on and what comes next. No more random YouTube spirals.",
-              },
-              {
-                icon: Layers,
-                title: "Real assets",
-                body: "Funnel, email, automation — built once, working in the background while you sleep.",
-              },
-              {
-                icon: Zap,
-                title: "Built for tired people",
-                body: "Designed for nights and weekends. Small wins that compound, not burnout sprints.",
-              },
-            ].map(({ icon: Icon, title, body }) => (
-              <div key={title} className="glass-card glass-card-hover rounded-2xl p-6">
-                <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary">
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {COLUMNS.map(({ icon: Icon, title, body }) => (
+              <div key={title} className="rounded-lg border border-[#1f1f1f] bg-surface p-6">
+                <div className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-primary/15 text-primary">
                   <Icon className="h-5 w-5" />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold">{title}</h3>
+                <h3 className="mt-4 font-display uppercase text-lg font-black tracking-tight text-white">
+                  {title}
+                </h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{body}</p>
               </div>
             ))}
@@ -170,104 +215,48 @@ function FunnelPage() {
         </div>
       </section>
 
-      {/* SOCIAL PROOF */}
-      <section className="px-6 py-12">
-        <div className="mx-auto max-w-4xl">
-          <div className="glass-card border-glow rounded-2xl p-8 md:p-10 relative">
-            <Quote className="absolute -top-3 left-6 h-6 w-6 text-primary bg-background rounded-full p-1 border border-border" />
-            <p className="text-lg md:text-xl leading-relaxed text-foreground/90">
-              “I bought five courses and built nothing. This was the first time I actually finished
-              a setup — funnel, email, automation — in one weekend. Felt like cheating.”
-            </p>
-            <div className="mt-5 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-gradient-primary" />
-              <div className="text-sm">
-                <div className="font-semibold">Reader of the system</div>
-                <div className="text-muted-foreground text-xs">Beginner · built first funnel in 2 weekends</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* PAIN */}
-      <section className="px-6 py-16">
-        <div className="mx-auto max-w-6xl grid gap-10 md:grid-cols-2 md:items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-destructive/30 bg-destructive/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-destructive">
-              <AlertTriangle className="h-3.5 w-3.5" /> Sound familiar?
-            </div>
-            <h2 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight">
-              You don't have a motivation problem.{" "}
-              <span className="text-gradient">You have a system problem.</span>
-            </h2>
-            <p className="mt-4 text-muted-foreground">
-              You've watched the videos. You've taken the notes. You've opened 12 tools and finished
-              none of them. It's not you — it's the missing blueprint.
-            </p>
-          </div>
-          <div className="grid gap-3">
-            {[
-              "Too many tools, none of them connected",
-              "No clear order — what do I even build first?",
-              "Guru content that sells the dream and skips the steps",
-              "Burned out before you ship anything real",
-            ].map((p) => (
-              <div key={p} className="flex items-start gap-3 rounded-xl border border-border bg-surface/40 p-4">
-                <span className="mt-1 h-2 w-2 rounded-full bg-destructive shrink-0" />
-                <span className="text-sm text-foreground/85">{p}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SOLUTION */}
-      <section className="px-6 py-16">
+      {/* WHAT YOU GET */}
+      <section className="px-6 py-20 border-t border-[#1a1a1a]">
         <div className="mx-auto max-w-6xl">
-          <div className="text-center max-w-2xl mx-auto">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-primary">
-              <Sparkles className="h-3.5 w-3.5" /> The reframe
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
+              What you get on day 1
             </div>
-            <h2 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight">
-              One path. <span className="text-gradient">Three systems.</span> Done.
+            <h2 className="mt-5 font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-white">
+              Open the email. <span className="text-primary">Do the thing.</span>
             </h2>
-            <p className="mt-3 text-muted-foreground">
-              Forget the 90-video curriculum. You're going to build three things — and they'll keep
-              working for you long after you close the laptop.
-            </p>
           </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {[
-              { n: "01", title: "Funnel", body: "A simple page that turns a stranger into a subscriber." },
-              { n: "02", title: "Email", body: "An automated welcome sequence that builds trust on autopilot." },
-              { n: "03", title: "Automation", body: "Plumbing that connects everything so you don't babysit it." },
-            ].map((s) => (
-              <div key={s.n} className="glass-card rounded-2xl p-6 relative">
-                <div className="text-xs font-mono text-primary">{s.n}</div>
-                <h3 className="mt-2 text-xl font-semibold">{s.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{s.body}</p>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {DAY1.map(({ icon: Icon, title, body }) => (
+              <div key={title} className="rounded-lg border border-[#1f1f1f] bg-surface p-6">
+                <div className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-primary/15 text-primary">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 font-display uppercase text-lg font-black tracking-tight text-white">
+                  {title}
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{body}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-12 text-center">
-            <a
-              href="#top"
-              onClick={(e) => {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-              className="inline-flex items-center gap-2 rounded-xl bg-gradient-primary text-primary-foreground px-6 py-3.5 font-semibold shadow-glow hover:opacity-95 transition-opacity"
+          {/* repeated CTA */}
+          <div className="mt-14 rounded-lg border border-[#1f1f1f] bg-surface p-8 md:p-10 text-center shadow-glow">
+            <h3 className="font-display uppercase text-2xl md:text-3xl font-black tracking-tight text-white">
+              Ready to build something <span className="text-primary">that's actually yours?</span>
+            </h3>
+            <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
+              Drop your email. Day 1 hits your inbox in under a minute.
+            </p>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground px-6 py-3.5 text-sm font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition"
             >
-              Get the free system <ArrowRight className="h-4 w-4" />
-            </a>
-            <div className="mt-4 text-xs text-muted-foreground">
-              Already inside?{" "}
-              <Link to="/login" className="text-primary underline-offset-4 hover:underline">
-                Sign in
-              </Link>
+              Send me the jumpstart <ArrowRight className="h-4 w-4" />
+            </button>
+            <div className="mt-4 text-[11px] uppercase tracking-wider text-muted-foreground">
+              Instant access · No spam · 100% free · Built for beginners
             </div>
           </div>
         </div>

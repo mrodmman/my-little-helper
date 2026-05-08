@@ -10,10 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VaultRouteImport } from './routes/vault'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as ThankYouRouteImport } from './routes/thank-you'
+import { Route as SubscribeRouteImport } from './routes/subscribe'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OfferRouteImport } from './routes/offer'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as JumpstartRouteImport } from './routes/jumpstart'
 import { Route as FunnelRouteImport } from './routes/funnel'
 import { Route as FastTrackRouteImport } from './routes/fast-track'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -31,9 +34,19 @@ const VaultRoute = VaultRouteImport.update({
   path: '/vault',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ThankYouRoute = ThankYouRouteImport.update({
   id: '/thank-you',
   path: '/thank-you',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubscribeRoute = SubscribeRouteImport.update({
+  id: '/subscribe',
+  path: '/subscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -49,6 +62,11 @@ const OfferRoute = OfferRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JumpstartRoute = JumpstartRouteImport.update({
+  id: '/jumpstart',
+  path: '/jumpstart',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FunnelRoute = FunnelRouteImport.update({
@@ -112,10 +130,13 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
+  '/jumpstart': typeof JumpstartRoute
   '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
+  '/subscribe': typeof SubscribeRoute
   '/thank-you': typeof ThankYouRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/vault': typeof VaultRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
@@ -129,10 +150,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
+  '/jumpstart': typeof JumpstartRoute
   '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
+  '/subscribe': typeof SubscribeRoute
   '/thank-you': typeof ThankYouRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/vault': typeof VaultRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
@@ -148,10 +172,13 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
+  '/jumpstart': typeof JumpstartRoute
   '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
+  '/subscribe': typeof SubscribeRoute
   '/thank-you': typeof ThankYouRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/vault': typeof VaultRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
@@ -168,10 +195,13 @@ export interface FileRouteTypes {
     | '/admin'
     | '/fast-track'
     | '/funnel'
+    | '/jumpstart'
     | '/login'
     | '/offer'
     | '/profile'
+    | '/subscribe'
     | '/thank-you'
+    | '/unsubscribe'
     | '/vault'
     | '/admin/assets'
     | '/admin/modules'
@@ -185,10 +215,13 @@ export interface FileRouteTypes {
     | '/'
     | '/fast-track'
     | '/funnel'
+    | '/jumpstart'
     | '/login'
     | '/offer'
     | '/profile'
+    | '/subscribe'
     | '/thank-you'
+    | '/unsubscribe'
     | '/vault'
     | '/admin/assets'
     | '/admin/modules'
@@ -203,10 +236,13 @@ export interface FileRouteTypes {
     | '/admin'
     | '/fast-track'
     | '/funnel'
+    | '/jumpstart'
     | '/login'
     | '/offer'
     | '/profile'
+    | '/subscribe'
     | '/thank-you'
+    | '/unsubscribe'
     | '/vault'
     | '/admin/assets'
     | '/admin/modules'
@@ -222,10 +258,13 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   FastTrackRoute: typeof FastTrackRoute
   FunnelRoute: typeof FunnelRoute
+  JumpstartRoute: typeof JumpstartRoute
   LoginRoute: typeof LoginRoute
   OfferRoute: typeof OfferRoute
   ProfileRoute: typeof ProfileRoute
+  SubscribeRoute: typeof SubscribeRoute
   ThankYouRoute: typeof ThankYouRoute
+  UnsubscribeRoute: typeof UnsubscribeRoute
   VaultRoute: typeof VaultRoute
   ApiUploadRoute: typeof ApiUploadRoute
   ModuleModuleIdRoute: typeof ModuleModuleIdRoute
@@ -241,11 +280,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VaultRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/thank-you': {
       id: '/thank-you'
       path: '/thank-you'
       fullPath: '/thank-you'
       preLoaderRoute: typeof ThankYouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscribe': {
+      id: '/subscribe'
+      path: '/subscribe'
+      fullPath: '/subscribe'
+      preLoaderRoute: typeof SubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -267,6 +320,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jumpstart': {
+      id: '/jumpstart'
+      path: '/jumpstart'
+      fullPath: '/jumpstart'
+      preLoaderRoute: typeof JumpstartRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/funnel': {
@@ -380,10 +440,13 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   FastTrackRoute: FastTrackRoute,
   FunnelRoute: FunnelRoute,
+  JumpstartRoute: JumpstartRoute,
   LoginRoute: LoginRoute,
   OfferRoute: OfferRoute,
   ProfileRoute: ProfileRoute,
+  SubscribeRoute: SubscribeRoute,
   ThankYouRoute: ThankYouRoute,
+  UnsubscribeRoute: UnsubscribeRoute,
   VaultRoute: VaultRoute,
   ApiUploadRoute: ApiUploadRoute,
   ModuleModuleIdRoute: ModuleModuleIdRoute,
@@ -392,12 +455,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
