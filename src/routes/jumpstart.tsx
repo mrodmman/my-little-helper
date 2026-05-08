@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 
-export const Route = createFileRoute("/jumpstart")({ component: JumpstartPage });
+export const Route = createFileRoute("/jumpstart")({
+  component: JumpstartPage,
+});
 
 const DAYS = [
   {
@@ -77,44 +79,44 @@ function JumpstartPage() {
           <div className="inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
             Free Resource · Kraken Vault
           </div>
-          <h1 className="mt-6 font-display uppercase text-4xl md:text-6xl font-black tracking-tight leading-[0.95] text-white">
+          <h1 className="mt-6 font-display text-4xl font-black uppercase leading-[0.95] tracking-tight text-white md:text-6xl">
             Your <span className="text-primary">7-Day Affiliate</span> Jumpstart
           </h1>
-          <p className="mt-5 text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            One action per day. 45 minutes max. By day 7 you'll have the foundation of a real
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+            One action per day. 45 minutes max. By day 7 you&apos;ll have the foundation of a real
             affiliate system running.
           </p>
-          <p className="mt-5 text-base text-muted-foreground max-w-2xl leading-relaxed">
-            This isn't theory. Each day is one specific move. Do the thing, close the laptop, go
-            live your life. The system builds while you're not looking.
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
+            This isn&apos;t theory. Each day is one specific move. Do the thing, close the laptop, go
+            live your life. The system builds while you&apos;re not looking.
           </p>
         </div>
       </section>
 
       <section className="px-6 py-10">
-        <div className="mx-auto max-w-4xl grid gap-4">
-          {DAYS.map((d) => (
+        <div className="mx-auto grid max-w-4xl gap-4">
+          {DAYS.map((day) => (
             <div
-              key={d.n}
-              className="rounded-lg border border-[#1f1f1f] bg-surface p-6 md:p-7 grid md:grid-cols-[auto_1fr] gap-5 md:gap-7"
+              key={day.n}
+              className="grid gap-5 rounded-lg border border-[#1f1f1f] bg-surface p-6 md:grid-cols-[auto_1fr] md:gap-7 md:p-7"
             >
-              <div className="flex md:flex-col items-center md:items-start gap-3 md:gap-1 md:min-w-[110px]">
+              <div className="flex items-center gap-3 md:min-w-[110px] md:flex-col md:items-start md:gap-1">
                 <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
                   Day
                 </div>
-                <div className="font-display text-5xl md:text-6xl font-black leading-none text-primary">
-                  {d.n}
+                <div className="font-display text-5xl font-black leading-none text-primary md:text-6xl">
+                  {day.n}
                 </div>
               </div>
               <div className="md:border-l md:border-[#1f1f1f] md:pl-7">
-                <h2 className="font-display uppercase text-xl md:text-2xl font-black tracking-tight text-white">
-                  {d.title}
+                <h2 className="font-display text-xl font-black uppercase tracking-tight text-white md:text-2xl">
+                  {day.title}
                 </h2>
                 <ul className="mt-4 space-y-2.5">
-                  {d.bullets.map((b) => (
-                    <li key={b} className="flex items-start gap-2.5 text-[15px] text-foreground/85 leading-relaxed">
-                      <span className="mt-2 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
-                      {b}
+                  {day.bullets.map((bullet) => (
+                    <li key={bullet} className="flex items-start gap-2.5 text-[15px] leading-relaxed text-foreground/85">
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                      {bullet}
                     </li>
                   ))}
                 </ul>
@@ -124,23 +126,21 @@ function JumpstartPage() {
         </div>
       </section>
 
-      {/* UPSELL */}
       <section className="px-6 pb-24 pt-10">
-        <div className="mx-auto max-w-4xl rounded-lg border border-[#1f1f1f] bg-surface p-8 md:p-12 shadow-glow">
-          <h2 className="font-display uppercase text-3xl md:text-4xl font-black tracking-tight leading-[1] text-white">
-            That's the foundation.{" "}
-            <span className="text-primary">The Vault builds the full machine.</span>
+        <div className="mx-auto max-w-4xl rounded-lg border border-[#1f1f1f] bg-surface p-8 shadow-glow md:p-12">
+          <h2 className="font-display text-3xl font-black uppercase leading-[1] tracking-tight text-white md:text-4xl">
+            That&apos;s the foundation. <span className="text-primary">The Vault builds the full machine.</span>
           </h2>
-          <p className="mt-5 text-muted-foreground leading-relaxed max-w-2xl">
+          <p className="mt-5 max-w-2xl leading-relaxed text-muted-foreground">
             The Kraken Vault takes everything you just set up and turns it into a complete
             connected system — automation, traffic, offers, DMs, promotion. One path. No
             guesswork.
           </p>
           <Link
             to="/offer"
-            className="mt-7 inline-flex items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground px-6 py-3.5 text-sm font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition"
+            className="mt-7 inline-flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-3.5 text-sm font-black uppercase tracking-wider text-primary-foreground shadow-glow transition hover:brightness-110"
           >
-            See what's inside the Vault <ArrowRight className="h-4 w-4" />
+            See what&apos;s inside the Vault <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
