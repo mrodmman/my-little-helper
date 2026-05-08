@@ -1,1 +1,1 @@
-export { getRouterManifest } from '@tanstack/start-server-core';
+export { getStartManifest as getRouterManifest } from '@tanstack/start-server-core';
