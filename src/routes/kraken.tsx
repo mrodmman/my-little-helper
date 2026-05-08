@@ -145,16 +145,6 @@ function HeroSection() {
               </a>
             </div>
 
-            <div className="mt-10 flex flex-wrap gap-2">
-              {["AI Workflows", "Funnels", "Automation", "Content Systems", "Lead Gen"].map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-[#1f1f1f] bg-surface/50 px-3 py-1 text-[11px] text-muted-foreground uppercase tracking-wider"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
           </div>
 
           <div className="relative flex items-center justify-center lg:justify-end">
