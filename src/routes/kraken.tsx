@@ -122,13 +122,12 @@ function HeroSection() {
             </div>
 
             <h1 className="font-display uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.92] text-white">
-              Stop piecing<br />together tactics.
-              <br />
-              <span className="text-gradient">Build a real system.</span>
+              Build systems that grow your{" "}
+              <span className="text-gradient">business, audience,<br />and income.</span>
             </h1>
 
             <p className="mt-7 text-lg text-muted-foreground leading-relaxed max-w-lg">
-              AI, automation, funnels, and content — connected into one machine that works without requiring more of your time.
+              AI, automation, funnels, content systems, and practical workflows — without guru fluff or overwhelming complexity.
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
