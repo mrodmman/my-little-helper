@@ -15,8 +15,28 @@ const fetchHandler = createStartHandler({
   getRouterManifest,
 })(defaultStreamingHandler);
 
+function normalizeRequestUrl(request: Request): Request {
+  try {
+    void new URL(request.url);
+    return request;
+  } catch {
+    const fallback = `https://invalid.local${request.url.startsWith("/") ? request.url : `/${request.url}`}`;
+    return new Request(fallback, request);
+  }
+}
+
 export default {
-  fetch: fetchHandler,
+  fetch: async (request: Request, env: Env, ctx: ExecutionContext) => {
+    try {
+      return await fetchHandler(normalizeRequestUrl(request), env, ctx);
+    } catch (error) {
+      if (error instanceof TypeError && /Invalid URL string/i.test(error.message)) {
+        return new Response("Invalid request URL", { status: 400 });
+      }
+
+      throw error;
+    }
+  },
 
   async scheduled(_event: ScheduledEvent, env: Env, _ctx: ExecutionContext) {
     await handleDripCron(env);
