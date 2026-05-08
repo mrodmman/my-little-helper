@@ -10,10 +10,21 @@ import { getRouter } from './router';
 import { handleDripCron } from './lib/drip';
 import type { Env } from './lib/env';
 
-const fetchHandler = createStartHandler({
-  createRouter: getRouter,
-  getRouterManifest,
-})(defaultStreamingHandler);
+// Lazy init: createStartHandler throws at module evaluation time in Cloudflare's
+// validation environment (no real request context), so we defer it to first use.
+let cachedFetchHandler:
+  | ReturnType<ReturnType<typeof createStartHandler>>
+  | undefined;
+
+function getFetchHandler() {
+  if (!cachedFetchHandler) {
+    cachedFetchHandler = createStartHandler({
+      createRouter: getRouter,
+      getRouterManifest,
+    })(defaultStreamingHandler);
+  }
+  return cachedFetchHandler;
+}
 
 function normalizeRequestUrl(request: Request): Request {
   try {
@@ -28,12 +39,11 @@ function normalizeRequestUrl(request: Request): Request {
 export default {
   fetch: async (request: Request, env: Env, ctx: ExecutionContext) => {
     try {
-      return await fetchHandler(normalizeRequestUrl(request), env, ctx);
+      return await getFetchHandler()(normalizeRequestUrl(request), env, ctx);
     } catch (error) {
       if (error instanceof TypeError && /Invalid URL string/i.test(error.message)) {
         return new Response('Invalid request URL', { status: 400 });
       }
-
       throw error;
     }
   },
