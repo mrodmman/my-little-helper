@@ -26,8 +26,17 @@ function normalizeRequestUrl(request: Request): Request {
 }
 
 export default {
-  fetch: (request: Request, env: Env, ctx: ExecutionContext) =>
-    fetchHandler(normalizeRequestUrl(request), env, ctx),
+  fetch: async (request: Request, env: Env, ctx: ExecutionContext) => {
+    try {
+      return await fetchHandler(normalizeRequestUrl(request), env, ctx);
+    } catch (error) {
+      if (error instanceof TypeError && /Invalid URL string/i.test(error.message)) {
+        return new Response("Invalid request URL", { status: 400 });
+      }
+
+      throw error;
+    }
+  },
 
   async scheduled(_event: ScheduledEvent, env: Env, _ctx: ExecutionContext) {
     await handleDripCron(env);
