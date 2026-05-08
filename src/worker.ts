@@ -5,7 +5,7 @@
  * export for the daily drip-email cron trigger.
  */
 import { createStartHandler, defaultStreamingHandler } from '@tanstack/react-start/server';
-import { getRouterManifest } from '@tanstack/react-start/router-manifest';
+import { getRouterManifest } from './lib/react-start-router-manifest-shim';
 import { getRouter } from './router';
 import { handleDripCron } from './lib/drip';
 import type { Env } from './lib/env';
