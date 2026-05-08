@@ -122,9 +122,9 @@ function HeroSection() {
             </div>
 
             <h1 className="font-display uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.92] text-white">
-              Stop piecing<br />together tactics.
+              Build systems <br />
               <br />
-              <span className="text-gradient">Build a real system.</span>
+              <span className="text-gradient">Build a real system.</grow your business, audience, and income.span>
             </h1>
 
             <p className="mt-7 text-lg text-muted-foreground leading-relaxed max-w-lg">
