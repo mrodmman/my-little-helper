@@ -35,56 +35,56 @@
   --color-glow: var(--glow);
 
   --font-sans: "Inter", system-ui, sans-serif;
-  --font-display: "Inter", system-ui, sans-serif;
+  --font-display: "Arial Black", "Helvetica Neue", Impact, system-ui, sans-serif;
 }
 
 :root {
-  --radius: 0.875rem;
+  --radius: 0.5rem;
 
-  /* Dark luxury vault palette (default) */
-  --background: oklch(0.14 0.02 265);
-  --foreground: oklch(0.97 0.01 250);
+  /* Kraken Vault — dark ocean / electric */
+  --background: #0a0a0a;
+  --foreground: #ffffff;
 
-  --surface: oklch(0.18 0.025 265);
-  --surface-elevated: oklch(0.22 0.03 265);
+  --surface: #111111;
+  --surface-elevated: #161616;
 
-  --card: oklch(0.18 0.025 265 / 0.7);
-  --card-foreground: oklch(0.97 0.01 250);
+  --card: rgba(20, 20, 20, 0.8);
+  --card-foreground: #ffffff;
 
-  --popover: oklch(0.18 0.025 265);
-  --popover-foreground: oklch(0.97 0.01 250);
+  --popover: #131313;
+  --popover-foreground: #ffffff;
 
-  --primary: oklch(0.72 0.19 245);          /* electric blue */
-  --primary-foreground: oklch(0.12 0.02 265);
-  --glow: oklch(0.78 0.18 270);              /* soft purple */
+  --primary: #0A8FE8;                 /* electric blue */
+  --primary-foreground: #0a0a0a;
+  --glow: #7F77DD;                    /* blue-purple accent */
 
-  --secondary: oklch(0.24 0.03 265);
-  --secondary-foreground: oklch(0.97 0.01 250);
+  --secondary: #161616;
+  --secondary-foreground: #ffffff;
 
-  --muted: oklch(0.22 0.025 265);
-  --muted-foreground: oklch(0.68 0.02 255);
+  --muted: #141414;
+  --muted-foreground: #aaaaaa;
 
-  --accent: oklch(0.65 0.22 285);            /* purple accent */
-  --accent-foreground: oklch(0.98 0.01 250);
+  --accent: #7F77DD;
+  --accent-foreground: #0a0a0a;
 
-  --destructive: oklch(0.65 0.22 25);
-  --destructive-foreground: oklch(0.98 0.01 250);
+  --destructive: #e85a3c;
+  --destructive-foreground: #ffffff;
 
-  --border: oklch(1 0 0 / 0.08);
-  --input: oklch(1 0 0 / 0.1);
-  --ring: oklch(0.72 0.19 245 / 0.6);
+  --border: #1f1f1f;
+  --input: #1a1a1a;
+  --ring: rgba(10, 143, 232, 0.5);
 
-  /* Premium gradients & shadows */
-  --gradient-primary: linear-gradient(135deg, oklch(0.72 0.19 245), oklch(0.65 0.22 285));
-  --gradient-hero: radial-gradient(ellipse at 20% 0%, oklch(0.4 0.18 270 / 0.45), transparent 60%),
-                   radial-gradient(ellipse at 80% 30%, oklch(0.45 0.2 245 / 0.35), transparent 55%),
-                   linear-gradient(180deg, oklch(0.14 0.02 265), oklch(0.1 0.015 265));
-  --gradient-card: linear-gradient(160deg, oklch(0.22 0.03 265 / 0.8), oklch(0.16 0.025 265 / 0.6));
-  --gradient-border: linear-gradient(135deg, oklch(0.72 0.19 245 / 0.5), oklch(0.65 0.22 285 / 0.3), transparent);
+  /* Gradients & shadows */
+  --gradient-primary: linear-gradient(135deg, #0A8FE8 0%, #1aa0f5 100%);
+  --gradient-hero: radial-gradient(ellipse at 15% 0%, rgba(10, 143, 232, 0.18), transparent 55%),
+                   radial-gradient(ellipse at 85% 25%, rgba(127, 119, 221, 0.10), transparent 55%),
+                   linear-gradient(180deg, #0a0a0a, #060606);
+  --gradient-card: linear-gradient(160deg, rgba(22,22,22,0.9), rgba(13,13,13,0.7));
+  --gradient-border: linear-gradient(135deg, rgba(10,143,232,0.55), rgba(127,119,221,0.25), transparent);
 
-  --shadow-glow: 0 0 40px -8px oklch(0.72 0.19 245 / 0.45);
-  --shadow-elevated: 0 30px 60px -20px oklch(0 0 0 / 0.8), 0 0 0 1px oklch(1 0 0 / 0.05);
-  --shadow-card: 0 12px 30px -12px oklch(0 0 0 / 0.6);
+  --shadow-glow: 0 0 32px -6px rgba(10, 143, 232, 0.55);
+  --shadow-elevated: 0 24px 48px -16px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.04);
+  --shadow-card: 0 10px 24px -10px rgba(0,0,0,0.7);
 }
 
 @layer base {
