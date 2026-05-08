@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VaultRouteImport } from './routes/vault'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as ThankYouRouteImport } from './routes/thank-you'
+import { Route as SubscribeRouteImport } from './routes/subscribe'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OfferRouteImport } from './routes/offer'
 import { Route as LoginRouteImport } from './routes/login'
@@ -31,9 +33,19 @@ const VaultRoute = VaultRouteImport.update({
   path: '/vault',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ThankYouRoute = ThankYouRouteImport.update({
   id: '/thank-you',
   path: '/thank-you',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubscribeRoute = SubscribeRouteImport.update({
+  id: '/subscribe',
+  path: '/subscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -115,7 +127,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
+  '/subscribe': typeof SubscribeRoute
   '/thank-you': typeof ThankYouRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/vault': typeof VaultRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
@@ -132,7 +146,9 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
+  '/subscribe': typeof SubscribeRoute
   '/thank-you': typeof ThankYouRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/vault': typeof VaultRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
@@ -151,7 +167,9 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
+  '/subscribe': typeof SubscribeRoute
   '/thank-you': typeof ThankYouRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/vault': typeof VaultRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
@@ -171,7 +189,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/offer'
     | '/profile'
+    | '/subscribe'
     | '/thank-you'
+    | '/unsubscribe'
     | '/vault'
     | '/admin/assets'
     | '/admin/modules'
@@ -188,7 +208,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/offer'
     | '/profile'
+    | '/subscribe'
     | '/thank-you'
+    | '/unsubscribe'
     | '/vault'
     | '/admin/assets'
     | '/admin/modules'
@@ -206,7 +228,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/offer'
     | '/profile'
+    | '/subscribe'
     | '/thank-you'
+    | '/unsubscribe'
     | '/vault'
     | '/admin/assets'
     | '/admin/modules'
@@ -225,7 +249,9 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   OfferRoute: typeof OfferRoute
   ProfileRoute: typeof ProfileRoute
+  SubscribeRoute: typeof SubscribeRoute
   ThankYouRoute: typeof ThankYouRoute
+  UnsubscribeRoute: typeof UnsubscribeRoute
   VaultRoute: typeof VaultRoute
   ApiUploadRoute: typeof ApiUploadRoute
   ModuleModuleIdRoute: typeof ModuleModuleIdRoute
@@ -241,11 +267,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VaultRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/thank-you': {
       id: '/thank-you'
       path: '/thank-you'
       fullPath: '/thank-you'
       preLoaderRoute: typeof ThankYouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subscribe': {
+      id: '/subscribe'
+      path: '/subscribe'
+      fullPath: '/subscribe'
+      preLoaderRoute: typeof SubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -383,7 +423,9 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   OfferRoute: OfferRoute,
   ProfileRoute: ProfileRoute,
+  SubscribeRoute: SubscribeRoute,
   ThankYouRoute: ThankYouRoute,
+  UnsubscribeRoute: UnsubscribeRoute,
   VaultRoute: VaultRoute,
   ApiUploadRoute: ApiUploadRoute,
   ModuleModuleIdRoute: ModuleModuleIdRoute,
