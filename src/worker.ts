@@ -45,6 +45,16 @@ function isInvalidUrlError(error: unknown): boolean {
   );
 }
 
+function normalizeRequestUrl(request: Request): Request {
+  try {
+    void new URL(request.url);
+    return request;
+  } catch {
+    const fallback = `https://invalid.local${request.url.startsWith("/") ? request.url : `/${request.url}`}`;
+    return new Request(fallback, request);
+  }
+}
+
 export default {
   fetch: async (request: Request, env: Env, ctx: ExecutionContext) => {
     try {
