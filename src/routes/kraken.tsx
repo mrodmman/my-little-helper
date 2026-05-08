@@ -4,31 +4,24 @@ import {
   Wrench,
   Zap,
   TrendingUp,
-  FileText,
-  Users,
-  Target,
-  Mail,
-  ShoppingBag,
-  Settings,
-  BarChart2,
   Play,
   BookOpen,
   Bot,
-  Layers,
   Workflow,
   Network,
   ChevronRight,
-  CheckCircle2,
-  Sparkles,
   Terminal,
   Video,
   Globe,
+  Settings,
+  Target,
+  ShoppingBag,
+  FileText,
 } from "lucide-react";
 
 // ── Swappable assets — edit these without touching layout ─────────────────────
 const LOGO_URL = ""; // set to your logo image URL, or leave empty for SVG default
 const HERO_IMAGE_URL = ""; // optional hero/product screenshot URL
-const AVATAR_URL = ""; // your photo URL
 
 const VIDEOS = [
   { youtubeId: "", title: "Full Automation Workflow", tag: "Automation" },
@@ -45,18 +38,18 @@ export const Route = createFileRoute("/kraken")({
       {
         name: "description",
         content:
-          "Build systems that grow your business, audience, and income. AI, automation, funnels, content systems — one connected machine.",
+          "AI, automation, funnels, content systems — one connected machine. Build. Automate. Grow.",
       },
       { property: "og:title", content: "Keyboard Kraken — Systems Builder" },
       {
         property: "og:description",
-        content: "Build systems that grow your business, audience, and income.",
+        content: "AI, automation, funnels, content systems — one connected machine.",
       },
     ],
   }),
 });
 
-// ── Sub-components ────────────────────────────────────────────────────────────
+// ── Shared ────────────────────────────────────────────────────────────────────
 
 function LogoMark({ className = "" }: { className?: string }) {
   if (LOGO_URL) {
@@ -72,23 +65,10 @@ function LogoMark({ className = "" }: { className?: string }) {
       </defs>
       <rect width="64" height="64" rx="14" fill="#0d0d0d" />
       <circle cx="32" cy="32" r="26" fill="none" stroke="url(#kk-g)" strokeWidth="2.5" />
-      {/* Simplified kraken tentacle shape */}
-      <path
-        d="M22 44V20h6l4 6 4-6h6v24h-6V30l-4 5-4-5v14z"
-        fill="url(#kk-g)"
-      />
+      <path d="M22 44V20h6l4 6 4-6h6v24h-6V30l-4 5-4-5v14z" fill="url(#kk-g)" />
       <circle cx="20" cy="42" r="2" fill="#0A8FE8" opacity="0.6" />
       <circle cx="44" cy="42" r="2" fill="#7F77DD" opacity="0.6" />
     </svg>
-  );
-}
-
-function Connector() {
-  return (
-    <div className="flex flex-col items-center py-1">
-      <div className="w-px h-8 bg-gradient-to-b from-primary/50 to-primary/10" />
-      <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
-    </div>
   );
 }
 
@@ -98,12 +78,11 @@ function KrakenPage() {
   return (
     <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <HeroSection />
-      <WhatIBuildSection />
+      <BuildSection />
       <ChoosePathSection />
-      <SystemMapSection />
+      <EcosystemSection />
       <ProofSection />
-      <VaultPreviewSection />
-      <AboutSection />
+      <VaultSection />
       <FinalCtaSection />
     </main>
   );
@@ -122,45 +101,37 @@ function HeroSection() {
           "#0a0a0a",
       }}
     >
-      {/* Background grid */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none opacity-40"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(10,143,232,0.04) 1px, transparent 1px), " +
-            "linear-gradient(90deg, rgba(10,143,232,0.04) 1px, transparent 1px)",
+            "linear-gradient(rgba(10,143,232,0.05) 1px, transparent 1px), " +
+            "linear-gradient(90deg, rgba(10,143,232,0.05) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
         }}
       />
 
       <div className="relative mx-auto max-w-6xl w-full">
         <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
-          {/* Left — text */}
           <div>
-            {/* Logo + brand name */}
-            <div className="flex items-center gap-3 mb-8">
-              <LogoMark className="h-10 w-10" />
+            <div className="flex items-center gap-3 mb-10">
+              <LogoMark className="h-9 w-9" />
               <span className="text-[11px] font-bold uppercase tracking-[0.28em] text-muted-foreground">
                 Keyboard Kraken
               </span>
             </div>
 
-            <div className="inline-flex items-center gap-2 rounded-md border border-primary/25 bg-primary/8 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary mb-6">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              Systems Builder
-            </div>
-
             <h1 className="font-display uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.92] text-white">
-              Build systems that grow your{" "}
-              <span className="text-gradient">business,<br />audience,</span>{" "}
-              and income.
+              Stop piecing<br />together tactics.
+              <br />
+              <span className="text-gradient">Build a real system.</span>
             </h1>
 
-            <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-xl">
-              AI workflows, funnel systems, content engines, and automation — simplified into one practical, connected machine. No fluff. No guru nonsense.
+            <p className="mt-7 text-lg text-muted-foreground leading-relaxed max-w-lg">
+              AI, automation, funnels, and content — connected into one machine that works without requiring more of your time.
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-9 flex flex-wrap gap-3">
               <Link
                 to="/vault"
                 className="inline-flex items-center gap-2 rounded-md bg-primary text-primary-foreground px-6 py-3.5 text-sm font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition"
@@ -169,18 +140,17 @@ function HeroSection() {
               </Link>
               <a
                 href="#work-with-me"
-                className="inline-flex items-center gap-2 rounded-md border border-[#222] bg-surface px-6 py-3.5 text-sm font-black uppercase tracking-wider hover:border-primary/40 transition"
+                className="inline-flex items-center gap-2 rounded-md border border-[#252525] bg-surface px-6 py-3.5 text-sm font-black uppercase tracking-wider hover:border-primary/40 transition"
               >
                 Work With Me <ChevronRight className="h-4 w-4" />
               </a>
             </div>
 
-            {/* Trust badges */}
             <div className="mt-10 flex flex-wrap gap-2">
-              {["AI Workflows", "Funnels", "Automation", "Content Systems", "Lead Gen", "Growth Systems"].map((tag) => (
+              {["AI Workflows", "Funnels", "Automation", "Content Systems", "Lead Gen"].map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full border border-[#1f1f1f] bg-surface/60 px-3 py-1 text-[11px] text-muted-foreground uppercase tracking-wider"
+                  className="rounded-full border border-[#1f1f1f] bg-surface/50 px-3 py-1 text-[11px] text-muted-foreground uppercase tracking-wider"
                 >
                   {tag}
                 </span>
@@ -188,7 +158,6 @@ function HeroSection() {
             </div>
           </div>
 
-          {/* Right — visual */}
           <div className="relative flex items-center justify-center lg:justify-end">
             {HERO_IMAGE_URL ? (
               <img
@@ -209,48 +178,38 @@ function HeroSection() {
 function HeroCommandCenter() {
   const nodes = [
     { label: "Content", color: "#0A8FE8", x: 50, y: 12 },
-    { label: "Funnel", color: "#1a9ffa", x: 75, y: 32 },
-    { label: "Email", color: "#7F77DD", x: 80, y: 58 },
-    { label: "Offers", color: "#9f77ee", x: 60, y: 78 },
-    { label: "Automation", color: "#0A8FE8", x: 30, y: 70 },
-    { label: "Leads", color: "#1a9ffa", x: 18, y: 45 },
-    { label: "AI", color: "#7F77DD", x: 25, y: 22 },
+    { label: "Funnel", color: "#1a9ffa", x: 76, y: 32 },
+    { label: "Email", color: "#7F77DD", x: 80, y: 60 },
+    { label: "Offers", color: "#9f77ee", x: 60, y: 80 },
+    { label: "Automation", color: "#0A8FE8", x: 28, y: 72 },
+    { label: "Leads", color: "#1a9ffa", x: 16, y: 46 },
+    { label: "AI", color: "#7F77DD", x: 24, y: 20 },
   ];
 
   return (
     <div className="relative w-full max-w-sm aspect-square">
-      {/* Glow orb */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-primary/10 blur-3xl" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-accent/8 blur-2xl" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 rounded-full bg-primary/8 blur-3xl" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 rounded-full bg-accent/6 blur-2xl" />
 
-      {/* SVG connector lines */}
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
         {nodes.map((n, i) => {
           const next = nodes[(i + 1) % nodes.length];
           return (
-            <line
-              key={i}
-              x1={`${n.x}%`} y1={`${n.y}%`}
-              x2={`${next.x}%`} y2={`${next.y}%`}
-              stroke="rgba(10,143,232,0.2)"
-              strokeWidth="0.5"
-            />
+            <line key={i} x1={`${n.x}%`} y1={`${n.y}%`} x2={`${next.x}%`} y2={`${next.y}%`}
+              stroke="rgba(10,143,232,0.18)" strokeWidth="0.5" />
           );
         })}
-        {/* Cross connections */}
-        <line x1="50%" y1="12%" x2="80%" y2="58%" stroke="rgba(127,119,221,0.12)" strokeWidth="0.4" />
-        <line x1="18%" y1="45%" x2="75%" y2="32%" stroke="rgba(10,143,232,0.10)" strokeWidth="0.4" />
-        <line x1="25%" y1="22%" x2="60%" y2="78%" stroke="rgba(127,119,221,0.10)" strokeWidth="0.4" />
+        <line x1="50%" y1="12%" x2="80%" y2="60%" stroke="rgba(127,119,221,0.10)" strokeWidth="0.4" />
+        <line x1="16%" y1="46%" x2="76%" y2="32%" stroke="rgba(10,143,232,0.08)" strokeWidth="0.4" />
+        <line x1="24%" y1="20%" x2="60%" y2="80%" stroke="rgba(127,119,221,0.08)" strokeWidth="0.4" />
       </svg>
 
-      {/* Center logo */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-        <div className="rounded-full border border-primary/40 bg-surface p-4 shadow-glow">
+        <div className="rounded-full border border-primary/35 bg-surface p-4 shadow-glow">
           <LogoMark className="h-12 w-12" />
         </div>
       </div>
 
-      {/* Orbit nodes */}
       {nodes.map((node) => (
         <div
           key={node.label}
@@ -258,8 +217,8 @@ function HeroCommandCenter() {
           style={{ left: `${node.x}%`, top: `${node.y}%` }}
         >
           <div
-            className="rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-surface/80 backdrop-blur-sm"
-            style={{ borderColor: `${node.color}40`, color: node.color }}
+            className="rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-[#0d0d0d]/80 backdrop-blur-sm"
+            style={{ borderColor: `${node.color}35`, color: node.color }}
           >
             {node.label}
           </div>
@@ -269,56 +228,48 @@ function HeroCommandCenter() {
   );
 }
 
-// ── 2. WHAT I BUILD ───────────────────────────────────────────────────────────
+// ── 2. BUILD · AUTOMATE · GROW ────────────────────────────────────────────────
 
 const BUILD_CARDS = [
   {
     icon: Wrench,
     title: "Build",
     color: "#0A8FE8",
-    body: "Funnels, offers, lead systems, landing pages, content engines. From zero to a working acquisition machine.",
-    tags: ["Funnels", "Landing Pages", "Lead Systems", "Offers"],
+    body: "Funnels, offers, lead systems, landing pages, content engines. The infrastructure that turns attention into revenue.",
+    tags: ["Funnels", "Lead Systems", "Landing Pages", "Offers"],
   },
   {
     icon: Zap,
     title: "Automate",
     color: "#7F77DD",
-    body: "AI workflows, multi-step automations, operational systems that cut manual work so you can focus on growth.",
-    tags: ["AI Workflows", "Zapier / Make", "Email Automation", "Ops Systems"],
+    body: "AI workflows, multi-step automations, operational systems. The work that used to take hours — running without you.",
+    tags: ["AI Workflows", "No-Code Automation", "Email Sequences", "Ops"],
   },
   {
     icon: TrendingUp,
     title: "Grow",
     color: "#1aa0f5",
-    body: "Content systems, lead generation frameworks, audience growth workflows, and scalable traffic engines.",
+    body: "Content systems, lead generation, audience growth. Consistent output without the grind of starting from zero every day.",
     tags: ["Content Systems", "Lead Gen", "Audience Growth", "Traffic"],
   },
 ];
 
-function WhatIBuildSection() {
+function BuildSection() {
   return (
-    <section className="px-6 py-24 border-t border-[#1a1a1a]">
+    <section className="px-6 py-24 border-t border-[#181818]">
       <div className="mx-auto max-w-6xl">
-        <div className="max-w-xl mb-14">
-          <div className="inline-flex items-center gap-2 rounded-md border border-primary/25 bg-primary/8 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary mb-5">
-            What I Build
-          </div>
-          <h2 className="font-display uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white">
-            One operator. <span className="text-primary">Three capabilities.</span>
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            Not an agency. Not a coach. A systems builder who makes the whole machine work together.
-          </p>
-        </div>
+        <h2 className="font-display uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white mb-12">
+          Build. Automate. <span className="text-primary">Grow.</span>
+        </h2>
 
         <div className="grid gap-5 md:grid-cols-3">
           {BUILD_CARDS.map(({ icon: Icon, title, color, body, tags }) => (
-            <div key={title} className="glass-card glass-card-hover rounded-xl p-6 border border-[#1f1f1f]">
+            <div key={title} className="glass-card glass-card-hover rounded-xl p-6 border border-[#1e1e1e]">
               <div
-                className="inline-flex h-11 w-11 items-center justify-center rounded-lg mb-5"
-                style={{ background: `${color}15`, border: `1px solid ${color}30` }}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg mb-5"
+                style={{ background: `${color}12`, border: `1px solid ${color}28` }}
               >
-                <Icon className="h-5 w-5" style={{ color }} />
+                <Icon className="h-4 w-4" style={{ color }} />
               </div>
               <h3 className="font-display uppercase text-xl font-black tracking-tight text-white mb-3">
                 {title}
@@ -326,10 +277,7 @@ function WhatIBuildSection() {
               <p className="text-sm text-muted-foreground leading-relaxed mb-5">{body}</p>
               <div className="flex flex-wrap gap-1.5">
                 {tags.map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-full border border-[#242424] bg-[#0d0d0d] px-2.5 py-0.5 text-[10px] text-muted-foreground uppercase tracking-wider"
-                  >
+                  <span key={t} className="rounded-full border border-[#222] bg-[#0d0d0d] px-2.5 py-0.5 text-[10px] text-muted-foreground uppercase tracking-wider">
                     {t}
                   </span>
                 ))}
@@ -346,15 +294,16 @@ function WhatIBuildSection() {
 
 function ChoosePathSection() {
   return (
-    <section className="px-6 py-24 border-t border-[#1a1a1a]">
+    <section className="px-6 py-24 border-t border-[#181818]">
       <div className="mx-auto max-w-6xl">
-        <div className="max-w-xl mb-14">
-          <div className="inline-flex items-center gap-2 rounded-md border border-primary/25 bg-primary/8 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary mb-5">
-            Choose Your Path
-          </div>
+        <div className="mb-12">
           <h2 className="font-display uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white">
-            Two audiences. <span className="text-primary">One system.</span>
+            Different goals.{" "}
+            <span className="text-primary">Same problem.</span>
           </h2>
+          <p className="mt-4 text-muted-foreground max-w-lg">
+            No clear system. No connected machine. Whether you're running a business or building one — that's the fix.
+          </p>
         </div>
 
         <div className="grid gap-5 md:grid-cols-2">
@@ -363,34 +312,28 @@ function ChoosePathSection() {
             id="work-with-me"
             className="rounded-xl border p-7 flex flex-col"
             style={{
-              background: "linear-gradient(160deg, rgba(10,143,232,0.06), rgba(10,10,10,0.9))",
-              borderColor: "rgba(10,143,232,0.25)",
+              background: "linear-gradient(160deg, rgba(10,143,232,0.05), rgba(10,10,10,0.95))",
+              borderColor: "rgba(10,143,232,0.22)",
             }}
           >
-            <div className="inline-flex items-center gap-2 mb-5">
-              <div className="h-8 w-8 rounded-md bg-primary/15 border border-primary/30 flex items-center justify-center">
-                <Globe className="h-4 w-4 text-primary" />
-              </div>
-              <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
-                Business Owners
-              </span>
+            <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-primary mb-4">
+              — Business Owners
             </div>
-            <h3 className="font-display uppercase text-2xl font-black tracking-tight text-white mb-2">
+            <h3 className="font-display uppercase text-2xl font-black tracking-tight text-white mb-4">
               You need systems,<br />not more tasks.
             </h3>
-            <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-              If you're running a business and drowning in manual work, scattered marketing, or inconsistent lead flow — you need infrastructure, not advice.
+            <p className="text-sm text-muted-foreground mb-7 leading-relaxed">
+              Scattered marketing, manual operations, inconsistent lead flow. That's an infrastructure problem. I build the system that fixes it.
             </p>
-            <ul className="space-y-2.5 mb-8 flex-1">
+            <ul className="space-y-2 mb-8 flex-1">
               {[
-                "Need a consistent lead pipeline",
-                "Operations are all manual, all reactive",
-                "Marketing is inconsistent or nonexistent",
-                "Too much time on tasks AI could handle",
-                "No clear funnel or follow-up system",
+                "No consistent lead pipeline",
+                "Operations are manual and reactive",
+                "Too much time on work AI should handle",
+                "Marketing that doesn't compound",
               ].map((p) => (
-                <li key={p} className="flex items-start gap-2.5 text-sm text-foreground/80">
-                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+                <li key={p} className="flex items-start gap-2.5 text-sm text-foreground/75">
+                  <span className="mt-1.5 h-1 w-1 rounded-full bg-primary shrink-0" />
                   {p}
                 </li>
               ))}
@@ -407,41 +350,35 @@ function ChoosePathSection() {
           <div
             className="rounded-xl border p-7 flex flex-col"
             style={{
-              background: "linear-gradient(160deg, rgba(127,119,221,0.06), rgba(10,10,10,0.9))",
-              borderColor: "rgba(127,119,221,0.25)",
+              background: "linear-gradient(160deg, rgba(127,119,221,0.05), rgba(10,10,10,0.95))",
+              borderColor: "rgba(127,119,221,0.22)",
             }}
           >
-            <div className="inline-flex items-center gap-2 mb-5">
-              <div className="h-8 w-8 rounded-md bg-accent/15 border border-accent/30 flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-accent" />
-              </div>
-              <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-accent">
-                Creators & Builders
-              </span>
+            <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-accent mb-4">
+              — Creators & Builders
             </div>
-            <h3 className="font-display uppercase text-2xl font-black tracking-tight text-white mb-2">
+            <h3 className="font-display uppercase text-2xl font-black tracking-tight text-white mb-4">
               Stop consuming.<br />Start building.
             </h3>
-            <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-              You're motivated, you're watching the content — but you're spinning in circles without a real system. The Vault gives you the actual blueprint.
+            <p className="text-sm text-muted-foreground mb-7 leading-relaxed">
+              You're motivated. You're watching the content. But nothing is being built. The Vault gives you the structure to actually execute.
             </p>
-            <ul className="space-y-2.5 mb-8 flex-1">
+            <ul className="space-y-2 mb-8 flex-1">
               {[
-                "Overwhelmed by information, no clear path",
-                "Watching tutorials but building nothing",
+                "Information overload, no clear path",
+                "Learning without building anything",
+                "Content that doesn't compound into leads",
                 "No monetization system in place",
-                "Content is inconsistent and scattered",
-                "Not sure how the pieces connect",
               ].map((p) => (
-                <li key={p} className="flex items-start gap-2.5 text-sm text-foreground/80">
-                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-accent shrink-0" />
+                <li key={p} className="flex items-start gap-2.5 text-sm text-foreground/75">
+                  <span className="mt-1.5 h-1 w-1 rounded-full bg-accent shrink-0" />
                   {p}
                 </li>
               ))}
             </ul>
             <Link
               to="/vault"
-              className="inline-flex items-center justify-center gap-2 rounded-md border border-accent/50 bg-accent/10 text-accent px-5 py-3 text-sm font-black uppercase tracking-wider hover:bg-accent/20 transition"
+              className="inline-flex items-center justify-center gap-2 rounded-md border border-accent/40 bg-accent/8 text-accent px-5 py-3 text-sm font-black uppercase tracking-wider hover:bg-accent/15 transition"
             >
               Explore the Vault <ArrowRight className="h-4 w-4" />
             </Link>
@@ -452,124 +389,112 @@ function ChoosePathSection() {
   );
 }
 
-// ── 4. SYSTEM MAP ─────────────────────────────────────────────────────────────
+// ── 4. ECOSYSTEM (replaces literal system map) ────────────────────────────────
 
-const SYSTEM_NODES = [
-  {
-    icon: FileText,
-    label: "Content Creation",
-    desc: "Short-form video, posts, and assets built from a repeatable system — not random effort.",
-    color: "#0A8FE8",
-  },
-  {
-    icon: Users,
-    label: "Audience & Engagement",
-    desc: "Comments, DMs, and discovery that turn cold scrollers into warm leads automatically.",
-    color: "#1a9ffa",
-  },
-  {
-    icon: Target,
-    label: "Lead Capture",
-    desc: "A funnel or opt-in page that converts attention into an email address you own.",
-    color: "#4ab0fc",
-  },
-  {
-    icon: Mail,
-    label: "Email Nurture",
-    desc: "Automated sequences that educate, build trust, and move leads toward a buying decision.",
-    color: "#7F77DD",
-  },
-  {
-    icon: ShoppingBag,
-    label: "Offers & Sales",
-    desc: "Positioned products and services tied directly to the problems your audience already has.",
-    color: "#9f77ee",
-  },
-  {
-    icon: Settings,
-    label: "Automation Layer",
-    desc: "AI and no-code tools that run the follow-up, notifications, and operations without you.",
-    color: "#7F77DD",
-  },
-  {
-    icon: BarChart2,
-    label: "Scale",
-    desc: "Paid traffic, affiliate loops, and optimised funnels that grow without proportional effort.",
-    color: "#0A8FE8",
-  },
+const ECO_NODES = [
+  { label: "Content", x: 50, y: 8, color: "#0A8FE8" },
+  { label: "Traffic", x: 78, y: 20, color: "#1a9ffa" },
+  { label: "Lead Capture", x: 88, y: 44, color: "#4ab0fc" },
+  { label: "Email", x: 78, y: 68, color: "#7F77DD" },
+  { label: "Offers", x: 54, y: 84, color: "#9f77ee" },
+  { label: "Automation", x: 28, y: 76, color: "#7F77DD" },
+  { label: "AI Layer", x: 12, y: 52, color: "#0A8FE8" },
+  { label: "Analytics", x: 22, y: 28, color: "#1a9ffa" },
 ];
 
-function SystemMapSection() {
+const ECO_EDGES = [
+  [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0],
+  [0, 4], [2, 6], [1, 5], [3, 7],
+];
+
+function EcosystemSection() {
   return (
-    <section className="px-6 py-24 border-t border-[#1a1a1a]">
+    <section
+      className="relative px-6 py-28 border-t border-[#181818] overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(ellipse at 50% 50%, rgba(10,143,232,0.06) 0%, transparent 65%), #050505",
+      }}
+    >
       <div className="mx-auto max-w-6xl">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 rounded-md border border-primary/25 bg-primary/8 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary mb-5">
-            The System Map
-          </div>
-          <h2 className="font-display uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white">
-            Not tactics. <span className="text-primary">One connected machine.</span>
-          </h2>
-          <p className="mt-4 text-muted-foreground">
-            Every piece feeds the next. When the system is built, it runs — with or without you in it.
-          </p>
-        </div>
+        <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
+          {/* Visual */}
+          <div className="relative flex items-center justify-center order-2 lg:order-1">
+            <div className="relative w-full max-w-sm aspect-square">
+              {/* Ambient glows */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full bg-primary/6 blur-3xl" />
+              <div className="absolute top-1/4 right-1/4 w-32 h-32 rounded-full bg-accent/5 blur-2xl" />
 
-        <div className="relative max-w-2xl mx-auto">
-          {/* Background glow */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-full rounded-full bg-primary/5 blur-3xl pointer-events-none" />
+              {/* Rotating ring */}
+              <div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full"
+                style={{ border: "1px solid rgba(10,143,232,0.12)" }}
+              />
+              <div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
+                style={{ border: "1px solid rgba(127,119,221,0.08)" }}
+              />
 
-          <div className="relative space-y-0">
-            {SYSTEM_NODES.map((node, i) => {
-              const Icon = node.icon;
-              const isLast = i === SYSTEM_NODES.length - 1;
-              return (
-                <div key={node.label}>
-                  <div className="group relative glass-card rounded-xl border border-[#1f1f1f] p-5 flex items-start gap-5 hover:border-primary/25 transition-colors">
-                    {/* Step number */}
+              {/* Edge lines */}
+              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                {ECO_EDGES.map(([a, b], i) => (
+                  <line
+                    key={i}
+                    x1={`${ECO_NODES[a].x}%`} y1={`${ECO_NODES[a].y}%`}
+                    x2={`${ECO_NODES[b].x}%`} y2={`${ECO_NODES[b].y}%`}
+                    stroke="rgba(10,143,232,0.15)"
+                    strokeWidth="0.4"
+                  />
+                ))}
+              </svg>
+
+              {/* Center mark */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                <div className="h-3 w-3 rounded-full bg-primary shadow-glow" />
+              </div>
+
+              {/* Nodes */}
+              {ECO_NODES.map((n) => (
+                <div
+                  key={n.label}
+                  className="absolute z-10 -translate-x-1/2 -translate-y-1/2"
+                  style={{ left: `${n.x}%`, top: `${n.y}%` }}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-1.5 w-1.5 rounded-full" style={{ background: n.color, boxShadow: `0 0 6px ${n.color}` }} />
                     <span
-                      className="absolute -left-3 top-1/2 -translate-y-1/2 hidden md:flex h-6 w-6 items-center justify-center rounded-full border text-[10px] font-bold"
-                      style={{
-                        background: "#0a0a0a",
-                        borderColor: `${node.color}40`,
-                        color: node.color,
-                      }}
+                      className="text-[10px] font-bold uppercase tracking-wider whitespace-nowrap"
+                      style={{ color: n.color }}
                     >
-                      {i + 1}
+                      {n.label}
                     </span>
-
-                    {/* Icon */}
-                    <div
-                      className="shrink-0 h-12 w-12 rounded-lg flex items-center justify-center"
-                      style={{ background: `${node.color}12`, border: `1px solid ${node.color}30` }}
-                    >
-                      <Icon className="h-5 w-5" style={{ color: node.color }} />
-                    </div>
-
-                    {/* Text */}
-                    <div className="flex-1 min-w-0">
-                      <div
-                        className="text-[11px] font-bold uppercase tracking-[0.2em] mb-1"
-                        style={{ color: node.color }}
-                      >
-                        Step {i + 1}
-                      </div>
-                      <h3 className="font-semibold text-white text-[15px] mb-1">{node.label}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{node.desc}</p>
-                    </div>
                   </div>
-
-                  {!isLast && <Connector />}
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
 
-          {/* Final indicator */}
-          <div className="mt-6 rounded-xl border border-primary/30 bg-primary/8 p-4 text-center">
-            <p className="text-sm font-bold uppercase tracking-wider text-primary">
-              A machine that grows without requiring more of your time.
+          {/* Text */}
+          <div className="order-1 lg:order-2">
+            <h2 className="font-display uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white mb-6">
+              Most people don't need<br />more tools.
+              <br />
+              <span className="text-primary">They need structure.</span>
+            </h2>
+            <p className="text-muted-foreground leading-relaxed mb-6">
+              The difference between spinning and scaling is almost never capability. It's architecture. When the pieces connect — content feeds leads, leads feed email, email feeds offers, offers feed automation — the whole machine starts to compound.
             </p>
+            <p className="text-muted-foreground leading-relaxed mb-8">
+              That's what gets built. Not tactics in isolation. A system where every layer feeds the next.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/vault"
+                className="inline-flex items-center gap-2 rounded-md bg-primary text-primary-foreground px-5 py-3 text-sm font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition"
+              >
+                See What's Inside <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -577,24 +502,17 @@ function SystemMapSection() {
   );
 }
 
-// ── 5. PROOF STRIP ────────────────────────────────────────────────────────────
+// ── 5. PROOF ──────────────────────────────────────────────────────────────────
 
 function ProofSection() {
   return (
-    <section className="px-6 py-24 border-t border-[#1a1a1a]">
+    <section className="px-6 py-24 border-t border-[#181818]">
       <div className="mx-auto max-w-6xl">
-        <div className="max-w-xl mb-14">
-          <div className="inline-flex items-center gap-2 rounded-md border border-primary/25 bg-primary/8 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary mb-5">
-            Real Systems
-          </div>
-          <h2 className="font-display uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white">
-            Not theory. <span className="text-primary">Working examples.</span>
+        <div className="mb-10">
+          <h2 className="font-display uppercase text-2xl sm:text-3xl font-black tracking-tight leading-[1] text-white">
+            Real workflows. <span className="text-primary">Real output.</span>
           </h2>
-          <p className="mt-4 text-muted-foreground">
-            Watch these systems in action — actual builds, actual workflows, actual output.
-          </p>
         </div>
-
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {VIDEOS.map((v, i) => (
             <VideoCard key={i} {...v} />
@@ -605,38 +523,25 @@ function ProofSection() {
   );
 }
 
-function VideoCard({
-  youtubeId,
-  title,
-  tag,
-}: {
-  youtubeId: string;
-  title: string;
-  tag: string;
-}) {
-  const thumbUrl = youtubeId
-    ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`
-    : null;
+function VideoCard({ youtubeId, title, tag }: { youtubeId: string; title: string; tag: string }) {
+  const thumbUrl = youtubeId ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg` : null;
   const href = youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : undefined;
 
   const inner = (
-    <div className="glass-card glass-card-hover rounded-xl border border-[#1f1f1f] overflow-hidden group cursor-pointer">
-      {/* Thumbnail */}
+    <div className="glass-card glass-card-hover rounded-xl border border-[#1e1e1e] overflow-hidden group cursor-pointer">
       <div className="relative aspect-video bg-surface flex items-center justify-center overflow-hidden">
         {thumbUrl ? (
           <img src={thumbUrl} alt={title} className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#111] to-[#0a0a0a]">
-            <Video className="h-10 w-10 text-muted-foreground/30" />
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#0f0f0f] to-[#080808]">
+            <Video className="h-8 w-8 text-muted-foreground/20" />
           </div>
         )}
-        {/* Play button overlay */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-12 w-12 rounded-full bg-primary/90 flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform">
-            <Play className="h-5 w-5 text-white fill-white ml-0.5" />
+          <div className="h-11 w-11 rounded-full bg-primary/90 flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform">
+            <Play className="h-4 w-4 text-white fill-white ml-0.5" />
           </div>
         </div>
-        {/* Tag */}
         <div className="absolute top-3 left-3">
           <span className="rounded-md bg-background/80 backdrop-blur-sm border border-[#1f1f1f] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
             {tag}
@@ -645,135 +550,98 @@ function VideoCard({
       </div>
       <div className="p-4">
         <h3 className="font-semibold text-sm text-white leading-snug">{title}</h3>
-        <div className="mt-2 flex items-center gap-1 text-[11px] text-muted-foreground">
+        <div className="mt-1.5 flex items-center gap-1 text-[11px] text-muted-foreground">
           <Terminal className="h-3 w-3" />
-          <span>Real workflow · No fluff</span>
+          <span>Actual build · No filler</span>
         </div>
       </div>
     </div>
   );
 
   if (href) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer">
-        {inner}
-      </a>
-    );
+    return <a href={href} target="_blank" rel="noopener noreferrer">{inner}</a>;
   }
   return inner;
 }
 
 // ── 6. THE VAULT ──────────────────────────────────────────────────────────────
 
-const VAULT_ITEMS = [
-  { icon: Workflow, label: "System Maps", desc: "Visual blueprints for every system in the stack." },
-  { icon: Target, label: "Funnel Templates", desc: "Plug-and-play funnel structures that convert." },
-  { icon: Bot, label: "AI Workflows", desc: "Prompt stacks and automation chains for daily ops." },
-  { icon: Settings, label: "Automation Systems", desc: "No-code flows that handle the repetitive work." },
-  { icon: FileText, label: "Content Systems", desc: "Batch creation workflows for consistent output." },
-  { icon: ShoppingBag, label: "Offer Vault", desc: "Frameworks for building and positioning offers." },
-  { icon: BookOpen, label: "Swipe Files", desc: "Proven hooks, headlines, and email structures." },
-  { icon: Network, label: "Lead Gen Playbooks", desc: "Step-by-step systems for growing an email list." },
+const VAULT_SYSTEMS = [
+  "Funnel Systems",
+  "AI Workflows",
+  "Content Engines",
+  "Automation Stacks",
+  "Offer Frameworks",
+  "Lead Playbooks",
+  "Email Sequences",
+  "Swipe Files",
 ];
 
-function VaultPreviewSection() {
+function VaultSection() {
   return (
-    <section className="px-6 py-24 border-t border-[#1a1a1a]">
+    <section
+      className="relative px-6 py-28 border-t border-[#181818] overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(ellipse at 30% 50%, rgba(10,143,232,0.07) 0%, transparent 55%), " +
+          "radial-gradient(ellipse at 70% 50%, rgba(127,119,221,0.05) 0%, transparent 55%), " +
+          "#060606",
+      }}
+    >
       <div className="mx-auto max-w-6xl">
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 rounded-md border border-primary/25 bg-primary/8 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary mb-5">
-            The Vault
-          </div>
-          <h2 className="font-display uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white">
-            Your guided <span className="text-primary">operator toolkit.</span>
-          </h2>
-          <p className="mt-4 text-muted-foreground max-w-lg mx-auto">
-            Not a course. A living ecosystem of systems, templates, workflows, and resources — built for people who want to build, not just learn.
-          </p>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {VAULT_ITEMS.map(({ icon: Icon, label, desc }) => (
-            <div
-              key={label}
-              className="glass-card glass-card-hover rounded-xl border border-[#1f1f1f] p-5"
-            >
-              <div className="h-9 w-9 rounded-md bg-primary/12 border border-primary/20 flex items-center justify-center mb-4">
-                <Icon className="h-4 w-4 text-primary" />
-              </div>
-              <h3 className="font-semibold text-[13px] text-white mb-1.5">{label}</h3>
-              <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-10 text-center">
-          <Link
-            to="/vault"
-            className="inline-flex items-center gap-2 rounded-md bg-primary text-primary-foreground px-7 py-3.5 text-sm font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition"
-          >
-            Open the Vault <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ── 7. ABOUT ──────────────────────────────────────────────────────────────────
-
-function AboutSection() {
-  return (
-    <section className="px-6 py-24 border-t border-[#1a1a1a]">
-      <div className="mx-auto max-w-6xl">
-        <div className="grid gap-12 md:grid-cols-2 md:items-center">
-          {/* Avatar */}
-          <div className="flex justify-center md:justify-start">
-            <div className="relative">
-              <div className="absolute -inset-4 rounded-2xl bg-primary/8 blur-2xl" />
-              <div className="relative h-64 w-64 rounded-2xl border border-[#1f1f1f] overflow-hidden bg-surface flex items-center justify-center">
-                {AVATAR_URL ? (
-                  <img src={AVATAR_URL} alt="Matt" className="h-full w-full object-cover" />
-                ) : (
-                  <LogoMark className="h-24 w-24 opacity-30" />
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Bio */}
+        <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
+          {/* Left — positioning */}
           <div>
-            <div className="inline-flex items-center gap-2 rounded-md border border-primary/25 bg-primary/8 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary mb-6">
-              About
+            <div className="text-[11px] font-bold uppercase tracking-[0.28em] text-primary mb-5">
+              — The Vault
             </div>
-            <h2 className="font-display uppercase text-3xl font-black tracking-tight leading-[1] text-white mb-6">
-              Not a guru. <span className="text-primary">An operator.</span>
+            <h2 className="font-display uppercase text-4xl sm:text-5xl font-black tracking-tight leading-[0.93] text-white mb-6">
+              Your growth<br />
+              <span className="text-gradient">operating system.</span>
             </h2>
-            <div className="space-y-4 text-muted-foreground leading-relaxed">
-              <p>
-                Retail operator since 2008. Built funnels, automations, AI workflows, lead systems, and scalable content systems using practical low-cost tools that actually exist in the real world.
-              </p>
-              <p>
-                I don't sell a dream. I build systems. The same systems I use to run my own business — documented, simplified, and put into tools that beginners can actually execute.
-              </p>
-              <p>
-                The goal has never been passive income mythology. It's leverage — building things that work when you're not in the room.
-              </p>
-            </div>
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              Not a course. Not a library of lessons. An operational toolkit built for people who are actually building — funnels, automation, content, and AI workflows that exist in the real world.
+            </p>
+            <p className="text-muted-foreground leading-relaxed mb-10">
+              Built from operational experience since 2008. Practical tools at every stage — from day one through scale.
+            </p>
+            <Link
+              to="/vault"
+              className="inline-flex items-center gap-2 rounded-md bg-primary text-primary-foreground px-7 py-3.5 text-sm font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition"
+            >
+              Open the Vault <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
 
-            <div className="mt-8 grid grid-cols-2 gap-4">
-              {[
-                { label: "Since", value: "2008" },
-                { label: "Focus", value: "Systems" },
-                { label: "Stack", value: "AI + No-Code" },
-                { label: "Mission", value: "Real Leverage" },
-              ].map(({ label, value }) => (
-                <div key={label} className="rounded-lg border border-[#1f1f1f] bg-surface p-4">
-                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">{label}</div>
-                  <div className="font-display font-black text-lg text-white uppercase tracking-tight">{value}</div>
+          {/* Right — system list */}
+          <div
+            className="rounded-xl border p-7"
+            style={{
+              background: "linear-gradient(160deg, rgba(15,15,15,0.9), rgba(8,8,8,0.95))",
+              borderColor: "rgba(10,143,232,0.15)",
+            }}
+          >
+            <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground mb-5">
+              Inside the Vault
+            </div>
+            <div className="space-y-2">
+              {VAULT_SYSTEMS.map((s, i) => (
+                <div
+                  key={s}
+                  className="flex items-center justify-between py-3 border-b border-[#161616] last:border-0"
+                >
+                  <span className="text-sm font-medium text-foreground/85">{s}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-primary/50">
+                    0{i + 1}
+                  </span>
                 </div>
               ))}
             </div>
+            <div className="mt-6 pt-5 border-t border-[#161616]">
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Built for operators. Not students. Every system documented and executable from day one.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -781,32 +649,28 @@ function AboutSection() {
   );
 }
 
-// ── 8. FINAL CTA ──────────────────────────────────────────────────────────────
+// ── 7. FINAL CTA ──────────────────────────────────────────────────────────────
 
 function FinalCtaSection() {
   return (
     <section
-      className="relative px-6 py-32 border-t border-[#1a1a1a] overflow-hidden"
+      className="relative px-6 py-36 border-t border-[#181818] overflow-hidden"
       style={{
         background:
-          "radial-gradient(ellipse at 50% 0%, rgba(10,143,232,0.12) 0%, transparent 60%), #0a0a0a",
+          "radial-gradient(ellipse at 50% 0%, rgba(10,143,232,0.10) 0%, transparent 55%), #0a0a0a",
       }}
     >
-      <div className="absolute inset-0 pointer-events-none"
+      <div
+        className="absolute inset-0 pointer-events-none opacity-30"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(10,143,232,0.03) 1px, transparent 1px), " +
-            "linear-gradient(90deg, rgba(10,143,232,0.03) 1px, transparent 1px)",
+            "linear-gradient(rgba(10,143,232,0.04) 1px, transparent 1px), " +
+            "linear-gradient(90deg, rgba(10,143,232,0.04) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
         }}
       />
 
-      <div className="relative mx-auto max-w-3xl text-center">
-        <div className="inline-flex items-center gap-2 rounded-md border border-primary/25 bg-primary/8 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary mb-8">
-          <CheckCircle2 className="h-3.5 w-3.5" />
-          You already do the hard part
-        </div>
-
+      <div className="relative mx-auto max-w-2xl text-center">
         <h2 className="font-display uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.92] text-white">
           Life is already hard.
           <br />
@@ -815,8 +679,8 @@ function FinalCtaSection() {
           that belongs to you.
         </h2>
 
-        <p className="mt-8 text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-          You're already doing difficult things every day. The systems are the same effort — just pointed in a direction that builds equity instead of burning hours.
+        <p className="mt-8 text-muted-foreground max-w-md mx-auto leading-relaxed">
+          The effort isn't the issue. The direction is. Point the same energy toward something that compounds.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
@@ -827,27 +691,16 @@ function FinalCtaSection() {
             Explore the Vault <ArrowRight className="h-4 w-4" />
           </Link>
           <a
-            href="#work-with-me"
+            href="mailto:matt@krakenvault.com"
             className="inline-flex items-center gap-2 rounded-md border border-[#222] bg-surface px-8 py-4 text-sm font-black uppercase tracking-wider hover:border-primary/40 transition"
           >
             Work With Me <ChevronRight className="h-4 w-4" />
           </a>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[11px] uppercase tracking-wider text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-1 w-1 rounded-full bg-primary" /> No fluff
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-1 w-1 rounded-full bg-primary" /> No fake urgency
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-1 w-1 rounded-full bg-primary" /> Real systems
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-1 w-1 rounded-full bg-primary" /> Built for real life
-          </span>
-        </div>
+        <p className="mt-10 text-[11px] uppercase tracking-[0.2em] text-muted-foreground/50">
+          Keyboard Kraken · Systems Builder · Operating since 2008
+        </p>
       </div>
     </section>
   );
