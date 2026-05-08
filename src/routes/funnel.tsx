@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { AlertCircle } from "lucide-react";
 import {
   ArrowRight,
   Zap,
@@ -63,11 +64,32 @@ function FunnelPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
-    navigate({ to: "/thank-you", search: { email, name } as never });
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), first_name: name.trim() || undefined }),
+        credentials: "include",
+      });
+      if (res.ok) {
+        navigate({ to: "/thank-you", search: { email, name } as never });
+      } else {
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        setError(data.error ?? "Something went wrong. Please try again.");
+      }
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -114,6 +136,13 @@ function FunnelPage() {
                   The 7-Day Affiliate Jumpstart — delivered to your inbox in under a minute.
                 </p>
 
+                {error && (
+                  <div className="mt-4 flex items-start gap-2 rounded-md bg-destructive/10 border border-destructive/30 px-4 py-3 text-sm text-destructive">
+                    <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+                    {error}
+                  </div>
+                )}
+
                 <form className="mt-6 grid gap-3" onSubmit={onSubmit}>
                   <label className="grid gap-1.5">
                     <span className="text-[11px] uppercase tracking-wider text-muted-foreground">
@@ -141,9 +170,10 @@ function FunnelPage() {
                   </label>
                   <button
                     type="submit"
-                    className="mt-2 inline-flex items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground px-5 py-3.5 text-sm font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition"
+                    disabled={loading}
+                    className="mt-2 inline-flex items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground px-5 py-3.5 text-sm font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition disabled:opacity-60"
                   >
-                    Send me the jumpstart <ArrowRight className="h-4 w-4" />
+                    {loading ? "Sending…" : "Send me the jumpstart"} <ArrowRight className="h-4 w-4" />
                   </button>
                 </form>
 

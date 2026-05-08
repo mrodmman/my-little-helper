@@ -20,7 +20,8 @@
     }
   ],
   "vars": {
-    "ADMIN_SECRET": "M9640940"
+    "ADMIN_SECRET": "M9640940",
+    "SESSION_SECRET": "REPLACE_WITH_WRANGLER_SECRET"
   },
   "triggers": {
     "crons": ["0 10 * * *"]

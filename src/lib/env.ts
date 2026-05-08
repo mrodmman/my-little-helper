@@ -10,6 +10,7 @@ export interface Env {
   R2_BUCKET: R2Bucket;
   ADMIN_SECRET: string;
   RESEND_API_KEY: string;
+  SESSION_SECRET: string;
 }
 
 type CloudflareWorkersModule = {
