@@ -1,5 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { getAuthUser } from "@/rpc/auth";
 import {
   Lock,
   Search,
@@ -25,6 +26,11 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/vault")({
+  beforeLoad: async () => {
+    const user = await getAuthUser();
+    if (!user) throw redirect({ to: "/login" });
+    return { user };
+  },
   head: () => ({
     meta: [
       { title: "Vault — Secure Storage" },

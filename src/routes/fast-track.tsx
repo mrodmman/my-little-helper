@@ -1,10 +1,16 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { getAuthUser } from "@/rpc/auth";
 import { useState } from "react";
 import { ArrowLeft, Rocket, CheckCircle2, ChevronRight, ChevronDown } from "lucide-react";
 import { FAST_TRACK, type FastTrackTile } from "@/data/fastTrack";
 import { MODULES } from "@/data/courseMeta";
 
 export const Route = createFileRoute("/fast-track")({
+  beforeLoad: async () => {
+    const user = await getAuthUser();
+    if (!user) throw redirect({ to: "/login" });
+    return { user };
+  },
   component: FastTrackPage,
   head: () => ({
     meta: [
