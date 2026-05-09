@@ -19,6 +19,7 @@ import {
 const LOGO_URL = "https://i.ibb.co/607fGNdR/file-45.jpg"; // set to your logo image URL, or leave empty for SVG default
 const HERO_IMAGE_URL = "https://i.ibb.co/Y4GBCzPw/file-46.jpg"; // optional hero/product screenshot URL
 
+// Paste any YouTube URL format here — share URL, watch URL, or bare video ID
 const VIDEOS = [
   { youtubeId: "https://youtu.be/9hxy2dzk7Ko?si=JdN5H2SZVBqFPpfv", title: "Full Automation Workflow", tag: "Automation" },
   { youtubeId: "", title: "Funnel Build — Start to Finish", tag: "Funnels" },
@@ -26,8 +27,30 @@ const VIDEOS = [
 ];
 // ─────────────────────────────────────────────────────────────────────────────
 
-const P = "#1da1ff"; // electric blue
+// Parse any YouTube URL or bare ID into a video ID string
+function extractYoutubeId(input: string): string {
+  if (!input) return "";
+  // youtu.be/ID or youtu.be/ID?si=...
+  const shortMatch = input.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+  if (shortMatch) return shortMatch[1];
+  // youtube.com/watch?v=ID or /embed/ID
+  const longMatch = input.match(/(?:v=|\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if (longMatch) return longMatch[1];
+  // bare ID already
+  if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+  return "";
+}
+
+const P = "#00C8FF"; // bright cyan
 const V = "#7F77DD"; // violet accent
+
+const glass: React.CSSProperties = {
+  background: "rgba(255,255,255,0.04)",
+  backdropFilter: "blur(24px)",
+  WebkitBackdropFilter: "blur(24px)",
+  border: "0.5px solid rgba(255,255,255,0.12)",
+  boxShadow: "0 8px 40px rgba(0,0,0,0.45)",
+};
 
 export const Route = createFileRoute("/kraken")({
   component: KrakenPage,
@@ -60,7 +83,7 @@ function LogoMark({ className = "" }: { className?: string }) {
           <stop offset="100%" stopColor={V} />
         </linearGradient>
       </defs>
-      <rect width="64" height="64" rx="14" fill="#0d0d0d" />
+      <rect width="64" height="64" rx="14" fill="#050510" />
       <circle cx="32" cy="32" r="26" fill="none" stroke="url(#kk-g)" strokeWidth="2.5" />
       <path d="M22 44V20h6l4 6 4-6h6v24h-6V30l-4 5-4-5v14z" fill="url(#kk-g)" />
       <circle cx="20" cy="42" r="2" fill={P} opacity="0.6" />
@@ -73,16 +96,60 @@ function LogoMark({ className = "" }: { className?: string }) {
 
 function KrakenPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      <KrakenNav />
-      <HeroSection />
-      <BuildSection />
-      <ChoosePathSection />
-      <EcosystemSection />
-      <ProofSection />
-      <VaultSection />
-      <CredibilitySection />
-      <FinalCtaSection />
+    <main
+      className="min-h-screen text-foreground overflow-x-hidden relative"
+      style={{ background: "#050510", fontFamily: "'Inter', system-ui, sans-serif" }}
+    >
+      {/* Ambient background blobs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
+        <div
+          className="absolute"
+          style={{
+            width: "70vw",
+            height: "70vw",
+            top: "-20vw",
+            left: "-20vw",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(100,60,220,0.18) 0%, transparent 70%)",
+            filter: "blur(80px)",
+          }}
+        />
+        <div
+          className="absolute"
+          style={{
+            width: "60vw",
+            height: "60vw",
+            top: "20vh",
+            right: "-15vw",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(0,200,255,0.12) 0%, transparent 70%)",
+            filter: "blur(80px)",
+          }}
+        />
+        <div
+          className="absolute"
+          style={{
+            width: "55vw",
+            height: "55vw",
+            bottom: "10vh",
+            left: "20vw",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(80,40,180,0.12) 0%, transparent 70%)",
+            filter: "blur(100px)",
+          }}
+        />
+      </div>
+      <div className="relative" style={{ zIndex: 1 }}>
+        <KrakenNav />
+        <HeroSection />
+        <BuildSection />
+        <ChoosePathSection />
+        <EcosystemSection />
+        <ProofSection />
+        <VaultSection />
+        <CredibilitySection />
+        <FinalCtaSection />
+      </div>
     </main>
   );
 }
@@ -94,9 +161,9 @@ function KrakenNav() {
     <header
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
       style={{
-        background: "rgba(8,8,8,0.88)",
+        background: "rgba(5,5,16,0.88)",
         backdropFilter: "blur(18px)",
-        borderBottom: "1px solid rgba(255,255,255,0.04)",
+        borderBottom: "0.5px solid rgba(255,255,255,0.07)",
       }}
     >
       <Link to="/kraken" className="flex items-center gap-2.5">
@@ -121,7 +188,7 @@ function KrakenNav() {
         </a>
         <div
           className="flex items-center gap-3 pl-4"
-          style={{ borderLeft: "1px solid rgba(255,255,255,0.07)" }}
+          style={{ borderLeft: "0.5px solid rgba(255,255,255,0.09)" }}
         >
           <a
             href="https://x.com/keyboardkraken"
@@ -161,17 +228,17 @@ function HeroSection() {
       className="relative min-h-screen flex flex-col justify-center px-6 pt-24 pb-20 overflow-hidden"
       style={{
         background:
-          `radial-gradient(ellipse at 15% 10%, rgba(29,161,255,0.12) 0%, transparent 50%), ` +
-          `radial-gradient(ellipse at 80% 25%, rgba(127,119,221,0.08) 0%, transparent 50%), ` +
-          `#080808`,
+          `radial-gradient(ellipse at 15% 10%, rgba(0,200,255,0.10) 0%, transparent 50%), ` +
+          `radial-gradient(ellipse at 80% 25%, rgba(127,119,221,0.10) 0%, transparent 50%), ` +
+          `transparent`,
       }}
     >
       <div
-        className="absolute inset-0 pointer-events-none opacity-25"
+        className="absolute inset-0 pointer-events-none opacity-20"
         style={{
           backgroundImage:
-            `linear-gradient(rgba(29,161,255,0.05) 1px, transparent 1px), ` +
-            `linear-gradient(90deg, rgba(29,161,255,0.05) 1px, transparent 1px)`,
+            `linear-gradient(rgba(0,200,255,0.04) 1px, transparent 1px), ` +
+            `linear-gradient(90deg, rgba(0,200,255,0.04) 1px, transparent 1px)`,
           backgroundSize: "64px 64px",
         }}
       />
@@ -186,7 +253,7 @@ function HeroSection() {
               </span>
             </div>
 
-            <h1 className="font-display uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.92] text-white">
+            <h1 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.92] text-white">
               Build systems that grow your{" "}
               <span style={{ color: P }}>
                 business, audience,
@@ -203,7 +270,7 @@ function HeroSection() {
               <Link
                 to="/vault"
                 className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider text-white transition hover:brightness-110"
-                style={{ background: P, boxShadow: `0 0 28px rgba(29,161,255,0.3)` }}
+                style={{ background: P, color: "#050510", boxShadow: `0 0 32px rgba(0,200,255,0.35)` }}
               >
                 Explore the Vault <ArrowRight className="h-4 w-4" />
               </Link>
@@ -211,9 +278,9 @@ function HeroSection() {
                 href="#work-with-me"
                 className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider transition hover:text-white"
                 style={{
-                  border: "1px solid rgba(255,255,255,0.10)",
-                  background: "rgba(255,255,255,0.03)",
-                  color: "rgba(255,255,255,0.65)",
+                  border: "1px solid rgba(255,255,255,0.18)",
+                  background: "transparent",
+                  color: "rgba(255,255,255,0.70)",
                 }}
               >
                 Work With Me <ChevronRight className="h-4 w-4" />
@@ -226,7 +293,7 @@ function HeroSection() {
                   {i > 0 && (
                     <span
                       className="h-1 w-1 rounded-full shrink-0"
-                      style={{ background: `rgba(29,161,255,0.35)` }}
+                      style={{ background: `rgba(0,200,255,0.35)` }}
                     />
                   )}
                   <span
@@ -247,8 +314,8 @@ function HeroSection() {
                 alt="System overview"
                 className="w-full max-w-md rounded-xl"
                 style={{
-                  border: "1px solid rgba(255,255,255,0.06)",
-                  boxShadow: `0 0 60px -10px rgba(29,161,255,0.25)`,
+                  border: "0.5px solid rgba(255,255,255,0.12)",
+                  boxShadow: `0 0 60px -10px rgba(0,200,255,0.28), 0 0 0 1px rgba(255,255,255,0.04)`,
                 }}
               />
             ) : (
@@ -276,19 +343,19 @@ function HeroCommandCenter() {
     <div className="relative w-full max-w-sm aspect-square">
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 rounded-full"
-        style={{ background: `radial-gradient(circle, rgba(29,161,255,0.07) 0%, transparent 70%)` }}
+        style={{ background: `radial-gradient(circle, rgba(0,200,255,0.08) 0%, transparent 70%)` }}
       />
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 rounded-full"
-        style={{ background: `radial-gradient(circle, rgba(127,119,221,0.06) 0%, transparent 70%)` }}
+        style={{ background: `radial-gradient(circle, rgba(127,119,221,0.07) 0%, transparent 70%)` }}
       />
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-44 rounded-full"
-        style={{ border: `1px solid rgba(29,161,255,0.10)` }}
+        style={{ border: `1px solid rgba(0,200,255,0.12)` }}
       />
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
-        style={{ border: `1px solid rgba(127,119,221,0.07)` }}
+        style={{ border: `1px solid rgba(127,119,221,0.08)` }}
       />
 
       <svg
@@ -305,23 +372,23 @@ function HeroCommandCenter() {
               y1={`${n.y}%`}
               x2={`${next.x}%`}
               y2={`${next.y}%`}
-              stroke="rgba(29,161,255,0.15)"
+              stroke="rgba(0,200,255,0.18)"
               strokeWidth="0.5"
             />
           );
         })}
-        <line x1="50%" y1="10%" x2="82%" y2="58%" stroke="rgba(127,119,221,0.09)" strokeWidth="0.4" />
-        <line x1="14%" y1="50%" x2="78%" y2="28%" stroke="rgba(29,161,255,0.07)" strokeWidth="0.4" />
-        <line x1="22%" y1="22%" x2="62%" y2="82%" stroke="rgba(127,119,221,0.07)" strokeWidth="0.4" />
+        <line x1="50%" y1="10%" x2="82%" y2="58%" stroke="rgba(127,119,221,0.10)" strokeWidth="0.4" />
+        <line x1="14%" y1="50%" x2="78%" y2="28%" stroke="rgba(0,200,255,0.08)" strokeWidth="0.4" />
+        <line x1="22%" y1="22%" x2="62%" y2="82%" stroke="rgba(127,119,221,0.08)" strokeWidth="0.4" />
       </svg>
 
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
         <div
           className="rounded-full border p-4"
           style={{
-            borderColor: `rgba(29,161,255,0.28)`,
-            background: "#0d0d0d",
-            boxShadow: `0 0 24px rgba(29,161,255,0.18)`,
+            borderColor: `rgba(0,200,255,0.30)`,
+            background: "rgba(5,5,16,0.9)",
+            boxShadow: `0 0 28px rgba(0,200,255,0.20)`,
           }}
         >
           <LogoMark className="h-12 w-12" />
@@ -339,7 +406,7 @@ function HeroCommandCenter() {
             style={{
               borderColor: `${node.color}28`,
               color: node.color,
-              background: "rgba(8,8,8,0.85)",
+              background: "rgba(5,5,16,0.85)",
             }}
           >
             {node.label}
@@ -377,10 +444,10 @@ function BuildSection() {
   return (
     <section
       className="px-6 py-24"
-      style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
+      style={{ borderTop: "0.5px solid rgba(255,255,255,0.06)" }}
     >
       <div className="mx-auto max-w-6xl">
-        <h2 className="font-display uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white mb-12">
+        <h2 className="font-sans uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white mb-12">
           Build. Automate. <span style={{ color: P }}>Grow.</span>
         </h2>
 
@@ -389,22 +456,19 @@ function BuildSection() {
             <div
               key={title}
               className="rounded-xl p-7 flex flex-col gap-5"
-              style={{
-                background: "rgba(12,12,12,0.9)",
-                border: "1px solid rgba(255,255,255,0.05)",
-              }}
+              style={glass}
             >
               <div
                 className="inline-flex h-10 w-10 items-center justify-center rounded-lg"
-                style={{ background: `${color}0f`, border: `1px solid ${color}22` }}
+                style={{ background: `${color}0f`, border: `1px solid ${color}28` }}
               >
                 <Icon className="h-4 w-4" style={{ color }} />
               </div>
               <div>
-                <h3 className="font-display uppercase text-xl font-black tracking-tight text-white mb-2">
+                <h3 className="font-sans uppercase text-xl font-black tracking-tight text-white mb-2">
                   {title}
                 </h3>
-                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.38)" }}>
+                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.42)" }}>
                   {body}
                 </p>
               </div>
@@ -422,11 +486,11 @@ function ChoosePathSection() {
   return (
     <section
       className="px-6 py-24"
-      style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
+      style={{ borderTop: "0.5px solid rgba(255,255,255,0.06)" }}
     >
       <div className="mx-auto max-w-6xl">
         <div className="mb-12">
-          <h2 className="font-display uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white">
+          <h2 className="font-sans uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white">
             Different goals.{" "}
             <span style={{ color: P }}>Same problem.</span>
           </h2>
@@ -440,8 +504,9 @@ function ChoosePathSection() {
             id="work-with-me"
             className="rounded-xl p-8 flex flex-col"
             style={{
-              background: `linear-gradient(160deg, rgba(29,161,255,0.05), rgba(8,8,8,0.96))`,
-              border: `1px solid rgba(29,161,255,0.16)`,
+              ...glass,
+              background: `linear-gradient(160deg, rgba(0,200,255,0.07), rgba(5,5,16,0.85))`,
+              border: `0.5px solid rgba(0,200,255,0.20)`,
             }}
           >
             <div
@@ -450,7 +515,7 @@ function ChoosePathSection() {
             >
               — Business Owners
             </div>
-            <h3 className="font-display uppercase text-2xl font-black tracking-tight text-white mb-4 leading-tight">
+            <h3 className="font-sans uppercase text-2xl font-black tracking-tight text-white mb-4 leading-tight">
               You need systems,<br />not more manual work.
             </h3>
             <ul className="space-y-2.5 mb-8 flex-1">
@@ -471,8 +536,8 @@ function ChoosePathSection() {
             </ul>
             <a
               href="mailto:matt@krakenvault.com"
-              className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider text-white transition hover:brightness-110"
-              style={{ background: P, boxShadow: `0 0 20px rgba(29,161,255,0.22)` }}
+              className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
+              style={{ background: P, color: "#050510", boxShadow: `0 0 24px rgba(0,200,255,0.28)` }}
             >
               Work With Me <ArrowRight className="h-4 w-4" />
             </a>
@@ -481,8 +546,9 @@ function ChoosePathSection() {
           <div
             className="rounded-xl p-8 flex flex-col"
             style={{
-              background: `linear-gradient(160deg, rgba(127,119,221,0.05), rgba(8,8,8,0.96))`,
-              border: `1px solid rgba(127,119,221,0.16)`,
+              ...glass,
+              background: `linear-gradient(160deg, rgba(127,119,221,0.07), rgba(5,5,16,0.85))`,
+              border: `0.5px solid rgba(127,119,221,0.20)`,
             }}
           >
             <div
@@ -491,7 +557,7 @@ function ChoosePathSection() {
             >
               — Builders & Creators
             </div>
-            <h3 className="font-display uppercase text-2xl font-black tracking-tight text-white mb-4 leading-tight">
+            <h3 className="font-sans uppercase text-2xl font-black tracking-tight text-white mb-4 leading-tight">
               Stop consuming.<br />Start building.
             </h3>
             <ul className="space-y-2.5 mb-8 flex-1">
@@ -513,7 +579,7 @@ function ChoosePathSection() {
             <Link
               to="/vault"
               className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:bg-white/5"
-              style={{ border: `1px solid rgba(127,119,221,0.32)`, color: V }}
+              style={{ border: `1px solid rgba(127,119,221,0.36)`, color: V }}
             >
               Explore the Vault <ArrowRight className="h-4 w-4" />
             </Link>
@@ -547,8 +613,8 @@ function EcosystemSection() {
     <section
       className="relative px-6 py-28 overflow-hidden"
       style={{
-        background: `radial-gradient(ellipse at 50% 50%, rgba(29,161,255,0.05) 0%, transparent 65%), #050505`,
-        borderTop: "1px solid rgba(255,255,255,0.04)",
+        background: `radial-gradient(ellipse at 50% 50%, rgba(0,200,255,0.06) 0%, transparent 65%), transparent`,
+        borderTop: "0.5px solid rgba(255,255,255,0.06)",
       }}
     >
       <div className="mx-auto max-w-6xl">
@@ -557,19 +623,19 @@ function EcosystemSection() {
             <div className="relative w-full max-w-sm aspect-square">
               <div
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
-                style={{ background: `radial-gradient(circle, rgba(29,161,255,0.06) 0%, transparent 70%)` }}
+                style={{ background: `radial-gradient(circle, rgba(0,200,255,0.07) 0%, transparent 70%)` }}
               />
               <div
                 className="absolute top-1/4 right-1/4 w-32 h-32 rounded-full"
-                style={{ background: `radial-gradient(circle, rgba(127,119,221,0.05) 0%, transparent 70%)` }}
+                style={{ background: `radial-gradient(circle, rgba(127,119,221,0.06) 0%, transparent 70%)` }}
               />
               <div
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full"
-                style={{ border: `1px solid rgba(29,161,255,0.10)` }}
+                style={{ border: `1px solid rgba(0,200,255,0.13)` }}
               />
               <div
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
-                style={{ border: `1px solid rgba(127,119,221,0.07)` }}
+                style={{ border: `1px solid rgba(127,119,221,0.09)` }}
               />
 
               <svg
@@ -577,6 +643,15 @@ function EcosystemSection() {
                 viewBox="0 0 100 100"
                 preserveAspectRatio="none"
               >
+                <defs>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="0.8" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
                 {ECO_EDGES.map(([a, b], i) => (
                   <line
                     key={i}
@@ -584,8 +659,9 @@ function EcosystemSection() {
                     y1={`${ECO_NODES[a].y}%`}
                     x2={`${ECO_NODES[b].x}%`}
                     y2={`${ECO_NODES[b].y}%`}
-                    stroke="rgba(29,161,255,0.13)"
-                    strokeWidth="0.4"
+                    stroke="rgba(0,200,255,0.22)"
+                    strokeWidth="0.5"
+                    filter="url(#glow)"
                   />
                 ))}
               </svg>
@@ -593,7 +669,7 @@ function EcosystemSection() {
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
                 <div
                   className="h-3 w-3 rounded-full animate-pulse"
-                  style={{ background: P, boxShadow: `0 0 14px ${P}` }}
+                  style={{ background: P, boxShadow: `0 0 16px ${P}` }}
                 />
               </div>
 
@@ -606,7 +682,7 @@ function EcosystemSection() {
                   <div className="flex items-center gap-1.5">
                     <div
                       className="h-1.5 w-1.5 rounded-full shrink-0"
-                      style={{ background: n.color, boxShadow: `0 0 5px ${n.color}` }}
+                      style={{ background: n.color, boxShadow: `0 0 6px ${n.color}` }}
                     />
                     <span
                       className="text-[10px] font-bold uppercase tracking-wider whitespace-nowrap"
@@ -621,7 +697,7 @@ function EcosystemSection() {
           </div>
 
           <div className="order-1 lg:order-2">
-            <h2 className="font-display uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white mb-6">
+            <h2 className="font-sans uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white mb-6">
               Not tactics.
               <br />
               <span style={{ color: P }}>Connected systems.</span>
@@ -634,8 +710,8 @@ function EcosystemSection() {
             </p>
             <Link
               to="/vault"
-              className="inline-flex items-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider text-white transition hover:brightness-110"
-              style={{ background: P, boxShadow: `0 0 20px rgba(29,161,255,0.25)` }}
+              className="inline-flex items-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
+              style={{ background: P, color: "#050510", boxShadow: `0 0 24px rgba(0,200,255,0.28)` }}
             >
               See What's Inside <ArrowRight className="h-4 w-4" />
             </Link>
@@ -652,11 +728,11 @@ function ProofSection() {
   return (
     <section
       className="px-6 py-24"
-      style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
+      style={{ borderTop: "0.5px solid rgba(255,255,255,0.06)" }}
     >
       <div className="mx-auto max-w-6xl">
         <div className="mb-10">
-          <h2 className="font-display uppercase text-2xl sm:text-3xl font-black tracking-tight leading-[1] text-white">
+          <h2 className="font-sans uppercase text-2xl sm:text-3xl font-black tracking-tight leading-[1] text-white">
             Real systems. <span style={{ color: P }}>Real workflows.</span>
           </h2>
         </div>
@@ -670,37 +746,51 @@ function ProofSection() {
   );
 }
 
-function VideoCard({ youtubeId, title, tag }: { youtubeId: string; title: string; tag: string }) {
-  const thumbUrl = youtubeId ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg` : null;
-  const href = youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : undefined;
+function VideoCard({ youtubeId: rawId, title, tag }: { youtubeId: string; title: string; tag: string }) {
+  const videoId = extractYoutubeId(rawId);
+  const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
+  const href = videoId ? `https://www.youtube.com/watch?v=${videoId}` : undefined;
 
   const inner = (
     <div
       className="rounded-xl overflow-hidden group cursor-pointer"
-      style={{ border: "1px solid rgba(255,255,255,0.06)", background: "#0a0a0a" }}
+      style={{
+        ...glass,
+        background: "rgba(5,5,20,0.70)",
+        border: "0.5px solid rgba(255,255,255,0.12)",
+      }}
     >
       <div className="relative aspect-video flex items-center justify-center overflow-hidden">
         {thumbUrl ? (
           <img src={thumbUrl} alt={title} className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#0f0f0f] to-[#080808]">
+          <div className="w-full h-full flex items-center justify-center" style={{ background: "rgba(5,5,20,0.9)" }}>
             <Video className="h-8 w-8" style={{ color: "rgba(255,255,255,0.08)" }} />
           </div>
         )}
+        {/* Glossy top sheen */}
+        <div
+          className="absolute inset-x-0 top-0 h-1/3 pointer-events-none"
+          style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 100%)" }}
+        />
         <div className="absolute inset-0 flex items-center justify-center">
           <div
-            className="h-11 w-11 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
-            style={{ background: `${P}e6`, boxShadow: `0 0 20px rgba(29,161,255,0.4)` }}
+            className="h-12 w-12 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
+            style={{
+              background: "rgba(0,200,255,0.15)",
+              border: `1.5px solid rgba(0,200,255,0.60)`,
+              boxShadow: `0 0 24px rgba(0,200,255,0.50), inset 0 0 12px rgba(0,200,255,0.10)`,
+            }}
           >
-            <Play className="h-4 w-4 text-white fill-white ml-0.5" />
+            <Play className="h-4 w-4 fill-current ml-0.5" style={{ color: P }} />
           </div>
         </div>
         <div className="absolute top-3 left-3">
           <span
             className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm"
             style={{
-              background: "rgba(8,8,8,0.88)",
-              border: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(5,5,16,0.88)",
+              border: "0.5px solid rgba(255,255,255,0.10)",
               color: P,
             }}
           >
@@ -766,10 +856,10 @@ function VaultSection() {
       className="relative px-6 py-28 overflow-hidden"
       style={{
         background:
-          `radial-gradient(ellipse at 30% 50%, rgba(29,161,255,0.06) 0%, transparent 55%), ` +
-          `radial-gradient(ellipse at 70% 50%, rgba(127,119,221,0.04) 0%, transparent 55%), ` +
-          `#060606`,
-        borderTop: "1px solid rgba(255,255,255,0.04)",
+          `radial-gradient(ellipse at 30% 50%, rgba(0,200,255,0.07) 0%, transparent 55%), ` +
+          `radial-gradient(ellipse at 70% 50%, rgba(127,119,221,0.05) 0%, transparent 55%), ` +
+          `transparent`,
+        borderTop: "0.5px solid rgba(255,255,255,0.06)",
       }}
     >
       <div className="mx-auto max-w-6xl">
@@ -781,7 +871,7 @@ function VaultSection() {
             >
               — The Vault
             </div>
-            <h2 className="font-display uppercase text-4xl sm:text-5xl font-black tracking-tight leading-[0.93] text-white">
+            <h2 className="font-sans uppercase text-4xl sm:text-5xl font-black tracking-tight leading-[0.93] text-white">
               Inside the Vault.
             </h2>
             <p className="mt-4 max-w-lg leading-relaxed" style={{ color: "rgba(255,255,255,0.38)" }}>
@@ -790,45 +880,51 @@ function VaultSection() {
           </div>
           <Link
             to="/vault"
-            className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider text-white transition hover:brightness-110 shrink-0"
-            style={{ background: P, boxShadow: `0 0 24px rgba(29,161,255,0.28)` }}
+            className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider transition hover:brightness-110 shrink-0"
+            style={{ background: P, color: "#050510", boxShadow: `0 0 28px rgba(0,200,255,0.30)` }}
           >
             Open the Vault <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {VAULT_ITEMS.map(({ icon: Icon, label, desc }) => (
-            <div
-              key={label}
-              className="rounded-xl p-5 flex gap-4 items-start"
-              style={{
-                background: "rgba(12,12,12,0.9)",
-                border: "1px solid rgba(255,255,255,0.05)",
-              }}
-            >
+        {/* Single large glass container */}
+        <div
+          className="rounded-2xl overflow-hidden"
+          style={glass}
+        >
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3">
+            {VAULT_ITEMS.map(({ icon: Icon, label, desc }, idx) => (
               <div
-                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg mt-0.5"
+                key={label}
+                className="p-6 flex gap-4 items-start relative"
                 style={{
-                  background: `rgba(29,161,255,0.08)`,
-                  border: `1px solid rgba(29,161,255,0.15)`,
+                  borderRight: (idx % 3 !== 2) ? "0.5px solid rgba(0,200,255,0.10)" : undefined,
+                  borderBottom: (idx < 3) ? "0.5px solid rgba(0,200,255,0.10)" : undefined,
                 }}
               >
-                <Icon className="h-4 w-4" style={{ color: P }} />
+                <div
+                  className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg mt-0.5"
+                  style={{
+                    background: `rgba(0,200,255,0.08)`,
+                    border: `1px solid rgba(0,200,255,0.18)`,
+                  }}
+                >
+                  <Icon className="h-4 w-4" style={{ color: P }} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white mb-1">{label}</h3>
+                  <p className="text-[12px] leading-relaxed" style={{ color: "rgba(255,255,255,0.35)" }}>
+                    {desc}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-sm font-bold text-white mb-1">{label}</h3>
-                <p className="text-[12px] leading-relaxed" style={{ color: "rgba(255,255,255,0.32)" }}>
-                  {desc}
-                </p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         <p
           className="mt-8 text-[11px] uppercase tracking-wider"
-          style={{ color: `rgba(29,161,255,0.38)` }}
+          style={{ color: `rgba(0,200,255,0.38)` }}
         >
           Built for operators. Not students.
         </p>
@@ -843,7 +939,7 @@ function CredibilitySection() {
   return (
     <section
       className="px-6 py-16"
-      style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
+      style={{ borderTop: "0.5px solid rgba(255,255,255,0.06)" }}
     >
       <div className="mx-auto max-w-3xl text-center">
         <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.26)" }}>
@@ -863,22 +959,34 @@ function FinalCtaSection() {
     <section
       className="relative px-6 py-36 overflow-hidden"
       style={{
-        background: `radial-gradient(ellipse at 50% 0%, rgba(29,161,255,0.09) 0%, transparent 55%), #080808`,
-        borderTop: "1px solid rgba(255,255,255,0.04)",
+        background:
+          `radial-gradient(ellipse at 50% 0%, rgba(0,200,255,0.10) 0%, transparent 50%), ` +
+          `radial-gradient(ellipse at 30% 100%, rgba(127,119,221,0.12) 0%, transparent 50%), ` +
+          `radial-gradient(ellipse at 70% 80%, rgba(80,40,200,0.08) 0%, transparent 40%), ` +
+          `#020208`,
+        borderTop: "0.5px solid rgba(255,255,255,0.06)",
       }}
     >
+      {/* Deep-space grid */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-20"
+        className="absolute inset-0 pointer-events-none opacity-15"
         style={{
           backgroundImage:
-            `linear-gradient(rgba(29,161,255,0.04) 1px, transparent 1px), ` +
-            `linear-gradient(90deg, rgba(29,161,255,0.04) 1px, transparent 1px)`,
+            `linear-gradient(rgba(0,200,255,0.04) 1px, transparent 1px), ` +
+            `linear-gradient(90deg, rgba(0,200,255,0.04) 1px, transparent 1px)`,
           backgroundSize: "64px 64px",
+        }}
+      />
+      {/* Purple/blue fade-out at bottom */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none"
+        style={{
+          background: "linear-gradient(0deg, rgba(30,10,80,0.55) 0%, transparent 100%)",
         }}
       />
 
       <div className="relative mx-auto max-w-2xl text-center">
-        <h2 className="font-display uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.95] text-white">
+        <h2 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.95] text-white">
           You wake up early
           <br />
           for a job you tolerate.
@@ -898,8 +1006,8 @@ function FinalCtaSection() {
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <Link
             to="/vault"
-            className="inline-flex items-center gap-2 rounded-md px-8 py-4 text-sm font-black uppercase tracking-wider text-white transition hover:brightness-110"
-            style={{ background: P, boxShadow: `0 0 28px rgba(29,161,255,0.3)` }}
+            className="inline-flex items-center gap-2 rounded-md px-8 py-4 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
+            style={{ background: P, color: "#050510", boxShadow: `0 0 32px rgba(0,200,255,0.35)` }}
           >
             Explore the Vault <ArrowRight className="h-4 w-4" />
           </Link>
@@ -907,9 +1015,9 @@ function FinalCtaSection() {
             href="mailto:matt@krakenvault.com"
             className="inline-flex items-center gap-2 rounded-md px-8 py-4 text-sm font-black uppercase tracking-wider transition hover:text-white"
             style={{
-              border: "1px solid rgba(255,255,255,0.10)",
-              background: "rgba(255,255,255,0.03)",
-              color: "rgba(255,255,255,0.60)",
+              border: "1px solid rgba(255,255,255,0.18)",
+              background: "transparent",
+              color: "rgba(255,255,255,0.65)",
             }}
           >
             Work With Me <ChevronRight className="h-4 w-4" />
