@@ -99,5 +99,17 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <>
+      {/* Fixed ambient blobs — visible on every page */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
+        <div className="absolute" style={{ width: "70vw", height: "70vw", top: "-20vw", left: "-20vw", borderRadius: "50%", background: "radial-gradient(circle, rgba(26,92,255,0.08) 0%, transparent 70%)", filter: "blur(80px)" }} />
+        <div className="absolute" style={{ width: "60vw", height: "60vw", top: "20vh", right: "-15vw", borderRadius: "50%", background: "radial-gradient(circle, rgba(41,82,204,0.06) 0%, transparent 70%)", filter: "blur(80px)" }} />
+        <div className="absolute" style={{ width: "55vw", height: "55vw", bottom: "10vh", left: "20vw", borderRadius: "50%", background: "radial-gradient(circle, rgba(26,92,255,0.05) 0%, transparent 70%)", filter: "blur(100px)" }} />
+      </div>
+      <div className="relative" style={{ zIndex: 1 }}>
+        <Outlet />
+      </div>
+    </>
+  );
 }
