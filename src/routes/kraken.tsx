@@ -1,29 +1,35 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  Wrench,
-  Zap,
-  TrendingUp,
-  Play,
-  ChevronRight,
-  Terminal,
-  Video,
-  Bot,
-  GitBranch,
-  FileText,
-  Package,
-  BookOpen,
-} from "lucide-react";
+import { ArrowRight, Play, ChevronRight, Video } from "lucide-react";
 
 // ── Swappable assets — edit these without touching layout ─────────────────────
-const LOGO_URL = "https://i.ibb.co/607fGNdR/file-45.jpg"; // set to your logo image URL, or leave empty for SVG default
-const HERO_IMAGE_URL = "https://i.ibb.co/Y4GBCzPw/file-46.jpg"; // optional hero/product screenshot URL
+const LOGO_URL = "https://i.ibb.co/607fGNdR/file-45.jpg"; // logo image URL, or leave empty for SVG default
+const HERO_IMAGE_URL = "https://i.ibb.co/Y4GBCzPw/file-46.jpg"; // hero image URL, or leave empty for SVG default
+const VAULT_IMAGE_URL = ""; // paste an image URL to replace the vault placeholder
+const ABOUT_MEDIA_URL = ""; // paste a GIF, image, or .mp4/.webm video URL for the About Me circle
 
-// Paste any YouTube URL format here — share URL, watch URL, or bare video ID
-const VIDEOS = [
-  { youtubeId: "https://youtu.be/9hxy2dzk7Ko?si=JdN5H2SZVBqFPpfv", title: "Full Automation Workflow", tag: "Automation" },
-  { youtubeId: "", title: "Funnel Build — Start to Finish", tag: "Funnels" },
-  { youtubeId: "", title: "AI Content System", tag: "AI Workflow" },
+// Paste any YouTube URL format (share, watch, embed) or bare video ID
+const VIDEOS: { youtubeId: string; title: string; tag: string; quote: string; attribution: string }[] = [
+  {
+    youtubeId: "https://youtu.be/9hxy2dzk7Ko?si=JdN5H2SZVBqFPpfv",
+    title: "Real Estate Agent",
+    tag: "Results",
+    quote: "Very knowledgeable and concise. Definitely recommend!",
+    attribution: "Real Estate Agent",
+  },
+  {
+    youtubeId: "",
+    title: "Micro Blading Client",
+    tag: "Results",
+    quote: "Helped me Build my Business, Super Happy with my results",
+    attribution: "Micro Blading Client",
+  },
+  {
+    youtubeId: "",
+    title: "Esthetician Client",
+    tag: "Results",
+    quote: "5 days & 145 leads. Multiple Appointments booked.",
+    attribution: "Esthetician",
+  },
 ];
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -142,10 +148,9 @@ function KrakenPage() {
       <div className="relative" style={{ zIndex: 1 }}>
         <KrakenNav />
         <HeroSection />
-        <BuildSection />
         <ChoosePathSection />
-        <EcosystemSection />
         <ProofSection />
+        <AboutSection />
         <VaultSection />
         <CredibilitySection />
         <FinalCtaSection />
@@ -417,69 +422,6 @@ function HeroCommandCenter() {
   );
 }
 
-// ── 2. BUILD · AUTOMATE · GROW ────────────────────────────────────────────────
-
-const BUILD_CARDS = [
-  {
-    icon: Wrench,
-    title: "Build",
-    color: P,
-    body: "Funnels, landing pages, lead systems, content engines.",
-  },
-  {
-    icon: Zap,
-    title: "Automate",
-    color: V,
-    body: "AI workflows, operational systems, automation infrastructure.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Grow",
-    color: "#1aa0f5",
-    body: "Content systems, lead generation, audience growth.",
-  },
-];
-
-function BuildSection() {
-  return (
-    <section
-      className="px-6 py-24"
-      style={{ borderTop: "0.5px solid rgba(255,255,255,0.06)" }}
-    >
-      <div className="mx-auto max-w-6xl">
-        <h2 className="font-sans uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white mb-12">
-          Build. Automate. <span style={{ color: P }}>Grow.</span>
-        </h2>
-
-        <div className="grid gap-5 md:grid-cols-3">
-          {BUILD_CARDS.map(({ icon: Icon, title, color, body }) => (
-            <div
-              key={title}
-              className="rounded-xl p-7 flex flex-col gap-5"
-              style={glass}
-            >
-              <div
-                className="inline-flex h-10 w-10 items-center justify-center rounded-lg"
-                style={{ background: `${color}0f`, border: `1px solid ${color}28` }}
-              >
-                <Icon className="h-4 w-4" style={{ color }} />
-              </div>
-              <div>
-                <h3 className="font-sans uppercase text-xl font-black tracking-tight text-white mb-2">
-                  {title}
-                </h3>
-                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.42)" }}>
-                  {body}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 // ── 3. AUDIENCE SPLIT ─────────────────────────────────────────────────────────
 
 function ChoosePathSection() {
@@ -590,137 +532,7 @@ function ChoosePathSection() {
   );
 }
 
-// ── 4. ECOSYSTEM ──────────────────────────────────────────────────────────────
 
-const ECO_NODES = [
-  { label: "Content", x: 50, y: 8, color: P },
-  { label: "Traffic", x: 78, y: 20, color: "#1a9ffa" },
-  { label: "Lead Capture", x: 88, y: 44, color: "#4ab0fc" },
-  { label: "Email", x: 78, y: 68, color: V },
-  { label: "Offers", x: 54, y: 84, color: "#9f77ee" },
-  { label: "Automation", x: 28, y: 76, color: V },
-  { label: "AI Layer", x: 12, y: 52, color: P },
-  { label: "Analytics", x: 22, y: 28, color: "#1a9ffa" },
-];
-
-const ECO_EDGES = [
-  [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0],
-  [0, 4], [2, 6], [1, 5], [3, 7],
-];
-
-function EcosystemSection() {
-  return (
-    <section
-      className="relative px-6 py-28 overflow-hidden"
-      style={{
-        background: `radial-gradient(ellipse at 50% 50%, rgba(0,200,255,0.06) 0%, transparent 65%), transparent`,
-        borderTop: "0.5px solid rgba(255,255,255,0.06)",
-      }}
-    >
-      <div className="mx-auto max-w-6xl">
-        <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
-          <div className="relative flex items-center justify-center order-2 lg:order-1">
-            <div className="relative w-full max-w-sm aspect-square">
-              <div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
-                style={{ background: `radial-gradient(circle, rgba(0,200,255,0.07) 0%, transparent 70%)` }}
-              />
-              <div
-                className="absolute top-1/4 right-1/4 w-32 h-32 rounded-full"
-                style={{ background: `radial-gradient(circle, rgba(127,119,221,0.06) 0%, transparent 70%)` }}
-              />
-              <div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full"
-                style={{ border: `1px solid rgba(0,200,255,0.13)` }}
-              />
-              <div
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
-                style={{ border: `1px solid rgba(127,119,221,0.09)` }}
-              />
-
-              <svg
-                className="absolute inset-0 w-full h-full"
-                viewBox="0 0 100 100"
-                preserveAspectRatio="none"
-              >
-                <defs>
-                  <filter id="glow">
-                    <feGaussianBlur stdDeviation="0.8" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-                {ECO_EDGES.map(([a, b], i) => (
-                  <line
-                    key={i}
-                    x1={`${ECO_NODES[a].x}%`}
-                    y1={`${ECO_NODES[a].y}%`}
-                    x2={`${ECO_NODES[b].x}%`}
-                    y2={`${ECO_NODES[b].y}%`}
-                    stroke="rgba(0,200,255,0.22)"
-                    strokeWidth="0.5"
-                    filter="url(#glow)"
-                  />
-                ))}
-              </svg>
-
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                <div
-                  className="h-3 w-3 rounded-full animate-pulse"
-                  style={{ background: P, boxShadow: `0 0 16px ${P}` }}
-                />
-              </div>
-
-              {ECO_NODES.map((n) => (
-                <div
-                  key={n.label}
-                  className="absolute z-10 -translate-x-1/2 -translate-y-1/2"
-                  style={{ left: `${n.x}%`, top: `${n.y}%` }}
-                >
-                  <div className="flex items-center gap-1.5">
-                    <div
-                      className="h-1.5 w-1.5 rounded-full shrink-0"
-                      style={{ background: n.color, boxShadow: `0 0 6px ${n.color}` }}
-                    />
-                    <span
-                      className="text-[10px] font-bold uppercase tracking-wider whitespace-nowrap"
-                      style={{ color: n.color }}
-                    >
-                      {n.label}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="order-1 lg:order-2">
-            <h2 className="font-sans uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white mb-6">
-              Not tactics.
-              <br />
-              <span style={{ color: P }}>Connected systems.</span>
-            </h2>
-            <p className="leading-relaxed mb-5" style={{ color: "rgba(255,255,255,0.38)" }}>
-              The difference between spinning and scaling is almost never capability. It's architecture. When the pieces connect — content feeds leads, leads feed email, email feeds offers, offers feed automation — the whole machine starts to compound.
-            </p>
-            <p className="leading-relaxed mb-9" style={{ color: "rgba(255,255,255,0.38)" }}>
-              Not isolated tactics. Infrastructure.
-            </p>
-            <Link
-              to="/vault"
-              className="inline-flex items-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
-              style={{ background: P, color: "#050510", boxShadow: `0 0 24px rgba(0,200,255,0.28)` }}
-            >
-              See What's Inside <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // ── 5. PROOF ──────────────────────────────────────────────────────────────────
 
@@ -731,12 +543,15 @@ function ProofSection() {
       style={{ borderTop: "0.5px solid rgba(255,255,255,0.06)" }}
     >
       <div className="mx-auto max-w-6xl">
-        <div className="mb-10">
-          <h2 className="font-sans uppercase text-2xl sm:text-3xl font-black tracking-tight leading-[1] text-white">
-            Real systems. <span style={{ color: P }}>Real workflows.</span>
+        <div className="mb-3 text-center">
+          <h2 className="font-sans text-2xl sm:text-3xl font-bold text-white">
+            Real Results Using This System
           </h2>
+          <p className="mt-2 text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>
+            Formerly Lead Net Marketing
+          </p>
         </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {VIDEOS.map((v, i) => (
             <VideoCard key={i} {...v} />
           ))}
@@ -746,109 +561,153 @@ function ProofSection() {
   );
 }
 
-function VideoCard({ youtubeId: rawId, title, tag }: { youtubeId: string; title: string; tag: string }) {
+function VideoCard({ youtubeId: rawId, title, tag, quote, attribution }: {
+  youtubeId: string;
+  title: string;
+  tag: string;
+  quote: string;
+  attribution: string;
+}) {
   const videoId = extractYoutubeId(rawId);
   const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
   const href = videoId ? `https://www.youtube.com/watch?v=${videoId}` : undefined;
 
-  const inner = (
-    <div
-      className="rounded-xl overflow-hidden group cursor-pointer"
-      style={{
-        ...glass,
-        background: "rgba(5,5,20,0.70)",
-        border: "0.5px solid rgba(255,255,255,0.12)",
-      }}
-    >
-      <div className="relative aspect-video flex items-center justify-center overflow-hidden">
-        {thumbUrl ? (
-          <img src={thumbUrl} alt={title} className="w-full h-full object-cover" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center" style={{ background: "rgba(5,5,20,0.9)" }}>
-            <Video className="h-8 w-8" style={{ color: "rgba(255,255,255,0.08)" }} />
-          </div>
-        )}
-        {/* Glossy top sheen */}
-        <div
-          className="absolute inset-x-0 top-0 h-1/3 pointer-events-none"
-          style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 100%)" }}
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div
-            className="h-12 w-12 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
-            style={{
-              background: "rgba(0,200,255,0.15)",
-              border: `1.5px solid rgba(0,200,255,0.60)`,
-              boxShadow: `0 0 24px rgba(0,200,255,0.50), inset 0 0 12px rgba(0,200,255,0.10)`,
-            }}
-          >
-            <Play className="h-4 w-4 fill-current ml-0.5" style={{ color: P }} />
-          </div>
+  const videoBlock = (
+    <div className="relative aspect-video flex items-center justify-center overflow-hidden rounded-t-xl group cursor-pointer">
+      {thumbUrl ? (
+        <img src={thumbUrl} alt={title} className="w-full h-full object-cover" />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center" style={{ background: "rgba(5,5,20,0.9)" }}>
+          <Video className="h-8 w-8" style={{ color: "rgba(255,255,255,0.08)" }} />
         </div>
-        <div className="absolute top-3 left-3">
-          <span
-            className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm"
-            style={{
-              background: "rgba(5,5,16,0.88)",
-              border: "0.5px solid rgba(255,255,255,0.10)",
-              color: P,
-            }}
-          >
-            {tag}
-          </span>
+      )}
+      <div
+        className="absolute inset-x-0 top-0 h-1/3 pointer-events-none"
+        style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 100%)" }}
+      />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div
+          className="h-12 w-12 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
+          style={{
+            background: "rgba(0,200,255,0.15)",
+            border: `1.5px solid rgba(0,200,255,0.60)`,
+            boxShadow: `0 0 24px rgba(0,200,255,0.50), inset 0 0 12px rgba(0,200,255,0.10)`,
+          }}
+        >
+          <Play className="h-4 w-4 fill-current ml-0.5" style={{ color: P }} />
         </div>
       </div>
-      <div className="p-4">
-        <h3 className="font-semibold text-sm text-white leading-snug">{title}</h3>
-        <div
-          className="mt-1.5 flex items-center gap-1.5 text-[11px]"
-          style={{ color: "rgba(255,255,255,0.28)" }}
+      <div className="absolute top-3 left-3">
+        <span
+          className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm"
+          style={{
+            background: "rgba(5,5,16,0.88)",
+            border: "0.5px solid rgba(255,255,255,0.10)",
+            color: P,
+          }}
         >
-          <Terminal className="h-3 w-3" />
-          <span>Actual build · No filler</span>
-        </div>
+          {tag}
+        </span>
       </div>
     </div>
   );
 
-  if (href) return <a href={href} target="_blank" rel="noopener noreferrer">{inner}</a>;
-  return inner;
+  return (
+    <div
+      className="rounded-xl overflow-hidden flex flex-col"
+      style={{ ...glass, background: "rgba(5,5,20,0.70)", border: "0.5px solid rgba(255,255,255,0.12)" }}
+    >
+      {href ? (
+        <a href={href} target="_blank" rel="noopener noreferrer">{videoBlock}</a>
+      ) : videoBlock}
+
+      <div className="p-5 flex flex-col gap-3 flex-1">
+        <svg className="h-5 w-5 shrink-0" viewBox="0 0 20 16" fill="none">
+          <path d="M0 16V9.6C0 4.267 3.2 1.067 9.6 0l1.2 2C8 2.667 6.4 4 6 6h3v10H0Zm10.4 0V9.6C10.4 4.267 13.6 1.067 20 0l1.2 2c-2.8.667-4.4 2-4.8 4h3v10h-9.6Z" fill={V} opacity="0.7"/>
+        </svg>
+        <p className="text-sm leading-relaxed italic" style={{ color: "rgba(255,255,255,0.65)" }}>
+          "{quote}"
+        </p>
+        <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.30)" }}>
+          — {attribution}
+        </p>
+      </div>
+    </div>
+  );
 }
 
-// ── 6. THE VAULT ──────────────────────────────────────────────────────────────
+// ── 6. ABOUT ME ───────────────────────────────────────────────────────────────
 
-const VAULT_ITEMS = [
-  {
-    icon: GitBranch,
-    label: "Funnel Systems",
-    desc: "Complete funnel builds, templates, and sequences.",
-  },
-  {
-    icon: Bot,
-    label: "AI Workflows",
-    desc: "Practical AI systems built for real-world use.",
-  },
-  {
-    icon: Zap,
-    label: "Automation Systems",
-    desc: "Multi-step automations and operational stacks.",
-  },
-  {
-    icon: FileText,
-    label: "Content Systems",
-    desc: "Content engines that generate consistent output.",
-  },
-  {
-    icon: Package,
-    label: "Offer Vault",
-    desc: "Offer frameworks, positioning, and packaging guides.",
-  },
-  {
-    icon: BookOpen,
-    label: "Swipe Files",
-    desc: "Copy, hooks, frameworks, and reusable assets.",
-  },
-];
+function AboutSection() {
+  const isVideo = ABOUT_MEDIA_URL && (ABOUT_MEDIA_URL.includes(".mp4") || ABOUT_MEDIA_URL.includes(".webm"));
+
+  return (
+    <section
+      className="px-6 py-24"
+      style={{ borderTop: "0.5px solid rgba(255,255,255,0.06)" }}
+    >
+      <div className="mx-auto max-w-3xl">
+        <div className="rounded-2xl p-10 flex flex-col items-center text-center" style={glass}>
+          {/* Circular media — swappable GIF / video / image via ABOUT_MEDIA_URL */}
+          <div
+            className="mb-8 h-28 w-28 rounded-full overflow-hidden shrink-0"
+            style={{
+              border: `2px solid rgba(0,200,255,0.32)`,
+              boxShadow: `0 0 28px rgba(0,200,255,0.20)`,
+            }}
+          >
+            {isVideo ? (
+              <video
+                src={ABOUT_MEDIA_URL}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            ) : ABOUT_MEDIA_URL ? (
+              <img src={ABOUT_MEDIA_URL} alt="About" className="w-full h-full object-cover" />
+            ) : (
+              <div
+                className="w-full h-full flex items-center justify-center"
+                style={{ background: "rgba(0,200,255,0.07)" }}
+              >
+                <LogoMark className="h-16 w-16" />
+              </div>
+            )}
+          </div>
+
+          <h2 className="font-sans text-2xl font-bold text-white mb-6">About Me</h2>
+
+          <p className="mb-4 text-sm" style={{ color: "rgba(255,255,255,0.60)" }}>
+            I'm not a "guru." I've:
+          </p>
+
+          <ul className="mb-7 space-y-1.5 text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+            {[
+              "Sold on Amazon",
+              "Built and sold my own products",
+              "Run ads for real businesses",
+              "Built automation systems that actually save time",
+            ].map((item) => (
+              <li key={item} className="flex items-center justify-center gap-2">
+                <span className="h-1 w-1 rounded-full shrink-0" style={{ background: P }} />
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <p className="max-w-md text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.40)" }}>
+            I'm not here to sell you another course to resell to the next desperate taker.
+            I help you build the system behind them — the part that actually makes money.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── 7. THE VAULT ──────────────────────────────────────────────────────────────
 
 function VaultSection() {
   return (
@@ -887,40 +746,24 @@ function VaultSection() {
           </Link>
         </div>
 
-        {/* Single large glass container */}
-        <div
-          className="rounded-2xl overflow-hidden"
-          style={glass}
-        >
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3">
-            {VAULT_ITEMS.map(({ icon: Icon, label, desc }, idx) => (
-              <div
-                key={label}
-                className="p-6 flex gap-4 items-start relative"
-                style={{
-                  borderRight: (idx % 3 !== 2) ? "0.5px solid rgba(0,200,255,0.10)" : undefined,
-                  borderBottom: (idx < 3) ? "0.5px solid rgba(0,200,255,0.10)" : undefined,
-                }}
-              >
-                <div
-                  className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg mt-0.5"
-                  style={{
-                    background: `rgba(0,200,255,0.08)`,
-                    border: `1px solid rgba(0,200,255,0.18)`,
-                  }}
-                >
-                  <Icon className="h-4 w-4" style={{ color: P }} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-white mb-1">{label}</h3>
-                  <p className="text-[12px] leading-relaxed" style={{ color: "rgba(255,255,255,0.35)" }}>
-                    {desc}
-                  </p>
-                </div>
-              </div>
-            ))}
+        {/* Vault image — set VAULT_IMAGE_URL at the top of this file to populate */}
+        {VAULT_IMAGE_URL ? (
+          <img
+            src={VAULT_IMAGE_URL}
+            alt="Inside the Vault"
+            className="w-full rounded-2xl"
+            style={{ border: "0.5px solid rgba(255,255,255,0.10)", boxShadow: "0 8px 40px rgba(0,0,0,0.45)" }}
+          />
+        ) : (
+          <div
+            className="w-full rounded-2xl flex items-center justify-center py-24"
+            style={{ ...glass, minHeight: 240 }}
+          >
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.18)" }}>
+              Vault image coming soon — set VAULT_IMAGE_URL at the top of this file
+            </p>
           </div>
-        </div>
+        )}
 
         <p
           className="mt-8 text-[11px] uppercase tracking-wider"
