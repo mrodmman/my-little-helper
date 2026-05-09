@@ -48,26 +48,26 @@ const VIDEOS: { youtubeId: string; title: string; tag: string; quote: string; at
 // Parse any YouTube URL or bare ID into a video ID string
 function extractYoutubeId(input: string): string {
   if (!input) return "";
-  // youtu.be/ID or youtu.be/ID?si=...
   const shortMatch = input.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
   if (shortMatch) return shortMatch[1];
-  // youtube.com/watch?v=ID or /embed/ID
   const longMatch = input.match(/(?:v=|\/embed\/)([a-zA-Z0-9_-]{11})/);
   if (longMatch) return longMatch[1];
-  // bare ID already
   if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
   return "";
 }
 
-const P = "#00C8FF"; // bright cyan
-const V = "#7F77DD"; // violet accent
+const P = "#1a5cff"; // electric blue
+const V = "#2952cc"; // deep ocean navy
+
+const FG  = "#0d1220";                    // main dark text
+const fg  = (a: number) => `rgba(13,18,32,${a})`; // helper for opacity text
 
 const glass: React.CSSProperties = {
-  background: "rgba(255,255,255,0.04)",
+  background: "rgba(252,250,246,0.80)",
   backdropFilter: "blur(24px)",
   WebkitBackdropFilter: "blur(24px)",
-  border: "0.5px solid rgba(255,255,255,0.12)",
-  boxShadow: "0 8px 40px rgba(0,0,0,0.45)",
+  border: "0.5px solid rgba(0,0,0,0.10)",
+  boxShadow: "0 8px 40px rgba(0,0,0,0.08)",
 };
 
 export const Route = createFileRoute("/kraken")({
@@ -101,7 +101,7 @@ function LogoMark({ className = "" }: { className?: string }) {
           <stop offset="100%" stopColor={V} />
         </linearGradient>
       </defs>
-      <rect width="64" height="64" rx="14" fill="#050510" />
+      <rect width="64" height="64" rx="14" fill="#edeae4" />
       <circle cx="32" cy="32" r="26" fill="none" stroke="url(#kk-g)" strokeWidth="2.5" />
       <path d="M22 44V20h6l4 6 4-6h6v24h-6V30l-4 5-4-5v14z" fill="url(#kk-g)" />
       <circle cx="20" cy="42" r="2" fill={P} opacity="0.6" />
@@ -115,10 +115,10 @@ function LogoMark({ className = "" }: { className?: string }) {
 function KrakenPage() {
   return (
     <main
-      className="min-h-screen text-foreground overflow-x-hidden relative"
-      style={{ background: "#050510", fontFamily: "'Inter', system-ui, sans-serif" }}
+      className="min-h-screen overflow-x-hidden relative"
+      style={{ background: "#edeae4", color: FG, fontFamily: "'Inter', system-ui, sans-serif" }}
     >
-      {/* Ambient background blobs */}
+      {/* Ambient background blobs — subtle on light bg */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
         <div
           className="absolute"
@@ -128,7 +128,7 @@ function KrakenPage() {
             top: "-20vw",
             left: "-20vw",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(100,60,220,0.18) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(26,92,255,0.07) 0%, transparent 70%)",
             filter: "blur(80px)",
           }}
         />
@@ -140,7 +140,7 @@ function KrakenPage() {
             top: "20vh",
             right: "-15vw",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(0,200,255,0.12) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(41,82,204,0.06) 0%, transparent 70%)",
             filter: "blur(80px)",
           }}
         />
@@ -152,7 +152,7 @@ function KrakenPage() {
             bottom: "10vh",
             left: "20vw",
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(80,40,180,0.12) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(26,92,255,0.05) 0%, transparent 70%)",
             filter: "blur(100px)",
           }}
         />
@@ -177,14 +177,14 @@ function KrakenNav() {
     <header
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
       style={{
-        background: "rgba(5,5,16,0.88)",
+        background: "rgba(237,234,228,0.92)",
         backdropFilter: "blur(18px)",
-        borderBottom: "0.5px solid rgba(255,255,255,0.07)",
+        borderBottom: "0.5px solid rgba(0,0,0,0.08)",
       }}
     >
       <Link to="/kraken" className="flex items-center gap-2.5">
         <LogoMark className="h-7 w-7" />
-        <span className="text-[11px] font-bold uppercase tracking-[0.28em] text-white/60">
+        <span className="text-[11px] font-bold uppercase tracking-[0.28em]" style={{ color: fg(0.45) }}>
           Keyboard Kraken
         </span>
       </Link>
@@ -192,24 +192,26 @@ function KrakenNav() {
       <nav className="flex items-center gap-6">
         <Link
           to="/vault"
-          className="text-[12px] font-semibold uppercase tracking-wider text-white/40 hover:text-white transition hidden sm:block"
+          className="text-[12px] font-semibold uppercase tracking-wider transition hidden sm:block"
+          style={{ color: fg(0.40) }}
         >
           Vault
         </Link>
         <a
           href="mailto:matt@krakenvault.com"
-          className="text-[12px] font-semibold uppercase tracking-wider text-white/40 hover:text-white transition hidden sm:block"
+          className="text-[12px] font-semibold uppercase tracking-wider transition hidden sm:block"
+          style={{ color: fg(0.40) }}
         >
           Work With Me
         </a>
         {(SOCIAL.twitter || SOCIAL.youtube || SOCIAL.instagram || SOCIAL.tiktok) && (
           <div
             className="flex items-center gap-3 pl-4"
-            style={{ borderLeft: "0.5px solid rgba(255,255,255,0.09)" }}
+            style={{ borderLeft: "0.5px solid rgba(0,0,0,0.10)" }}
           >
             {SOCIAL.twitter && (
               <a href={SOCIAL.twitter} target="_blank" rel="noopener noreferrer"
-                className="text-white/25 hover:text-white/60 transition" aria-label="X / Twitter">
+                className="transition" style={{ color: fg(0.30) }} aria-label="X / Twitter">
                 <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
                   <path d="M15.32 1.5H18L11.93 8.5 18.9 18.5h-5.65l-4.08-5.34L4.07 18.5H1.39l6.49-7.43L1.1 1.5h5.8l3.69 4.88L15.32 1.5Zm-.95 15.3h1.5L5.73 3H4.12L14.37 16.8Z" />
                 </svg>
@@ -217,7 +219,7 @@ function KrakenNav() {
             )}
             {SOCIAL.youtube && (
               <a href={SOCIAL.youtube} target="_blank" rel="noopener noreferrer"
-                className="text-white/25 hover:text-white/60 transition" aria-label="YouTube">
+                className="transition" style={{ color: fg(0.30) }} aria-label="YouTube">
                 <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
                   <path d="M18.7 5.4a2.26 2.26 0 0 0-1.59-1.6C15.73 3.5 10 3.5 10 3.5s-5.73 0-7.11.3A2.26 2.26 0 0 0 1.3 5.4 23.8 23.8 0 0 0 1 10a23.8 23.8 0 0 0 .3 4.6 2.26 2.26 0 0 0 1.59 1.6C4.27 16.5 10 16.5 10 16.5s5.73 0 7.11-.3a2.26 2.26 0 0 0 1.59-1.6A23.8 23.8 0 0 0 19 10a23.8 23.8 0 0 0-.3-4.6Zm-10.58 7.5V7.1L13.37 10l-5.25 2.9Z" />
                 </svg>
@@ -225,7 +227,7 @@ function KrakenNav() {
             )}
             {SOCIAL.instagram && (
               <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer"
-                className="text-white/25 hover:text-white/60 transition" aria-label="Instagram">
+                className="transition" style={{ color: fg(0.30) }} aria-label="Instagram">
                 <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
                   <path d="M10 1.8c2.67 0 2.99.01 4.04.06 2.75.13 4.03 1.42 4.16 4.16.05 1.05.06 1.37.06 4.04s-.01 2.99-.06 4.04c-.13 2.73-1.4 4.03-4.16 4.16-1.05.05-1.36.06-4.04.06s-2.99-.01-4.04-.06c-2.75-.13-4.03-1.43-4.16-4.16C1.75 12.99 1.74 12.67 1.74 10s.01-2.99.06-4.04C1.93 3.22 3.21 1.93 5.96 1.86 7.01 1.81 7.33 1.8 10 1.8Zm0-1.8C7.28 0 6.94.01 5.88.06 2.24.23.23 2.24.06 5.88.01 6.94 0 7.28 0 10c0 2.72.01 3.06.06 4.12.17 3.64 2.18 5.65 5.82 5.82C6.94 19.99 7.28 20 10 20s3.06-.01 4.12-.06c3.63-.17 5.65-2.18 5.82-5.82C19.99 13.06 20 12.72 20 10c0-2.72-.01-3.06-.06-4.12C19.77 2.25 17.76.23 14.12.06 13.06.01 12.72 0 10 0Zm0 4.86a5.14 5.14 0 1 0 0 10.28A5.14 5.14 0 0 0 10 4.86Zm0 8.48a3.34 3.34 0 1 1 0-6.68 3.34 3.34 0 0 1 0 6.68Zm5.34-9.8a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4Z" />
                 </svg>
@@ -233,7 +235,7 @@ function KrakenNav() {
             )}
             {SOCIAL.tiktok && (
               <a href={SOCIAL.tiktok} target="_blank" rel="noopener noreferrer"
-                className="text-white/25 hover:text-white/60 transition" aria-label="TikTok">
+                className="transition" style={{ color: fg(0.30) }} aria-label="TikTok">
                 <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
                   <path d="M17 4.1a4.9 4.9 0 0 1-3-.96V12a5 5 0 1 1-5-5c.17 0 .34.01.5.03V9.6a2.5 2.5 0 1 0 2 2.45V0h2.5A4.9 4.9 0 0 0 17 4.1Z" />
                 </svg>
@@ -256,17 +258,17 @@ function HeroSection() {
       className="relative min-h-screen flex flex-col justify-center px-6 pt-24 pb-20 overflow-hidden"
       style={{
         background:
-          `radial-gradient(ellipse at 15% 10%, rgba(0,200,255,0.10) 0%, transparent 50%), ` +
-          `radial-gradient(ellipse at 80% 25%, rgba(127,119,221,0.10) 0%, transparent 50%), ` +
+          `radial-gradient(ellipse at 15% 10%, rgba(26,92,255,0.06) 0%, transparent 50%), ` +
+          `radial-gradient(ellipse at 80% 25%, rgba(41,82,204,0.05) 0%, transparent 50%), ` +
           `transparent`,
       }}
     >
       <div
-        className="absolute inset-0 pointer-events-none opacity-20"
+        className="absolute inset-0 pointer-events-none opacity-30"
         style={{
           backgroundImage:
-            `linear-gradient(rgba(0,200,255,0.04) 1px, transparent 1px), ` +
-            `linear-gradient(90deg, rgba(0,200,255,0.04) 1px, transparent 1px)`,
+            `linear-gradient(rgba(26,92,255,0.04) 1px, transparent 1px), ` +
+            `linear-gradient(90deg, rgba(26,92,255,0.04) 1px, transparent 1px)`,
           backgroundSize: "64px 64px",
         }}
       />
@@ -276,12 +278,12 @@ function HeroSection() {
           <div>
             <div className="flex items-center gap-3 mb-10">
               <LogoMark className="h-9 w-9" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.28em] text-white/35">
+              <span className="text-[11px] font-bold uppercase tracking-[0.28em]" style={{ color: fg(0.35) }}>
                 Keyboard Kraken
               </span>
             </div>
 
-            <h1 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.92] text-white">
+            <h1 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.92]" style={{ color: FG }}>
               Build systems that grow your{" "}
               <span style={{ color: P }}>
                 business, audience,
@@ -290,25 +292,25 @@ function HeroSection() {
               </span>
             </h1>
 
-            <p className="mt-7 text-lg leading-relaxed max-w-lg" style={{ color: "rgba(255,255,255,0.42)" }}>
+            <p className="mt-7 text-lg leading-relaxed max-w-lg" style={{ color: fg(0.55) }}>
               AI, automation, content, funnels, and practical systems — connected properly so they actually work together.
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
               <Link
                 to="/vault"
-                className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider text-white transition hover:brightness-110"
-                style={{ background: P, color: "#050510", boxShadow: `0 0 32px rgba(0,200,255,0.35)` }}
+                className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
+                style={{ background: P, color: "#ffffff", boxShadow: `0 0 32px rgba(26,92,255,0.25)` }}
               >
                 Explore the Vault <ArrowRight className="h-4 w-4" />
               </Link>
               <a
                 href="#work-with-me"
-                className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider transition hover:text-white"
+                className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider transition"
                 style={{
-                  border: "1px solid rgba(255,255,255,0.18)",
+                  border: "1px solid rgba(0,0,0,0.18)",
                   background: "transparent",
-                  color: "rgba(255,255,255,0.70)",
+                  color: fg(0.65),
                 }}
               >
                 Work With Me <ChevronRight className="h-4 w-4" />
@@ -321,12 +323,12 @@ function HeroSection() {
                   {i > 0 && (
                     <span
                       className="h-1 w-1 rounded-full shrink-0"
-                      style={{ background: `rgba(0,200,255,0.35)` }}
+                      style={{ background: `rgba(26,92,255,0.35)` }}
                     />
                   )}
                   <span
                     className="text-[10px] font-bold uppercase tracking-[0.2em]"
-                    style={{ color: "rgba(255,255,255,0.28)" }}
+                    style={{ color: fg(0.35) }}
                   >
                     {tag}
                   </span>
@@ -342,8 +344,8 @@ function HeroSection() {
                 alt="System overview"
                 className="w-full max-w-md rounded-xl"
                 style={{
-                  border: "0.5px solid rgba(255,255,255,0.12)",
-                  boxShadow: `0 0 60px -10px rgba(0,200,255,0.28), 0 0 0 1px rgba(255,255,255,0.04)`,
+                  border: "0.5px solid rgba(0,0,0,0.10)",
+                  boxShadow: `0 0 60px -10px rgba(26,92,255,0.18), 0 0 0 1px rgba(0,0,0,0.05)`,
                 }}
               />
             ) : (
@@ -361,7 +363,7 @@ function HeroCommandCenter() {
     { label: "Content", color: P, x: 50, y: 10 },
     { label: "Funnel", color: "#1a9ffa", x: 78, y: 28 },
     { label: "Email", color: V, x: 82, y: 58 },
-    { label: "Offers", color: "#9f77ee", x: 62, y: 82 },
+    { label: "Offers", color: "#2952cc", x: 62, y: 82 },
     { label: "Automation", color: P, x: 28, y: 76 },
     { label: "Leads", color: "#1a9ffa", x: 14, y: 50 },
     { label: "AI", color: V, x: 22, y: 22 },
@@ -371,19 +373,19 @@ function HeroCommandCenter() {
     <div className="relative w-full max-w-sm aspect-square">
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-60 h-60 rounded-full"
-        style={{ background: `radial-gradient(circle, rgba(0,200,255,0.08) 0%, transparent 70%)` }}
+        style={{ background: `radial-gradient(circle, rgba(26,92,255,0.07) 0%, transparent 70%)` }}
       />
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 rounded-full"
-        style={{ background: `radial-gradient(circle, rgba(127,119,221,0.07) 0%, transparent 70%)` }}
+        style={{ background: `radial-gradient(circle, rgba(41,82,204,0.06) 0%, transparent 70%)` }}
       />
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-44 rounded-full"
-        style={{ border: `1px solid rgba(0,200,255,0.12)` }}
+        style={{ border: `1px solid rgba(26,92,255,0.14)` }}
       />
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full"
-        style={{ border: `1px solid rgba(127,119,221,0.08)` }}
+        style={{ border: `1px solid rgba(41,82,204,0.10)` }}
       />
 
       <svg
@@ -400,23 +402,23 @@ function HeroCommandCenter() {
               y1={`${n.y}%`}
               x2={`${next.x}%`}
               y2={`${next.y}%`}
-              stroke="rgba(0,200,255,0.18)"
+              stroke="rgba(26,92,255,0.15)"
               strokeWidth="0.5"
             />
           );
         })}
-        <line x1="50%" y1="10%" x2="82%" y2="58%" stroke="rgba(127,119,221,0.10)" strokeWidth="0.4" />
-        <line x1="14%" y1="50%" x2="78%" y2="28%" stroke="rgba(0,200,255,0.08)" strokeWidth="0.4" />
-        <line x1="22%" y1="22%" x2="62%" y2="82%" stroke="rgba(127,119,221,0.08)" strokeWidth="0.4" />
+        <line x1="50%" y1="10%" x2="82%" y2="58%" stroke="rgba(41,82,204,0.10)" strokeWidth="0.4" />
+        <line x1="14%" y1="50%" x2="78%" y2="28%" stroke="rgba(26,92,255,0.08)" strokeWidth="0.4" />
+        <line x1="22%" y1="22%" x2="62%" y2="82%" stroke="rgba(41,82,204,0.08)" strokeWidth="0.4" />
       </svg>
 
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
         <div
           className="rounded-full border p-4"
           style={{
-            borderColor: `rgba(0,200,255,0.30)`,
-            background: "rgba(5,5,16,0.9)",
-            boxShadow: `0 0 28px rgba(0,200,255,0.20)`,
+            borderColor: `rgba(26,92,255,0.30)`,
+            background: "rgba(237,234,228,0.9)",
+            boxShadow: `0 0 28px rgba(26,92,255,0.15)`,
           }}
         >
           <LogoMark className="h-12 w-12" />
@@ -434,7 +436,7 @@ function HeroCommandCenter() {
             style={{
               borderColor: `${node.color}28`,
               color: node.color,
-              background: "rgba(5,5,16,0.85)",
+              background: "rgba(237,234,228,0.88)",
             }}
           >
             {node.label}
@@ -451,15 +453,15 @@ function ChoosePathSection() {
   return (
     <section
       className="px-6 py-24"
-      style={{ borderTop: "0.5px solid rgba(255,255,255,0.06)" }}
+      style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}
     >
       <div className="mx-auto max-w-6xl">
         <div className="mb-12">
-          <h2 className="font-sans uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1] text-white">
+          <h2 className="font-sans uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1]" style={{ color: FG }}>
             Different goals.{" "}
             <span style={{ color: P }}>Same problem.</span>
           </h2>
-          <p className="mt-4 max-w-lg" style={{ color: "rgba(255,255,255,0.38)" }}>
+          <p className="mt-4 max-w-lg" style={{ color: fg(0.48) }}>
             Most people don't need more information. They need structure.
           </p>
         </div>
@@ -470,8 +472,8 @@ function ChoosePathSection() {
             className="rounded-xl p-8 flex flex-col"
             style={{
               ...glass,
-              background: `linear-gradient(160deg, rgba(0,200,255,0.07), rgba(5,5,16,0.85))`,
-              border: `0.5px solid rgba(0,200,255,0.20)`,
+              background: `linear-gradient(160deg, rgba(26,92,255,0.06), rgba(252,250,246,0.85))`,
+              border: `0.5px solid rgba(26,92,255,0.20)`,
             }}
           >
             <div
@@ -480,7 +482,7 @@ function ChoosePathSection() {
             >
               — Business Owners
             </div>
-            <h3 className="font-sans uppercase text-2xl font-black tracking-tight text-white mb-4 leading-tight">
+            <h3 className="font-sans uppercase text-2xl font-black tracking-tight mb-4 leading-tight" style={{ color: FG }}>
               You need systems,<br />not more manual work.
             </h3>
             <ul className="space-y-2.5 mb-8 flex-1">
@@ -490,7 +492,7 @@ function ChoosePathSection() {
                 "Too much time on work AI should handle",
                 "Marketing that doesn't compound",
               ].map((p) => (
-                <li key={p} className="flex items-start gap-2.5 text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+                <li key={p} className="flex items-start gap-2.5 text-sm" style={{ color: fg(0.55) }}>
                   <span
                     className="mt-1.5 h-1 w-1 rounded-full shrink-0"
                     style={{ background: P }}
@@ -502,7 +504,7 @@ function ChoosePathSection() {
             <a
               href="mailto:matt@krakenvault.com"
               className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
-              style={{ background: P, color: "#050510", boxShadow: `0 0 24px rgba(0,200,255,0.28)` }}
+              style={{ background: P, color: "#ffffff", boxShadow: `0 0 24px rgba(26,92,255,0.22)` }}
             >
               Work With Me <ArrowRight className="h-4 w-4" />
             </a>
@@ -512,8 +514,8 @@ function ChoosePathSection() {
             className="rounded-xl p-8 flex flex-col"
             style={{
               ...glass,
-              background: `linear-gradient(160deg, rgba(127,119,221,0.07), rgba(5,5,16,0.85))`,
-              border: `0.5px solid rgba(127,119,221,0.20)`,
+              background: `linear-gradient(160deg, rgba(41,82,204,0.06), rgba(252,250,246,0.85))`,
+              border: `0.5px solid rgba(41,82,204,0.20)`,
             }}
           >
             <div
@@ -522,7 +524,7 @@ function ChoosePathSection() {
             >
               — Builders & Creators
             </div>
-            <h3 className="font-sans uppercase text-2xl font-black tracking-tight text-white mb-4 leading-tight">
+            <h3 className="font-sans uppercase text-2xl font-black tracking-tight mb-4 leading-tight" style={{ color: FG }}>
               Stop consuming.<br />Start building.
             </h3>
             <ul className="space-y-2.5 mb-8 flex-1">
@@ -532,7 +534,7 @@ function ChoosePathSection() {
                 "Content that doesn't compound into leads",
                 "No monetization system in place",
               ].map((p) => (
-                <li key={p} className="flex items-start gap-2.5 text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+                <li key={p} className="flex items-start gap-2.5 text-sm" style={{ color: fg(0.55) }}>
                   <span
                     className="mt-1.5 h-1 w-1 rounded-full shrink-0"
                     style={{ background: V }}
@@ -543,8 +545,8 @@ function ChoosePathSection() {
             </ul>
             <Link
               to="/vault"
-              className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:bg-white/5"
-              style={{ border: `1px solid rgba(127,119,221,0.36)`, color: V }}
+              className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition"
+              style={{ border: `1px solid rgba(41,82,204,0.36)`, color: V, background: "transparent" }}
             >
               Explore the Vault <ArrowRight className="h-4 w-4" />
             </Link>
@@ -563,14 +565,14 @@ function ProofSection() {
   return (
     <section
       className="px-6 py-24"
-      style={{ borderTop: "0.5px solid rgba(255,255,255,0.06)" }}
+      style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}
     >
       <div className="mx-auto max-w-6xl">
         <div className="mb-3 text-center">
-          <h2 className="font-sans text-2xl sm:text-3xl font-bold text-white">
+          <h2 className="font-sans text-2xl sm:text-3xl font-bold" style={{ color: FG }}>
             Real Results Using This System
           </h2>
-          <p className="mt-2 text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>
+          <p className="mt-2 text-sm" style={{ color: fg(0.42) }}>
             Formerly Lead Net Marketing
           </p>
         </div>
@@ -600,21 +602,21 @@ function VideoCard({ youtubeId: rawId, title, tag, quote, attribution }: {
       {thumbUrl ? (
         <img src={thumbUrl} alt={title} className="w-full h-full object-cover" />
       ) : (
-        <div className="w-full h-full flex items-center justify-center" style={{ background: "rgba(5,5,20,0.9)" }}>
-          <Video className="h-8 w-8" style={{ color: "rgba(255,255,255,0.08)" }} />
+        <div className="w-full h-full flex items-center justify-center" style={{ background: "rgba(230,226,219,0.9)" }}>
+          <Video className="h-8 w-8" style={{ color: fg(0.15) }} />
         </div>
       )}
       <div
         className="absolute inset-x-0 top-0 h-1/3 pointer-events-none"
-        style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.07) 0%, transparent 100%)" }}
+        style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.06) 0%, transparent 100%)" }}
       />
       <div className="absolute inset-0 flex items-center justify-center">
         <div
           className="h-12 w-12 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
           style={{
-            background: "rgba(0,200,255,0.15)",
-            border: `1.5px solid rgba(0,200,255,0.60)`,
-            boxShadow: `0 0 24px rgba(0,200,255,0.50), inset 0 0 12px rgba(0,200,255,0.10)`,
+            background: "rgba(26,92,255,0.12)",
+            border: `1.5px solid rgba(26,92,255,0.55)`,
+            boxShadow: `0 0 24px rgba(26,92,255,0.35), inset 0 0 12px rgba(26,92,255,0.08)`,
           }}
         >
           <Play className="h-4 w-4 fill-current ml-0.5" style={{ color: P }} />
@@ -624,8 +626,8 @@ function VideoCard({ youtubeId: rawId, title, tag, quote, attribution }: {
         <span
           className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm"
           style={{
-            background: "rgba(5,5,16,0.88)",
-            border: "0.5px solid rgba(255,255,255,0.10)",
+            background: "rgba(237,234,228,0.90)",
+            border: "0.5px solid rgba(0,0,0,0.10)",
             color: P,
           }}
         >
@@ -638,7 +640,7 @@ function VideoCard({ youtubeId: rawId, title, tag, quote, attribution }: {
   return (
     <div
       className="rounded-xl overflow-hidden flex flex-col"
-      style={{ ...glass, background: "rgba(5,5,20,0.70)", border: "0.5px solid rgba(255,255,255,0.12)" }}
+      style={{ ...glass, background: "rgba(252,250,246,0.88)", border: "0.5px solid rgba(0,0,0,0.10)" }}
     >
       {href ? (
         <a href={href} target="_blank" rel="noopener noreferrer">{videoBlock}</a>
@@ -646,12 +648,12 @@ function VideoCard({ youtubeId: rawId, title, tag, quote, attribution }: {
 
       <div className="p-5 flex flex-col gap-3 flex-1">
         <svg className="h-5 w-5 shrink-0" viewBox="0 0 20 16" fill="none">
-          <path d="M0 16V9.6C0 4.267 3.2 1.067 9.6 0l1.2 2C8 2.667 6.4 4 6 6h3v10H0Zm10.4 0V9.6C10.4 4.267 13.6 1.067 20 0l1.2 2c-2.8.667-4.4 2-4.8 4h3v10h-9.6Z" fill={V} opacity="0.7"/>
+          <path d="M0 16V9.6C0 4.267 3.2 1.067 9.6 0l1.2 2C8 2.667 6.4 4 6 6h3v10H0Zm10.4 0V9.6C10.4 4.267 13.6 1.067 20 0l1.2 2c-2.8.667-4.4 2-4.8 4h3v10h-9.6Z" fill={V} opacity="0.6"/>
         </svg>
-        <p className="text-sm leading-relaxed italic" style={{ color: "rgba(255,255,255,0.65)" }}>
+        <p className="text-sm leading-relaxed italic" style={{ color: fg(0.65) }}>
           "{quote}"
         </p>
-        <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.30)" }}>
+        <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: fg(0.35) }}>
           — {attribution}
         </p>
       </div>
@@ -667,16 +669,15 @@ function AboutSection() {
   return (
     <section
       className="px-6 py-24"
-      style={{ borderTop: "0.5px solid rgba(255,255,255,0.06)" }}
+      style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}
     >
       <div className="mx-auto max-w-3xl">
         <div className="rounded-2xl p-10 flex flex-col items-center text-center" style={glass}>
-          {/* Circular media — swappable GIF / video / image via ABOUT_MEDIA_URL */}
           <div
             className="mb-8 h-28 w-28 rounded-full overflow-hidden shrink-0"
             style={{
-              border: `2px solid rgba(0,200,255,0.32)`,
-              boxShadow: `0 0 28px rgba(0,200,255,0.20)`,
+              border: `2px solid rgba(26,92,255,0.30)`,
+              boxShadow: `0 0 28px rgba(26,92,255,0.15)`,
             }}
           >
             {isVideo ? (
@@ -693,20 +694,20 @@ function AboutSection() {
             ) : (
               <div
                 className="w-full h-full flex items-center justify-center"
-                style={{ background: "rgba(0,200,255,0.07)" }}
+                style={{ background: "rgba(26,92,255,0.06)" }}
               >
                 <LogoMark className="h-16 w-16" />
               </div>
             )}
           </div>
 
-          <h2 className="font-sans text-2xl font-bold text-white mb-6">About Me</h2>
+          <h2 className="font-sans text-2xl font-bold mb-6" style={{ color: FG }}>About Me</h2>
 
-          <p className="mb-4 text-sm" style={{ color: "rgba(255,255,255,0.60)" }}>
+          <p className="mb-4 text-sm" style={{ color: fg(0.60) }}>
             I'm not a "guru." I've:
           </p>
 
-          <ul className="mb-7 space-y-1.5 text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+          <ul className="mb-7 space-y-1.5 text-sm" style={{ color: fg(0.55) }}>
             {[
               "Sold on Amazon",
               "Built and sold my own products",
@@ -720,7 +721,7 @@ function AboutSection() {
             ))}
           </ul>
 
-          <p className="max-w-md text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.40)" }}>
+          <p className="max-w-md text-sm leading-relaxed" style={{ color: fg(0.50) }}>
             I'm not here to sell you another course to resell to the next desperate taker.
             I help you build the system behind them — the part that actually makes money.
           </p>
@@ -738,10 +739,10 @@ function VaultSection() {
       className="relative px-6 py-28 overflow-hidden"
       style={{
         background:
-          `radial-gradient(ellipse at 30% 50%, rgba(0,200,255,0.07) 0%, transparent 55%), ` +
-          `radial-gradient(ellipse at 70% 50%, rgba(127,119,221,0.05) 0%, transparent 55%), ` +
+          `radial-gradient(ellipse at 30% 50%, rgba(26,92,255,0.05) 0%, transparent 55%), ` +
+          `radial-gradient(ellipse at 70% 50%, rgba(41,82,204,0.04) 0%, transparent 55%), ` +
           `transparent`,
-        borderTop: "0.5px solid rgba(255,255,255,0.06)",
+        borderTop: "0.5px solid rgba(0,0,0,0.08)",
       }}
     >
       <div className="mx-auto max-w-6xl">
@@ -753,34 +754,33 @@ function VaultSection() {
             >
               — The Vault
             </div>
-            <h2 className="font-sans uppercase text-4xl sm:text-5xl font-black tracking-tight leading-[0.93] text-white">
+            <h2 className="font-sans uppercase text-4xl sm:text-5xl font-black tracking-tight leading-[0.93]" style={{ color: FG }}>
               Inside the Vault.
             </h2>
           </div>
           <Link
             to="/vault"
             className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider transition hover:brightness-110 shrink-0"
-            style={{ background: P, color: "#050510", boxShadow: `0 0 28px rgba(0,200,255,0.30)` }}
+            style={{ background: P, color: "#ffffff", boxShadow: `0 0 28px rgba(26,92,255,0.22)` }}
           >
             Open the Vault <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
 
-        {/* Vault image — set VAULT_IMAGE_URL at the top of this file to populate */}
         <div className="flex justify-center">
           {VAULT_IMAGE_URL ? (
             <img
               src={VAULT_IMAGE_URL}
               alt="Inside the Vault"
               className="w-full max-w-md rounded-xl"
-              style={{ border: "0.5px solid rgba(255,255,255,0.12)", boxShadow: "0 0 60px -10px rgba(0,200,255,0.28), 0 0 0 1px rgba(255,255,255,0.04)" }}
+              style={{ border: "0.5px solid rgba(0,0,0,0.10)", boxShadow: "0 0 60px -10px rgba(26,92,255,0.18), 0 0 0 1px rgba(0,0,0,0.05)" }}
             />
           ) : (
             <div
               className="w-full max-w-md rounded-xl flex items-center justify-center py-24"
               style={{ ...glass, minHeight: 240 }}
             >
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.18)" }}>
+              <p className="text-sm" style={{ color: fg(0.25) }}>
                 Vault image coming soon — set VAULT_IMAGE_URL at the top of this file
               </p>
             </div>
@@ -791,7 +791,7 @@ function VaultSection() {
   );
 }
 
-// ── 7. FINAL CTA ──────────────────────────────────────────────────────────────
+// ── 8. FINAL CTA ──────────────────────────────────────────────────────────────
 
 function FinalCtaSection() {
   return (
@@ -799,33 +799,31 @@ function FinalCtaSection() {
       className="relative px-6 py-36 overflow-hidden"
       style={{
         background:
-          `radial-gradient(ellipse at 50% 0%, rgba(0,200,255,0.10) 0%, transparent 50%), ` +
-          `radial-gradient(ellipse at 30% 100%, rgba(127,119,221,0.12) 0%, transparent 50%), ` +
-          `radial-gradient(ellipse at 70% 80%, rgba(80,40,200,0.08) 0%, transparent 40%), ` +
-          `#020208`,
-        borderTop: "0.5px solid rgba(255,255,255,0.06)",
+          `radial-gradient(ellipse at 50% 0%, rgba(26,92,255,0.07) 0%, transparent 50%), ` +
+          `radial-gradient(ellipse at 30% 100%, rgba(41,82,204,0.06) 0%, transparent 50%), ` +
+          `radial-gradient(ellipse at 70% 80%, rgba(26,92,255,0.04) 0%, transparent 40%), ` +
+          `#e6e2db`,
+        borderTop: "0.5px solid rgba(0,0,0,0.08)",
       }}
     >
-      {/* Deep-space grid */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-15"
+        className="absolute inset-0 pointer-events-none opacity-20"
         style={{
           backgroundImage:
-            `linear-gradient(rgba(0,200,255,0.04) 1px, transparent 1px), ` +
-            `linear-gradient(90deg, rgba(0,200,255,0.04) 1px, transparent 1px)`,
+            `linear-gradient(rgba(26,92,255,0.04) 1px, transparent 1px), ` +
+            `linear-gradient(90deg, rgba(26,92,255,0.04) 1px, transparent 1px)`,
           backgroundSize: "64px 64px",
         }}
       />
-      {/* Purple/blue fade-out at bottom */}
       <div
         className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none"
         style={{
-          background: "linear-gradient(0deg, rgba(30,10,80,0.55) 0%, transparent 100%)",
+          background: "linear-gradient(0deg, rgba(26,92,255,0.04) 0%, transparent 100%)",
         }}
       />
 
       <div className="relative mx-auto max-w-2xl text-center">
-        <h2 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.95] text-white">
+        <h2 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.95]" style={{ color: FG }}>
           You wake up early
           <br />
           for a job you tolerate.
@@ -837,7 +835,7 @@ function FinalCtaSection() {
 
         <p
           className="mt-9 max-w-md mx-auto leading-relaxed"
-          style={{ color: "rgba(255,255,255,0.38)" }}
+          style={{ color: fg(0.50) }}
         >
           You already deal with schedules, stress, difficult people, and exhausting work every day. Put some of that effort into building systems that belong to you.
         </p>
@@ -846,17 +844,17 @@ function FinalCtaSection() {
           <Link
             to="/vault"
             className="inline-flex items-center gap-2 rounded-md px-8 py-4 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
-            style={{ background: P, color: "#050510", boxShadow: `0 0 32px rgba(0,200,255,0.35)` }}
+            style={{ background: P, color: "#ffffff", boxShadow: `0 0 32px rgba(26,92,255,0.25)` }}
           >
             Explore the Vault <ArrowRight className="h-4 w-4" />
           </Link>
           <a
             href="mailto:matt@krakenvault.com"
-            className="inline-flex items-center gap-2 rounded-md px-8 py-4 text-sm font-black uppercase tracking-wider transition hover:text-white"
+            className="inline-flex items-center gap-2 rounded-md px-8 py-4 text-sm font-black uppercase tracking-wider transition"
             style={{
-              border: "1px solid rgba(255,255,255,0.18)",
+              border: "1px solid rgba(0,0,0,0.18)",
               background: "transparent",
-              color: "rgba(255,255,255,0.65)",
+              color: fg(0.65),
             }}
           >
             Work With Me <ChevronRight className="h-4 w-4" />
@@ -865,7 +863,7 @@ function FinalCtaSection() {
 
         <p
           className="mt-10 text-[11px] uppercase tracking-[0.2em]"
-          style={{ color: "rgba(255,255,255,0.18)" }}
+          style={{ color: fg(0.25) }}
         >
           Keyboard Kraken · Systems Builder · Operating since 2008
         </p>
