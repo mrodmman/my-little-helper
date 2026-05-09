@@ -8,7 +8,7 @@ import { ArrowRight, Play, ChevronRight, Video } from "lucide-react";
 const LOGO_URL        = "https://i.ibb.co/607fGNdR/file-45.jpg"; // navbar + hero logo; leave "" for SVG fallback
 const HERO_IMAGE_URL  = "https://i.ibb.co/Y4GBCzPw/file-46.jpg"; // right-side hero image; leave "" for network diagram
 const ABOUT_MEDIA_URL = ""; // About Me circle — paste a .gif, .mp4/.webm, or image URL; leave "" for logo fallback
-const VAULT_IMAGE_URL = ""; // Vault section image; leave "" for placeholder
+const VAULT_IMAGE_URL = "https://i.ibb.co/Qq729bz/file-47.jpg"; // Vault section image; leave "" for placeholder
 
 // Social links — leave a value empty ("") to hide that icon entirely
 const SOCIAL = {
