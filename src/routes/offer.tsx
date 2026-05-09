@@ -76,7 +76,7 @@ function OfferPage() {
           <div className="inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
             The Kraken Vault
           </div>
-          <h1 className="mt-6 font-display uppercase text-4xl md:text-6xl font-black tracking-tight leading-[0.95] text-white">
+          <h1 className="mt-6 font-display uppercase text-4xl md:text-6xl font-black tracking-tight leading-[0.95] text-foreground">
             You got the system.{" "}
             <span className="text-primary">Now get the whole vault.</span>
           </h1>
@@ -96,12 +96,12 @@ function OfferPage() {
       </section>
 
       {/* WHY NOTHING HAS WORKED */}
-      <section className="px-6 py-20 border-t border-[#1a1a1a]">
+      <section className="px-6 py-20 border-t border-border">
         <div className="mx-auto max-w-5xl">
           <div className="inline-flex items-center gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-destructive">
             <AlertTriangle className="h-3.5 w-3.5" /> Why nothing has worked yet
           </div>
-          <h2 className="mt-5 font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-white max-w-3xl">
+          <h2 className="mt-5 font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-foreground max-w-3xl">
             You don't have a work ethic problem.{" "}
             <span className="text-primary">You have an architecture problem.</span>
           </h2>
@@ -114,7 +114,7 @@ function OfferPage() {
 
           <div className="mt-10 grid gap-3 sm:grid-cols-2">
             {WHY_PAINS.map((p) => (
-              <div key={p} className="flex items-start gap-3 rounded-lg border border-[#1f1f1f] bg-surface p-4">
+              <div key={p} className="flex items-start gap-3 rounded-lg border border-border bg-surface p-4">
                 <X className="h-4 w-4 mt-1 text-destructive shrink-0" />
                 <span className="text-[15px] text-foreground/85">{p}</span>
               </div>
@@ -124,26 +124,26 @@ function OfferPage() {
       </section>
 
       {/* WHAT'S INSIDE */}
-      <section className="px-6 py-20 border-t border-[#1a1a1a]">
+      <section className="px-6 py-20 border-t border-border">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
               What's inside the vault
             </div>
-            <h2 className="mt-5 font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-white">
+            <h2 className="mt-5 font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-foreground">
               Four building blocks. <span className="text-primary">One system.</span>
             </h2>
           </div>
 
           <div className="mt-10 grid gap-5 md:grid-cols-2">
             {STACK.map(({ icon: Icon, title, body }) => (
-              <div key={title} className="rounded-lg border border-[#1f1f1f] bg-surface p-6">
+              <div key={title} className="rounded-lg border border-border bg-surface p-6">
                 <div className="flex items-start gap-4">
                   <div className="h-11 w-11 rounded-md bg-primary/15 text-primary flex items-center justify-center shrink-0">
                     <Icon className="h-5 w-5" />
                   </div>
                   <div>
-                    <h3 className="font-display uppercase text-lg font-black tracking-tight text-white">
+                    <h3 className="font-display uppercase text-lg font-black tracking-tight text-foreground">
                       {title}
                     </h3>
                     <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{body}</p>
@@ -156,14 +156,14 @@ function OfferPage() {
       </section>
 
       {/* COMPARISON */}
-      <section className="px-6 py-20 border-t border-[#1a1a1a]">
+      <section className="px-6 py-20 border-t border-border">
         <div className="mx-auto max-w-5xl">
-          <h2 className="font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-white max-w-3xl">
+          <h2 className="font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-foreground max-w-3xl">
             Without a system vs <span className="text-primary">inside the Vault</span>
           </h2>
 
           <div className="mt-10 grid gap-4 md:grid-cols-2">
-            <div className="rounded-lg border border-[#1f1f1f] bg-surface p-6">
+            <div className="rounded-lg border border-border bg-surface p-6">
               <div className="text-[11px] font-bold uppercase tracking-[0.22em] text-muted-foreground mb-5">
                 Without a system
               </div>
@@ -194,9 +194,9 @@ function OfferPage() {
       </section>
 
       {/* FAQ */}
-      <section className="px-6 py-20 border-t border-[#1a1a1a]">
+      <section className="px-6 py-20 border-t border-border">
         <div className="mx-auto max-w-3xl">
-          <h2 className="font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-white">
+          <h2 className="font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-foreground">
             Honest <span className="text-primary">answers</span>
           </h2>
 
@@ -204,10 +204,10 @@ function OfferPage() {
             {FAQ.map(({ q, a }) => (
               <details
                 key={q}
-                className="group rounded-lg border border-[#1f1f1f] bg-surface p-5 cursor-pointer open:border-primary/40"
+                className="group rounded-lg border border-border bg-surface p-5 cursor-pointer open:border-primary/40"
               >
                 <summary className="flex items-center justify-between gap-4 list-none">
-                  <span className="font-display uppercase text-[15px] font-black tracking-tight text-white">
+                  <span className="font-display uppercase text-[15px] font-black tracking-tight text-foreground">
                     {q}
                   </span>
                   <span className="text-primary transition-transform group-open:rotate-45 text-2xl leading-none font-light">
@@ -223,8 +223,8 @@ function OfferPage() {
 
       {/* FINAL CTA */}
       <section className="px-6 pb-24 pt-10">
-        <div className="mx-auto max-w-4xl rounded-lg border border-[#1f1f1f] bg-surface p-8 md:p-12 text-center shadow-glow">
-          <h2 className="font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-white">
+        <div className="mx-auto max-w-4xl rounded-lg border border-border bg-surface p-8 md:p-12 text-center shadow-glow">
+          <h2 className="font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-foreground">
             Stop starting over. <span className="text-primary">Build the system.</span>
           </h2>
           <p className="mt-4 text-muted-foreground max-w-xl mx-auto leading-relaxed">

@@ -21,7 +21,7 @@ function ThankYouPage() {
           </div>
         </div>
 
-        <h1 className="font-display uppercase text-4xl md:text-5xl font-black tracking-tight leading-[1] text-white">
+        <h1 className="font-display uppercase text-4xl md:text-5xl font-black tracking-tight leading-[1] text-foreground">
           You're in. <span className="text-primary">Check your inbox now.</span>
         </h1>
 
@@ -32,12 +32,12 @@ function ThankYouPage() {
         </p>
 
         {/* What happens next */}
-        <div className="mt-10 rounded-lg border border-[#1f1f1f] bg-surface p-6 text-left">
+        <div className="mt-10 rounded-lg border border-border bg-surface p-6 text-left">
           <div className="flex items-center gap-2.5 mb-4">
             <div className="h-8 w-8 rounded-md bg-primary/15 text-primary flex items-center justify-center">
               <Mail className="h-4 w-4" />
             </div>
-            <div className="font-display uppercase text-sm font-black tracking-[0.18em] text-white">
+            <div className="font-display uppercase text-sm font-black tracking-[0.18em] text-foreground">
               What happens next
             </div>
           </div>
@@ -52,8 +52,8 @@ function ThankYouPage() {
         </div>
 
         {/* Soft pitch */}
-        <div className="mt-16 pt-12 border-t border-[#1a1a1a] text-left">
-          <h2 className="font-display uppercase text-2xl md:text-3xl font-black tracking-tight text-white">
+        <div className="mt-16 pt-12 border-t border-border text-left">
+          <h2 className="font-display uppercase text-2xl md:text-3xl font-black tracking-tight text-foreground">
             Want to <span className="text-primary">skip ahead?</span>
           </h2>
           <p className="mt-4 text-muted-foreground leading-relaxed">

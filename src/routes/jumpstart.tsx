@@ -79,7 +79,7 @@ function JumpstartPage() {
           <div className="inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
             Free Resource · Kraken Vault
           </div>
-          <h1 className="mt-6 font-display text-4xl font-black uppercase leading-[0.95] tracking-tight text-white md:text-6xl">
+          <h1 className="mt-6 font-display text-4xl font-black uppercase leading-[0.95] tracking-tight text-foreground md:text-6xl">
             Your <span className="text-primary">7-Day Affiliate</span> Jumpstart
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
@@ -98,7 +98,7 @@ function JumpstartPage() {
           {DAYS.map((day) => (
             <div
               key={day.n}
-              className="grid gap-5 rounded-lg border border-[#1f1f1f] bg-surface p-6 md:grid-cols-[auto_1fr] md:gap-7 md:p-7"
+              className="grid gap-5 rounded-lg border border-border bg-surface p-6 md:grid-cols-[auto_1fr] md:gap-7 md:p-7"
             >
               <div className="flex items-center gap-3 md:min-w-[110px] md:flex-col md:items-start md:gap-1">
                 <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
@@ -108,8 +108,8 @@ function JumpstartPage() {
                   {day.n}
                 </div>
               </div>
-              <div className="md:border-l md:border-[#1f1f1f] md:pl-7">
-                <h2 className="font-display text-xl font-black uppercase tracking-tight text-white md:text-2xl">
+              <div className="md:border-l md:border-border md:pl-7">
+                <h2 className="font-display text-xl font-black uppercase tracking-tight text-foreground md:text-2xl">
                   {day.title}
                 </h2>
                 <ul className="mt-4 space-y-2.5">
@@ -127,8 +127,8 @@ function JumpstartPage() {
       </section>
 
       <section className="px-6 pb-24 pt-10">
-        <div className="mx-auto max-w-4xl rounded-lg border border-[#1f1f1f] bg-surface p-8 shadow-glow md:p-12">
-          <h2 className="font-display text-3xl font-black uppercase leading-[1] tracking-tight text-white md:text-4xl">
+        <div className="mx-auto max-w-4xl rounded-lg border border-border bg-surface p-8 shadow-glow md:p-12">
+          <h2 className="font-display text-3xl font-black uppercase leading-[1] tracking-tight text-foreground md:text-4xl">
             That&apos;s the foundation. <span className="text-primary">The Vault builds the full machine.</span>
           </h2>
           <p className="mt-5 max-w-2xl leading-relaxed text-muted-foreground">
