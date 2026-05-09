@@ -1,48 +1,136 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, Check } from "lucide-react";
+import { Check, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/offer")({ component: OfferPage });
 
-const POINTS = [
-  "Step-by-step system order so you know exactly what to do next",
-  "Done-for-you funnel and email assets you can adapt quickly",
-  "Automation layer to reduce manual busywork and keep momentum",
-  "Built for both beginners and people restarting after burnout",
+const INSIDE = [
+  "Plug-and-play templates for content, funnels, and offers",
+  "AI workflow blueprints that replace hours of manual work",
+  "Automation setups for Zapier, Make, and n8n",
+  "A step-by-step monetization system — not theory, actual steps",
+  "The exact system used to generate leads without showing your face or owning a product",
+  "30-day content calendar so you know exactly what to post",
+  "Lifetime access — every update, every new template, forever",
+];
+
+const FAQ = [
+  "Who is this for?",
+  "Do I need technical skills?",
+  "What if it's not for me?",
+  "Is this a subscription?",
 ];
 
 function OfferPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <section className="px-6 pt-16 pb-12 md:pt-24 border-b border-border">
-        <div className="mx-auto max-w-4xl">
-          <div className="inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
-            The Kraken Vault
+    <main className="min-h-screen bg-[#e9edf2] text-[#0b1220]">
+      <section className="mx-auto max-w-6xl px-6 pt-8 pb-16">
+        <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.18em] font-bold text-[#6e7f96]">
+          <span className="text-[#111827]">Keyboard Kraken</span>
+          <span>The Vault · Limited Offer</span>
+        </div>
+
+        <div className="mt-12 grid gap-10 lg:grid-cols-2 lg:items-center">
+          <div>
+            <span className="inline-flex rounded-full bg-[#dbeafe] px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-[#1d4ed8]">
+              Inside the Vault
+            </span>
+            <h1 className="mt-6 text-5xl md:text-6xl font-black uppercase leading-[0.95] tracking-tight">
+              Stop collecting courses.
+              <br />
+              <span className="text-[#1973ea]">Start shipping systems.</span>
+            </h1>
+            <p className="mt-7 max-w-xl text-[28px] leading-relaxed text-[#6b7b90]">
+              The Vault is a complete operating system for solo builders — templates, AI workflows,
+              automations, and monetization playbooks that connect into one machine that actually
+              makes money.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <a
+                href="mailto:matt@krakenvault.com?subject=Kraken%20Vault%20Access"
+                className="inline-flex rounded-md bg-[#1973ea] px-7 py-4 text-sm font-black uppercase tracking-[0.12em] text-white"
+              >
+                Get Instant Access — $24.99 →
+              </a>
+              <span className="text-xs uppercase font-bold tracking-[0.16em] text-[#7a879a]">
+                One-time · Lifetime access
+              </span>
+            </div>
           </div>
-          <h1 className="mt-6 font-display uppercase text-4xl md:text-6xl font-black tracking-tight leading-[0.95] text-foreground">
-            Build your growth machine with one connected path.
-          </h1>
-          <p className="mt-5 text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            Whether you came from the free guide or landed here first, this is where the complete
-            system lives: offer setup, funnel flow, email nurture, and automation execution.
-          </p>
-          <a
-            href="mailto:matt@krakenvault.com?subject=Kraken%20Vault%20Access"
-            className="mt-8 inline-flex items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground px-6 py-3.5 text-sm font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition"
-          >
-            Get Access <ArrowRight className="h-4 w-4" />
-          </a>
-          <p className="mt-3 text-sm text-muted-foreground">Stripe checkout coming soon.</p>
+
+          <div className="rounded-2xl bg-[#020916] p-6 shadow-2xl border border-[#0c1f3a]">
+            <img src="https://i.ibb.co/XhcGS64/file-49.jpg" alt="Vault" className="w-full rounded-xl" />
+            <p className="mt-5 text-sm text-[#9db1cc] leading-relaxed">
+              <span className="text-[#2a7fff] font-bold">AI, automation, content, funnels,</span> and
+              practical systems — connected properly so they actually work together.
+            </p>
+          </div>
         </div>
       </section>
 
-      <section className="px-6 py-14">
-        <div className="mx-auto max-w-4xl grid gap-4">
-          {POINTS.map((point) => (
-            <div key={point} className="rounded-lg border border-border bg-surface p-4 flex items-start gap-3">
-              <Check className="h-5 w-5 mt-0.5 text-primary shrink-0" />
-              <p className="text-foreground/90">{point}</p>
+      <section className="mx-auto max-w-6xl px-6 py-14">
+        <h2 className="text-5xl font-black uppercase leading-[1] tracking-tight">
+          You don't have a knowledge problem.
+          <br />
+          <span className="text-[#1973ea]">You have a system problem.</span>
+        </h2>
+        <p className="mt-5 max-w-3xl text-xl text-[#6d7f95]">
+          Another course won't fix it. Another AI tool won't fix it. What you need is the wiring
+          between them — the part nobody shows you.
+        </p>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {[
+            ["Before the Vault", "20 tabs open, 3 half-built funnels, no income from any of it."],
+            ["What changes", "One connected stack. Content → audience → offers → revenue."],
+            ["Where you land", "A system you own that compounds while you sleep."],
+          ].map(([t, b]) => (
+            <div key={t} className="rounded-xl bg-white p-6 shadow-sm border border-black/5">
+              <div className="text-[11px] uppercase font-black tracking-[0.16em] text-[#1973ea]">{t}</div>
+              <p className="mt-4 text-[15px] font-semibold text-[#1b2738]">{b}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-6 py-10">
+        <h2 className="text-5xl font-black uppercase">What you get inside.</h2>
+        <p className="mt-3 text-[#7a8799]">Everything is plug-and-play. Open it, customize it, ship it the same day.</p>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          {INSIDE.map((item) => (
+            <div key={item} className="rounded-xl bg-white border border-black/5 px-5 py-4 flex items-center gap-3">
+              <span className="h-6 w-6 rounded-full bg-[#1973ea] text-white inline-flex items-center justify-center"><Check className="h-4 w-4" /></span>
+              <p className="font-semibold text-[#1a2738]">{item}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-16 bg-[#020916] py-16">
+        <div className="mx-auto max-w-4xl px-6 text-center text-white">
+          <h2 className="text-6xl font-black">Less Than a Movie Night.</h2>
+          <p className="mt-4 text-lg text-[#98a7bf]">A new release on Amazon costs $24.99. So does lifetime access to The Vault.</p>
+          <div className="mt-9 rounded-2xl border border-white/10 bg-white/5 p-8">
+            <div className="text-7xl font-black">$24.99 <span className="text-base align-middle font-bold text-[#8fa0bb]">one-time · no subscription ever</span></div>
+            <a href="mailto:matt@krakenvault.com?subject=Kraken%20Vault%20Access" className="mt-7 inline-flex rounded-md bg-[#1973ea] px-10 py-4 text-sm font-black uppercase tracking-[0.13em]">Get Instant Access — $24.99 →</a>
+            <p className="mt-4 text-xs uppercase tracking-[0.16em] text-[#8ea0ba]">14-day money-back guarantee · secure checkout</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-4xl px-6 py-16">
+        <h2 className="text-5xl font-black uppercase">Questions?</h2>
+        <div className="mt-6 overflow-hidden rounded-xl border border-black/10 bg-white">
+          {FAQ.map((q) => (
+            <div key={q} className="flex items-center justify-between border-b border-black/10 px-6 py-5 last:border-b-0">
+              <span className="font-bold text-xl">{q}</span>
+              <Plus className="h-4 w-4 text-[#1973ea]" />
+            </div>
+          ))}
+        </div>
+        <div className="mt-10 text-center">
+          <a href="mailto:matt@krakenvault.com?subject=Kraken%20Vault%20Access" className="inline-flex rounded-md bg-[#1973ea] px-8 py-4 text-sm font-black uppercase tracking-[0.13em] text-white">Get Instant Access — $24.99 →</a>
+          <p className="mt-12 text-xs uppercase tracking-[0.16em] text-[#7b889b]">© Keyboard Kraken · The Vault</p>
         </div>
       </section>
     </main>
