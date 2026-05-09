@@ -41,50 +41,50 @@
 :root {
   --radius: 0.5rem;
 
-  /* Kraken Vault — deep ocean navy / electric */
-  --background: #07090e;              /* deep navy-black, like the darkest tentacle shadows */
-  --foreground: #ffffff;
+  /* Kraken Vault — warm linen / electric */
+  --background: #edeae4;              /* warm off-white/beige from the image background */
+  --foreground: #0d1220;              /* deep navy text */
 
-  --surface: #0c1018;                 /* dark navy surface */
-  --surface-elevated: #111826;        /* lifted navy layer */
+  --surface: #e4e0d9;                 /* slightly deeper warm surface */
+  --surface-elevated: #f5f2ed;        /* lifted warm white */
 
-  --card: rgba(11, 15, 25, 0.85);     /* navy-tinted glass */
-  --card-foreground: #ffffff;
+  --card: rgba(252, 250, 246, 0.92);  /* warm white glass */
+  --card-foreground: #0d1220;
 
-  --popover: #0d1220;
-  --popover-foreground: #ffffff;
+  --popover: #faf8f4;
+  --popover-foreground: #0d1220;
 
-  --primary: #1a5cff;                 /* electric blue — keyboard backlight / highlighted text */
+  --primary: #1a5cff;                 /* electric blue — unchanged */
   --primary-foreground: #ffffff;
   --glow: #2952cc;                    /* deep ocean navy accent */
 
-  --secondary: #111826;
-  --secondary-foreground: #ffffff;
+  --secondary: #d8d4cc;
+  --secondary-foreground: #0d1220;
 
-  --muted: #0e1422;
-  --muted-foreground: #8899bb;        /* cool blue-gray instead of neutral gray */
+  --muted: #dedad3;
+  --muted-foreground: #556070;        /* muted slate for secondary text */
 
   --accent: #2952cc;
   --accent-foreground: #ffffff;
 
-  --destructive: #e85a3c;
+  --destructive: #c93a20;
   --destructive-foreground: #ffffff;
 
-  --border: #182035;                  /* dark navy border */
-  --input: #0e1422;
-  --ring: rgba(26, 92, 255, 0.5);
+  --border: #c8c3ba;                  /* warm gray border */
+  --input: #f0ece6;
+  --ring: rgba(26, 92, 255, 0.4);
 
   /* Gradients & shadows */
   --gradient-primary: linear-gradient(135deg, #1a5cff 0%, #3d84ff 100%);
-  --gradient-hero: radial-gradient(ellipse at 15% 0%, rgba(26, 92, 255, 0.15), transparent 55%),
-                   radial-gradient(ellipse at 85% 25%, rgba(41, 82, 204, 0.10), transparent 55%),
-                   linear-gradient(180deg, #07090e, #040608);
-  --gradient-card: linear-gradient(160deg, rgba(14,20,34,0.9), rgba(7,9,14,0.7));
-  --gradient-border: linear-gradient(135deg, rgba(26,92,255,0.55), rgba(41,82,204,0.25), transparent);
+  --gradient-hero: radial-gradient(ellipse at 15% 0%, rgba(26, 92, 255, 0.08), transparent 55%),
+                   radial-gradient(ellipse at 85% 25%, rgba(41, 82, 204, 0.05), transparent 55%),
+                   linear-gradient(180deg, #edeae4, #e6e2db);
+  --gradient-card: linear-gradient(160deg, rgba(252,250,246,0.95), rgba(237,234,228,0.80));
+  --gradient-border: linear-gradient(135deg, rgba(26,92,255,0.45), rgba(41,82,204,0.20), transparent);
 
-  --shadow-glow: 0 0 32px -6px rgba(26, 92, 255, 0.55);
-  --shadow-elevated: 0 24px 48px -16px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.04);
-  --shadow-card: 0 10px 24px -10px rgba(0,0,0,0.7);
+  --shadow-glow: 0 0 32px -6px rgba(26, 92, 255, 0.30);
+  --shadow-elevated: 0 24px 48px -16px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06);
+  --shadow-card: 0 10px 24px -10px rgba(0,0,0,0.12);
 }
 
 @layer base {
@@ -114,7 +114,7 @@
   }
   .glass-card-hover:hover {
     transform: translateY(-4px);
-    border-color: oklch(0.72 0.19 245 / 0.45);
+    border-color: oklch(0.50 0.20 245 / 0.40);
     box-shadow: var(--shadow-elevated), var(--shadow-glow);
   }
   .text-gradient {
