@@ -8,7 +8,7 @@ import { ArrowRight, Play, ChevronRight, Video } from "lucide-react";
 const LOGO_URL        = "https://i.ibb.co/607fGNdR/file-45.jpg"; // navbar + hero logo; leave "" for SVG fallback
 const HERO_IMAGE_URL  = "https://i.ibb.co/Y4GBCzPw/file-46.jpg"; // right-side hero image; leave "" for network diagram
 const ABOUT_MEDIA_URL = ""; // About Me circle — paste a .gif, .mp4/.webm, or image URL; leave "" for logo fallback
-const VAULT_IMAGE_URL = ""; // Vault section image; leave "" for placeholder
+const VAULT_IMAGE_URL = "https://i.ibb.co/Qq729bz/file-47.jpg"; // Vault section image; leave "" for placeholder
 
 // Social links — leave a value empty ("") to hide that icon entirely
 const SOCIAL = {
@@ -28,14 +28,14 @@ const VIDEOS: { youtubeId: string; title: string; tag: string; quote: string; at
     attribution: "Real Estate Agent",
   },
   {
-    youtubeId: "",
+    youtubeId: "https://youtu.be/K5IYG4QB9RA?si=Z6kWhPNN96Y01IAH",
     title: "Micro Blading Client",
     tag: "Results",
     quote: "Helped me Build my Business, Super Happy with my results",
     attribution: "Micro Blading Client",
   },
   {
-    youtubeId: "",
+    youtubeId: "https://youtu.be/mXDCp4C24EA?si=uiKnKRN28zH19nKV",
     title: "Esthetician Client",
     tag: "Results",
     quote: "5 days & 145 leads. Multiple Appointments booked.",
