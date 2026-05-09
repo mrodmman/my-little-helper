@@ -756,8 +756,6 @@ function VaultSection() {
             <h2 className="font-sans uppercase text-4xl sm:text-5xl font-black tracking-tight leading-[0.93] text-white">
               Inside the Vault.
             </h2>
-            <p className="mt-4 max-w-lg leading-relaxed" style={{ color: "rgba(255,255,255,0.38)" }}
-            </p>
           </div>
           <Link
             to="/vault"
