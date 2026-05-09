@@ -245,7 +245,7 @@ function ModulesManager() {
                     </div>
                   )}
                   <label className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity cursor-pointer">
-                    <Image className="h-4 w-4 text-white" />
+                    <Image className="h-4 w-4 text-foreground" />
                     <input
                       type="file"
                       accept="image/*"
