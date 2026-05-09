@@ -1,94 +1,224 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Rocket, Music2, Package, Zap, ChevronRight } from "lucide-react";
+import { MODULES } from "@/data/courseMeta";
 
 export const Route = createFileRoute("/jumpstart")({
   component: JumpstartPage,
 });
 
-const DAYS = [
+// ─── Calendar data (pulled from Fast Track strategies) ────────────────────────
+
+type PostSlot = {
+  platform: "tiktok" | "amazon" | "bonus";
+  title: string;
+  body: string;
+};
+
+type CalDay = {
+  n: number;
+  theme: string;
+  sub: string;
+  posts: PostSlot[];
+};
+
+const CALENDAR: CalDay[] = [
   {
     n: 1,
-    title: "Pick Your Niche and Angle",
-    bullets: [
-      'Decide who you\'re talking to (be specific, not "everyone")',
-      'Write one sentence: "I help [person] do [thing] using [method]"',
-      "Pick one platform to start on — just one",
+    theme: "Start",
+    sub: "Easiest plays — build the habit",
+    posts: [
+      {
+        platform: "tiktok",
+        title: "Slash & Free Referral Hack",
+        body: "Screen record the progress bar dropping to $0. Show how to get free items via referrals.",
+      },
+      {
+        platform: "amazon",
+        title: "Home Item Find",
+        body: "Show something you already own in real life, then pull up the Amazon listing.",
+      },
+      {
+        platform: "bonus",
+        title: "Wishlist Walkthrough",
+        body: "Scroll your Amazon wishlist. Explain quickly why you want each item.",
+      },
     ],
   },
   {
     n: 2,
-    title: "Set Up Your Free Tool Stack",
-    bullets: [
-      "Resend for email (free tier)",
-      "Cloudflare Pages for your site (free)",
-      "One affiliate program — Amazon Associates or TikTok Shop",
+    theme: "Urgency",
+    sub: "Scarcity & deal angles",
+    posts: [
+      {
+        platform: "tiktok",
+        title: "Flash Sale Countdown",
+        body: "Use a live Flash Sale timer as your green screen background to drive urgency.",
+      },
+      {
+        platform: "amazon",
+        title: "Feature Demo (Savings)",
+        body: "Record clipping coupons and using discounts. Show the final price drop.",
+      },
+      {
+        platform: "bonus",
+        title: "Inventory FOMO Alert",
+        body: `Screen record "Low Stock" or "Only X Left" badges. Create urgency with the visual.`,
+      },
     ],
   },
   {
     n: 3,
-    title: "Create Your First Piece of Content",
-    bullets: [
-      "Pick one product you actually use",
-      "Record or write one honest review — no script needed",
-      "Post it. Done. First rep complete.",
+    theme: "Trust",
+    sub: "Social proof builds buyers",
+    posts: [
+      {
+        platform: "tiktok",
+        title: "Shop Page Trust Tour",
+        body: "Green screen over a brand storefront. Scroll sold counts — 10k+ sold proves reliability.",
+      },
+      {
+        platform: "amazon",
+        title: "Review Showcase",
+        body: "Green screen over a product page. Highlight customer photos and star reviews.",
+      },
+      {
+        platform: "bonus",
+        title: "Negative Review Debunk",
+        body: "Find a 1-star where the user made a mistake. Point it out — builds authority fast.",
+      },
     ],
   },
   {
     n: 4,
-    title: "Build a Simple Landing Page",
-    bullets: [
-      "One headline, one form, one button",
-      "Use the Kraken Vault funnel template",
-      "Connect it to your Resend account",
+    theme: "Discovery",
+    sub: "Blue ocean + search hacks",
+    posts: [
+      {
+        platform: "tiktok",
+        title: "Low-Competition Blue Ocean",
+        body: `Find items with 100+ sold but few creator videos. Hook: "Nobody is talking about this yet."`,
+      },
+      {
+        platform: "amazon",
+        title: "Amazon Search Hack",
+        body: `Record using filters like "Under $25" or "Overstock Deals." Show the find live.`,
+      },
+      {
+        platform: "bonus",
+        title: "Best-Seller Reaction",
+        body: "React to items on Movers & Shakers or Trending pages. Show your honest take.",
+      },
     ],
   },
   {
     n: 5,
-    title: "Write Your Welcome Email",
-    bullets: [
-      "Subject: deliver what you promised",
-      "Body: 3 paragraphs — who you are, what they'll get, what comes next",
-      "Send a test to yourself",
+    theme: "Compare",
+    sub: "Comparison content converts",
+    posts: [
+      {
+        platform: "tiktok",
+        title: "Cross-Platform Price War",
+        body: "Split-screen: Amazon price vs TikTok price. Highlight the cheaper one clearly.",
+      },
+      {
+        platform: "amazon",
+        title: "Rating Comparison",
+        body: "Compare top positive review vs top negative review. Give your honest perspective.",
+      },
+      {
+        platform: "bonus",
+        title: "Cart Price Alert",
+        body: `Record the red "Price Dropped" tag in your cart. Zoom into the exact dollar saved.`,
+      },
     ],
   },
   {
     n: 6,
-    title: "Find and Stack Your Offers",
-    bullets: [
-      "Pick 2-3 affiliate products that match your niche",
-      "Add links to your content and landing page",
-      "Make sure every piece of content has somewhere to go",
+    theme: "Curation",
+    sub: "List & lifestyle content",
+    posts: [
+      {
+        platform: "tiktok",
+        title: "Viral Shop Stitch",
+        body: "Stitch the first 3 seconds of a viral review. Transition to the product page — still in stock.",
+      },
+      {
+        platform: "amazon",
+        title: "Virtual Cart Build",
+        body: `"Spend $50 with me" or "Self-care night" — build a themed cart live on camera.`,
+      },
+      {
+        platform: "bonus",
+        title: "Gift Idea List",
+        body: "Scroll a custom idea list. Explain your top picks and why you'd actually give them.",
+      },
     ],
   },
   {
     n: 7,
-    title: "Go Live and Track Day 1",
-    bullets: [
-      "Post your content",
-      "Share your landing page link in one place",
-      "Check your Resend dashboard — first subscriber incoming",
+    theme: "Close",
+    sub: "Deals that drive the click",
+    posts: [
+      {
+        platform: "tiktok",
+        title: "Voucher Stacking Demo",
+        body: `Record claiming a "New Customer" coupon. Show the checkout price drop in real time.`,
+      },
+      {
+        platform: "amazon",
+        title: "Shoppable Page Tour",
+        body: "Scroll through a shoppable image page. Show how items look together in a real space.",
+      },
+      {
+        platform: "bonus",
+        title: "Affiliate-Only Creator Deal",
+        body: `Record the "Special Price" tag that only appears when someone clicks your affiliate link.`,
+      },
     ],
   },
 ];
 
+// ─── Platform config ──────────────────────────────────────────────────────────
+
+const PLATFORM_CONFIG = {
+  tiktok: {
+    label: "TikTok Shop",
+    dot: "bg-pink-500",
+    tag: "text-pink-400 border-pink-500/30 bg-pink-500/10",
+  },
+  amazon: {
+    label: "Amazon",
+    dot: "bg-amber-400",
+    tag: "text-amber-400 border-amber-500/30 bg-amber-500/10",
+  },
+  bonus: {
+    label: "Bonus",
+    dot: "bg-emerald-400",
+    tag: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10",
+  },
+} as const;
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
 function JumpstartPage() {
+  const firstModule = MODULES[0];
+
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <section className="px-6 pt-16 pb-10 md:pt-24">
-        <div className="mx-auto max-w-4xl">
-          <div className="inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
-            Free Resource · Kraken Vault
+
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-border">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/8 via-background to-background" />
+        <div className="relative max-w-5xl mx-auto px-6 pt-16 pb-12 md:pt-24">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-primary mb-5">
+            <Rocket className="h-3 w-3" /> Free guide · Kraken Vault
           </div>
           <h1 className="mt-6 font-display text-4xl font-black uppercase leading-[0.95] tracking-tight text-foreground md:text-6xl">
             Your <span className="text-primary">7-Day Affiliate</span> Jumpstart
           </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            One action per day. 45 minutes max. By day 7 you&apos;ll have the foundation of a real
-            affiliate system running.
-          </p>
-          <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
-            This isn&apos;t theory. Each day is one specific move. Do the thing, close the laptop, go
-            live your life. The system builds while you&apos;re not looking.
+          <p className="mt-5 max-w-2xl text-lg text-muted-foreground leading-relaxed">
+            Every slot is a play straight from the Fast Track — TikTok Shop + Amazon Curation.
+            Open the calendar, pick the strategy, record it, post it. Done in 30–60 minutes a day.
           </p>
         </div>
       </section>
@@ -131,16 +261,16 @@ function JumpstartPage() {
           <h2 className="font-display text-3xl font-black uppercase leading-[1] tracking-tight text-foreground md:text-4xl">
             That&apos;s the foundation. <span className="text-primary">The Vault builds the full machine.</span>
           </h2>
-          <p className="mt-5 max-w-2xl leading-relaxed text-muted-foreground">
-            The Kraken Vault takes everything you just set up and turns it into a complete
-            connected system — automation, traffic, offers, DMs, promotion. One path. No
-            guesswork.
+          <p className="mt-4 max-w-2xl text-muted-foreground leading-relaxed">
+            All 12 TikTok Shop strategies and 15 Amazon Curation plays — plus automation, traffic systems,
+            and a 30-day calendar that turns this into a real machine.
           </p>
           <Link
-            to="/offer"
-            className="mt-7 inline-flex items-center justify-center gap-2 rounded-md bg-primary px-6 py-3.5 text-sm font-black uppercase tracking-wider text-primary-foreground shadow-glow transition hover:brightness-110"
+            to="/module/$moduleId"
+            params={{ moduleId: firstModule.id }}
+            className="mt-6 inline-flex items-center gap-2 bg-gradient-primary text-primary-foreground font-semibold rounded-xl px-6 py-3 shadow-glow hover:opacity-95 transition-opacity"
           >
-            See what&apos;s inside the Vault <ArrowRight className="h-4 w-4" />
+            Enter the full vault <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
