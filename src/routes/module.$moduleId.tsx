@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import {
   ArrowLeft, ChevronLeft, ChevronRight, ChevronDown,
   BookOpen, CheckCircle2, Circle, Zap, Sparkles,
@@ -11,9 +11,15 @@ import { getLessonAssets } from "@/data/assets";
 import { cn } from "@/lib/utils";
 import { loadModuleProgress, markLessonComplete, markLessonIncomplete, resetModuleProgress } from "@/rpc/progress";
 import { getModuleWithLessons } from "@/rpc/modules";
+import { getAuthUser } from "@/rpc/auth";
 import type { DbLesson } from "@/rpc/modules";
 
 export const Route = createFileRoute("/module/$moduleId")({
+  beforeLoad: async () => {
+    const user = await getAuthUser();
+    if (!user) throw redirect({ to: "/login" });
+    return { user };
+  },
   component: ModulePage,
   loader: async ({ params }) => {
     const staticMod = getModule(params.moduleId);
