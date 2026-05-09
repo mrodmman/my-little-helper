@@ -5,13 +5,14 @@
  */
 import { createFileRoute } from '@tanstack/react-router';
 import { getEnv } from '@/lib/env';
-import { hashPassword } from '@/lib/auth';
+import { hashPassword, ensureAuthSchema } from '@/lib/auth';
 
 export const Route = createFileRoute('/auth/provision')({
   server: {
     handlers: {
       POST: async ({ request }) => {
         const env = getEnv();
+        await ensureAuthSchema(env);
 
         let body: { email?: string; first_name?: string };
         try {
