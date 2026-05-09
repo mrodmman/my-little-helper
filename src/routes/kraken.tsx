@@ -1,13 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Play, ChevronRight, Video } from "lucide-react";
 
-// ── Swappable assets — edit these without touching layout ─────────────────────
-const LOGO_URL = "https://i.ibb.co/607fGNdR/file-45.jpg"; // logo image URL, or leave empty for SVG default
-const HERO_IMAGE_URL = "https://i.ibb.co/Y4GBCzPw/file-46.jpg"; // hero image URL, or leave empty for SVG default
-const VAULT_IMAGE_URL = ""; // paste an image URL to replace the vault placeholder
-const ABOUT_MEDIA_URL = ""; // paste a GIF, image, or .mp4/.webm video URL for the About Me circle
+// ══════════════════════════════════════════════════════════════════════════════
+// SWAPPABLE ASSETS — edit only this block to customise the page
+// ══════════════════════════════════════════════════════════════════════════════
 
-// Paste any YouTube URL format (share, watch, embed) or bare video ID
+const LOGO_URL        = "https://i.ibb.co/607fGNdR/file-45.jpg"; // navbar + hero logo; leave "" for SVG fallback
+const HERO_IMAGE_URL  = "https://i.ibb.co/Y4GBCzPw/file-46.jpg"; // right-side hero image; leave "" for network diagram
+const ABOUT_MEDIA_URL = ""; // About Me circle — paste a .gif, .mp4/.webm, or image URL; leave "" for logo fallback
+const VAULT_IMAGE_URL = ""; // Vault section image; leave "" for placeholder
+
+// Social links — leave a value empty ("") to hide that icon entirely
+const SOCIAL = {
+  twitter:   "https://x.com/keyboardkraken",
+  youtube:   "https://youtube.com/@keyboardkraken",
+  instagram: "", // e.g. "https://instagram.com/yourhandle"
+  tiktok:    "", // e.g. "https://tiktok.com/@yourhandle"
+};
+
+// Video testimonial cards — paste any YouTube URL or bare video ID into youtubeId
 const VIDEOS: { youtubeId: string; title: string; tag: string; quote: string; attribution: string }[] = [
   {
     youtubeId: "https://youtu.be/9hxy2dzk7Ko?si=JdN5H2SZVBqFPpfv",
@@ -31,7 +42,8 @@ const VIDEOS: { youtubeId: string; title: string; tag: string; quote: string; at
     attribution: "Esthetician",
   },
 ];
-// ─────────────────────────────────────────────────────────────────────────────
+
+// ══════════════════════════════════════════════════════════════════════════════
 
 // Parse any YouTube URL or bare ID into a video ID string
 function extractYoutubeId(input: string): string {
@@ -152,7 +164,6 @@ function KrakenPage() {
         <ProofSection />
         <AboutSection />
         <VaultSection />
-        <CredibilitySection />
         <FinalCtaSection />
       </div>
     </main>
@@ -191,33 +202,45 @@ function KrakenNav() {
         >
           Work With Me
         </a>
-        <div
-          className="flex items-center gap-3 pl-4"
-          style={{ borderLeft: "0.5px solid rgba(255,255,255,0.09)" }}
-        >
-          <a
-            href="https://x.com/keyboardkraken"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white/25 hover:text-white/60 transition"
-            aria-label="X / Twitter"
+        {(SOCIAL.twitter || SOCIAL.youtube || SOCIAL.instagram || SOCIAL.tiktok) && (
+          <div
+            className="flex items-center gap-3 pl-4"
+            style={{ borderLeft: "0.5px solid rgba(255,255,255,0.09)" }}
           >
-            <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
-              <path d="M15.32 1.5H18L11.93 8.5 18.9 18.5h-5.65l-4.08-5.34L4.07 18.5H1.39l6.49-7.43L1.1 1.5h5.8l3.69 4.88L15.32 1.5Zm-.95 15.3h1.5L5.73 3H4.12L14.37 16.8Z" />
-            </svg>
-          </a>
-          <a
-            href="https://youtube.com/@keyboardkraken"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white/25 hover:text-white/60 transition"
-            aria-label="YouTube"
-          >
-            <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
-              <path d="M18.7 5.4a2.26 2.26 0 0 0-1.59-1.6C15.73 3.5 10 3.5 10 3.5s-5.73 0-7.11.3A2.26 2.26 0 0 0 1.3 5.4 23.8 23.8 0 0 0 1 10a23.8 23.8 0 0 0 .3 4.6 2.26 2.26 0 0 0 1.59 1.6C4.27 16.5 10 16.5 10 16.5s5.73 0 7.11-.3a2.26 2.26 0 0 0 1.59-1.6A23.8 23.8 0 0 0 19 10a23.8 23.8 0 0 0-.3-4.6Zm-10.58 7.5V7.1L13.37 10l-5.25 2.9Z" />
-            </svg>
-          </a>
-        </div>
+            {SOCIAL.twitter && (
+              <a href={SOCIAL.twitter} target="_blank" rel="noopener noreferrer"
+                className="text-white/25 hover:text-white/60 transition" aria-label="X / Twitter">
+                <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
+                  <path d="M15.32 1.5H18L11.93 8.5 18.9 18.5h-5.65l-4.08-5.34L4.07 18.5H1.39l6.49-7.43L1.1 1.5h5.8l3.69 4.88L15.32 1.5Zm-.95 15.3h1.5L5.73 3H4.12L14.37 16.8Z" />
+                </svg>
+              </a>
+            )}
+            {SOCIAL.youtube && (
+              <a href={SOCIAL.youtube} target="_blank" rel="noopener noreferrer"
+                className="text-white/25 hover:text-white/60 transition" aria-label="YouTube">
+                <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
+                  <path d="M18.7 5.4a2.26 2.26 0 0 0-1.59-1.6C15.73 3.5 10 3.5 10 3.5s-5.73 0-7.11.3A2.26 2.26 0 0 0 1.3 5.4 23.8 23.8 0 0 0 1 10a23.8 23.8 0 0 0 .3 4.6 2.26 2.26 0 0 0 1.59 1.6C4.27 16.5 10 16.5 10 16.5s5.73 0 7.11-.3a2.26 2.26 0 0 0 1.59-1.6A23.8 23.8 0 0 0 19 10a23.8 23.8 0 0 0-.3-4.6Zm-10.58 7.5V7.1L13.37 10l-5.25 2.9Z" />
+                </svg>
+              </a>
+            )}
+            {SOCIAL.instagram && (
+              <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer"
+                className="text-white/25 hover:text-white/60 transition" aria-label="Instagram">
+                <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
+                  <path d="M10 1.8c2.67 0 2.99.01 4.04.06 2.75.13 4.03 1.42 4.16 4.16.05 1.05.06 1.37.06 4.04s-.01 2.99-.06 4.04c-.13 2.73-1.4 4.03-4.16 4.16-1.05.05-1.36.06-4.04.06s-2.99-.01-4.04-.06c-2.75-.13-4.03-1.43-4.16-4.16C1.75 12.99 1.74 12.67 1.74 10s.01-2.99.06-4.04C1.93 3.22 3.21 1.93 5.96 1.86 7.01 1.81 7.33 1.8 10 1.8Zm0-1.8C7.28 0 6.94.01 5.88.06 2.24.23.23 2.24.06 5.88.01 6.94 0 7.28 0 10c0 2.72.01 3.06.06 4.12.17 3.64 2.18 5.65 5.82 5.82C6.94 19.99 7.28 20 10 20s3.06-.01 4.12-.06c3.63-.17 5.65-2.18 5.82-5.82C19.99 13.06 20 12.72 20 10c0-2.72-.01-3.06-.06-4.12C19.77 2.25 17.76.23 14.12.06 13.06.01 12.72 0 10 0Zm0 4.86a5.14 5.14 0 1 0 0 10.28A5.14 5.14 0 0 0 10 4.86Zm0 8.48a3.34 3.34 0 1 1 0-6.68 3.34 3.34 0 0 1 0 6.68Zm5.34-9.8a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4Z" />
+                </svg>
+              </a>
+            )}
+            {SOCIAL.tiktok && (
+              <a href={SOCIAL.tiktok} target="_blank" rel="noopener noreferrer"
+                className="text-white/25 hover:text-white/60 transition" aria-label="TikTok">
+                <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
+                  <path d="M17 4.1a4.9 4.9 0 0 1-3-.96V12a5 5 0 1 1-5-5c.17 0 .34.01.5.03V9.6a2.5 2.5 0 1 0 2 2.45V0h2.5A4.9 4.9 0 0 0 17 4.1Z" />
+                </svg>
+              </a>
+            )}
+          </div>
+        )}
       </nav>
     </header>
   );
@@ -776,26 +799,7 @@ function VaultSection() {
   );
 }
 
-// ── 7. CREDIBILITY ────────────────────────────────────────────────────────────
-
-function CredibilitySection() {
-  return (
-    <section
-      className="px-6 py-16"
-      style={{ borderTop: "0.5px solid rgba(255,255,255,0.06)" }}
-    >
-      <div className="mx-auto max-w-3xl text-center">
-        <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.26)" }}>
-          Operating since 2008. Real-world systems across funnels, automation, AI, and content.
-          Low-cost tools, practical implementation, no certification required.
-          The systems here exist because they were built and used — not designed to look impressive in a presentation.
-        </p>
-      </div>
-    </section>
-  );
-}
-
-// ── 8. FINAL CTA ──────────────────────────────────────────────────────────────
+// ── 7. FINAL CTA ──────────────────────────────────────────────────────────────
 
 function FinalCtaSection() {
   return (
