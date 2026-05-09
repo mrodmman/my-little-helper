@@ -4,7 +4,7 @@
  */
 import { createFileRoute } from '@tanstack/react-router';
 import { getEnv } from '@/lib/env';
-import { hashPassword, createUserSession, sessionCookieHeader } from '@/lib/auth';
+import { hashPassword, createUserSession, sessionCookieHeader, ensureAuthSchema } from '@/lib/auth';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -13,6 +13,7 @@ export const Route = createFileRoute('/auth/register')({
     handlers: {
       POST: async ({ request }) => {
         const env = getEnv();
+        await ensureAuthSchema(env);
 
         let body: { email?: string; password?: string; first_name?: string };
         try {

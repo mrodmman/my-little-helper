@@ -10,6 +10,45 @@ export interface AuthUser {
   role: string;
 }
 
+async function addColumnIfMissing(env: Env, table: string, columnDef: string): Promise<void> {
+  try {
+    await env.DB.prepare(`ALTER TABLE ${table} ADD COLUMN ${columnDef}`).run();
+  } catch {
+    // ignore if column already exists or table shape differs
+  }
+}
+
+// Best-effort schema guard for environments that were provisioned before auth migrations.
+export async function ensureAuthSchema(env: Env): Promise<void> {
+  await env.DB.prepare(
+    `CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY,
+      email TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      first_name TEXT,
+      role TEXT DEFAULT 'member',
+      created_at INTEGER,
+      last_login INTEGER
+    )`,
+  ).run();
+
+  await env.DB.prepare(
+    `CREATE TABLE IF NOT EXISTS sessions (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      created_at INTEGER,
+      expires_at INTEGER
+    )`,
+  ).run();
+
+  await addColumnIfMissing(env, 'users', 'first_name TEXT');
+  await addColumnIfMissing(env, 'users', "role TEXT DEFAULT 'member'");
+  await addColumnIfMissing(env, 'users', 'created_at INTEGER');
+  await addColumnIfMissing(env, 'users', 'last_login INTEGER');
+  await addColumnIfMissing(env, 'sessions', 'created_at INTEGER');
+  await addColumnIfMissing(env, 'sessions', 'expires_at INTEGER');
+}
+
 // Returns a Set-Cookie header value that sets the auth cookie
 export function sessionCookieHeader(sessionId: string): string {
   return `${AUTH_COOKIE}=${sessionId}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_MAX_AGE}`;
