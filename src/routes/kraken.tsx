@@ -767,30 +767,25 @@ function VaultSection() {
         </div>
 
         {/* Vault image — set VAULT_IMAGE_URL at the top of this file to populate */}
-        {VAULT_IMAGE_URL ? (
-          <img
-            src={VAULT_IMAGE_URL}
-            alt="Inside the Vault"
-            className="w-full rounded-2xl"
-            style={{ border: "0.5px solid rgba(255,255,255,0.10)", boxShadow: "0 8px 40px rgba(0,0,0,0.45)" }}
-          />
-        ) : (
-          <div
-            className="w-full rounded-2xl flex items-center justify-center py-24"
-            style={{ ...glass, minHeight: 240 }}
-          >
-            <p className="text-sm" style={{ color: "rgba(255,255,255,0.18)" }}>
-              Vault image coming soon — set VAULT_IMAGE_URL at the top of this file
-            </p>
-          </div>
-        )}
-
-        <p
-          className="mt-8 text-[11px] uppercase tracking-wider"
-          style={{ color: `rgba(0,200,255,0.38)` }}
-        >
-          Built for operators. Not students.
-        </p>
+        <div className="flex justify-center">
+          {VAULT_IMAGE_URL ? (
+            <img
+              src={VAULT_IMAGE_URL}
+              alt="Inside the Vault"
+              className="w-full max-w-md rounded-xl"
+              style={{ border: "0.5px solid rgba(255,255,255,0.12)", boxShadow: "0 0 60px -10px rgba(0,200,255,0.28), 0 0 0 1px rgba(255,255,255,0.04)" }}
+            />
+          ) : (
+            <div
+              className="w-full max-w-md rounded-xl flex items-center justify-center py-24"
+              style={{ ...glass, minHeight: 240 }}
+            >
+              <p className="text-sm" style={{ color: "rgba(255,255,255,0.18)" }}>
+                Vault image coming soon — set VAULT_IMAGE_URL at the top of this file
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
