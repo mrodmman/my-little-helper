@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Play, ChevronRight, Video } from "lucide-react";
+import { FormEvent, useState } from "react";
 
 // ══════════════════════════════════════════════════════════════════════════════
 // SWAPPABLE ASSETS — edit only this block to customise the page
@@ -113,27 +114,30 @@ function LogoMark({ className = "" }: { className?: string }) {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 function KrakenPage() {
+  const [contactOpen, setContactOpen] = useState(false);
+
   return (
     <main
       className="min-h-screen overflow-x-hidden relative"
       style={{ background: "#edeae4", color: FG, fontFamily: "'Inter', system-ui, sans-serif" }}
     >
       <div className="relative" style={{ zIndex: 1 }}>
-        <KrakenNav />
-        <HeroSection />
-        <ChoosePathSection />
+        <KrakenNav onOpenContact={() => setContactOpen(true)} />
+        <HeroSection onOpenContact={() => setContactOpen(true)} />
+        <ChoosePathSection onOpenContact={() => setContactOpen(true)} />
         <ProofSection />
         <AboutSection />
         <VaultSection />
-        <FinalCtaSection />
+        <FinalCtaSection onOpenContact={() => setContactOpen(true)} />
       </div>
+      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </main>
   );
 }
 
 // ── NAV ───────────────────────────────────────────────────────────────────────
 
-function KrakenNav() {
+function KrakenNav({ onOpenContact }: { onOpenContact: () => void }) {
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
@@ -152,19 +156,20 @@ function KrakenNav() {
 
       <nav className="flex items-center gap-6">
         <Link
-          to="/vault"
+          to="/offer"
           className="text-[12px] font-semibold uppercase tracking-wider transition hidden sm:block"
           style={{ color: fg(0.40) }}
         >
           Vault
         </Link>
-        <a
-          href="mailto:matt@krakenvault.com"
+        <button
+          type="button"
+          onClick={onOpenContact}
           className="text-[12px] font-semibold uppercase tracking-wider transition hidden sm:block"
           style={{ color: fg(0.40) }}
         >
           Work With Me
-        </a>
+        </button>
         {(SOCIAL.twitter || SOCIAL.youtube || SOCIAL.instagram || SOCIAL.tiktok) && (
           <div
             className="flex items-center gap-3 pl-4"
@@ -213,7 +218,7 @@ function KrakenNav() {
 
 const TRUST_TAGS = ["Systems", "Automation", "Funnels", "AI Workflows", "Content Engines"];
 
-function HeroSection() {
+function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
   return (
     <section
       className="relative min-h-screen flex flex-col justify-center px-6 pt-24 pb-20 overflow-hidden"
@@ -259,14 +264,15 @@ function HeroSection() {
 
             <div className="mt-9 flex flex-wrap gap-3">
               <Link
-                to="/vault"
+                to="/offer"
                 className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
                 style={{ background: P, color: "#ffffff", boxShadow: `0 0 32px rgba(26,92,255,0.25)` }}
               >
                 Explore the Vault <ArrowRight className="h-4 w-4" />
               </Link>
-              <a
-                href="#work-with-me"
+              <button
+                type="button"
+                onClick={onOpenContact}
                 className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider transition"
                 style={{
                   border: "1px solid rgba(0,0,0,0.18)",
@@ -275,7 +281,7 @@ function HeroSection() {
                 }}
               >
                 Work With Me <ChevronRight className="h-4 w-4" />
-              </a>
+              </button>
             </div>
 
             <div className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -410,7 +416,7 @@ function HeroCommandCenter() {
 
 // ── 3. AUDIENCE SPLIT ─────────────────────────────────────────────────────────
 
-function ChoosePathSection() {
+function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
   return (
     <section
       className="px-6 py-24"
@@ -462,13 +468,14 @@ function ChoosePathSection() {
                 </li>
               ))}
             </ul>
-            <a
-              href="mailto:matt@krakenvault.com"
+            <button
+              type="button"
+              onClick={onOpenContact}
               className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
               style={{ background: P, color: "#ffffff", boxShadow: `0 0 24px rgba(26,92,255,0.22)` }}
             >
               Work With Me <ArrowRight className="h-4 w-4" />
-            </a>
+            </button>
           </div>
 
           <div
@@ -505,7 +512,14 @@ function ChoosePathSection() {
               ))}
             </ul>
             <Link
-              to="/vault"
+              to="/funnel"
+              className="mb-3 inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition"
+              style={{ border: `1px solid rgba(26,92,255,0.3)`, color: P, background: "transparent" }}
+            >
+              Get the free guide <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/offer"
               className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition"
               style={{ border: `1px solid rgba(41,82,204,0.36)`, color: V, background: "transparent" }}
             >
@@ -754,7 +768,7 @@ function VaultSection() {
 
 // ── 8. FINAL CTA ──────────────────────────────────────────────────────────────
 
-function FinalCtaSection() {
+function FinalCtaSection({ onOpenContact }: { onOpenContact: () => void }) {
   return (
     <section
       className="relative px-6 py-36 overflow-hidden"
@@ -803,14 +817,15 @@ function FinalCtaSection() {
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <Link
-            to="/vault"
+            to="/offer"
             className="inline-flex items-center gap-2 rounded-md px-8 py-4 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
             style={{ background: P, color: "#ffffff", boxShadow: `0 0 32px rgba(26,92,255,0.25)` }}
           >
             Explore the Vault <ArrowRight className="h-4 w-4" />
           </Link>
-          <a
-            href="mailto:matt@krakenvault.com"
+          <button
+            type="button"
+            onClick={onOpenContact}
             className="inline-flex items-center gap-2 rounded-md px-8 py-4 text-sm font-black uppercase tracking-wider transition"
             style={{
               border: "1px solid rgba(0,0,0,0.18)",
@@ -819,7 +834,7 @@ function FinalCtaSection() {
             }}
           >
             Work With Me <ChevronRight className="h-4 w-4" />
-          </a>
+          </button>
         </div>
 
         <p
@@ -830,5 +845,58 @@ function FinalCtaSection() {
         </p>
       </div>
     </section>
+  );
+}
+
+
+function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
+
+  if (!open) return null;
+
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setStatus(null);
+    const formData = new FormData(e.currentTarget);
+    const payload = {
+      name: String(formData.get("name") ?? "").trim(),
+      email: String(formData.get("email") ?? "").trim(),
+      message: String(formData.get("message") ?? "").trim(),
+    };
+
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    setLoading(false);
+    if (res.ok) {
+      setStatus("Thanks — message sent.");
+      e.currentTarget.reset();
+      return;
+    }
+    setStatus("Could not send right now. Please try again.");
+  };
+
+  return (
+    <div className="fixed inset-0 z-[80] flex items-center justify-center px-4">
+      <button type="button" className="absolute inset-0 bg-black/40" onClick={onClose} aria-label="Close contact modal" />
+      <div className="relative w-full max-w-md rounded-xl p-6" style={glass}>
+        <h3 className="text-xl font-bold">Work With Me</h3>
+        <form className="mt-4 space-y-3" onSubmit={onSubmit}>
+          <input name="name" required placeholder="Name" className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm" />
+          <input name="email" type="email" required placeholder="Email" className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm" />
+          <textarea name="message" required rows={4} placeholder="Message" className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm" />
+          {status && <p className="text-sm" style={{ color: fg(0.65) }}>{status}</p>}
+          <div className="flex justify-end gap-2">
+            <button type="button" onClick={onClose} className="rounded-md px-4 py-2 text-sm">Cancel</button>
+            <button type="submit" disabled={loading} className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white">{loading ? "Sending..." : "Send"}</button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }
