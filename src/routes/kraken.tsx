@@ -16,11 +16,11 @@ import {
 } from "lucide-react";
 
 // ── Swappable assets — edit these without touching layout ─────────────────────
-const LOGO_URL = ""; // set to your logo image URL, or leave empty for SVG default
-const HERO_IMAGE_URL = ""; // optional hero/product screenshot URL
+const LOGO_URL = "https://i.ibb.co/607fGNdR/file-45.jpg"; // set to your logo image URL, or leave empty for SVG default
+const HERO_IMAGE_URL = "https://i.ibb.co/Y4GBCzPw/file-46.jpg"; // optional hero/product screenshot URL
 
 const VIDEOS = [
-  { youtubeId: "", title: "Full Automation Workflow", tag: "Automation" },
+  { youtubeId: "https://youtu.be/9hxy2dzk7Ko?si=JdN5H2SZVBqFPpfv", title: "Full Automation Workflow", tag: "Automation" },
   { youtubeId: "", title: "Funnel Build — Start to Finish", tag: "Funnels" },
   { youtubeId: "", title: "AI Content System", tag: "AI Workflow" },
 ];
