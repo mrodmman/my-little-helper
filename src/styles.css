@@ -76,8 +76,9 @@
 
   /* Gradients & shadows */
   --gradient-primary: linear-gradient(135deg, #1a5cff 0%, #3d84ff 100%);
-  --gradient-hero: radial-gradient(ellipse at 15% 0%, rgba(26, 92, 255, 0.08), transparent 55%),
-                   radial-gradient(ellipse at 85% 25%, rgba(41, 82, 204, 0.05), transparent 55%),
+  --gradient-hero: radial-gradient(ellipse at 10% 0%, rgba(26, 92, 255, 0.10), transparent 50%),
+                   radial-gradient(ellipse at 90% 15%, rgba(41, 82, 204, 0.07), transparent 50%),
+                   radial-gradient(ellipse at 50% 80%, rgba(26, 92, 255, 0.05), transparent 55%),
                    linear-gradient(180deg, #edeae4, #e6e2db);
   --gradient-card: linear-gradient(160deg, rgba(252,250,246,0.95), rgba(237,234,228,0.80));
   --gradient-border: linear-gradient(135deg, rgba(26,92,255,0.45), rgba(41,82,204,0.20), transparent);
