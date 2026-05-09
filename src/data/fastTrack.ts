@@ -4,8 +4,8 @@ import {
 
 export type FastTrackItem = {
   title: string;
-  body?: string;        // short paragraph under the title
-  bullets?: string[];   // checklist bullets
+  body?: string;
+  bullets?: string[];
 };
 
 export type FastTrackTile = {
@@ -16,9 +16,10 @@ export type FastTrackTile = {
   tagline: string;
   icon: LucideIcon;
   intro?: string;
-  bullets?: string[];          // simple flat tile (intro + checklist)
-  items?: FastTrackItem[];     // tiles with multiple sub-strategies
-  closer?: string;             // final 👉 line
+  bullets?: string[];
+  items?: FastTrackItem[];
+  closer?: string;
+  calendar30?: boolean; // renders the full 30-day posting calendar
 };
 
 export const FAST_TRACK: FastTrackTile[] = [
@@ -30,21 +31,21 @@ export const FAST_TRACK: FastTrackTile[] = [
     tagline: "Momentum beats mastery.",
     icon: Rocket,
     intro: `Do you actually like your job?
-Taking breaks when you’re told…
-Going to lunch when you’re allowed…
-Dealing with people you can’t stand…
+Taking breaks when you're told…
+Going to lunch when you're allowed…
+Dealing with people you can't stand…
 
 Truth is — you already do things you hate every day.
 
-This won’t always be easy.
-Sometimes it’ll click… sometimes it won’t.
-Some days it’ll feel like work… because it is.
+This won't always be easy.
+Sometimes it'll click… sometimes it won't.
+Some days it'll feel like work… because it is.
 
 But remind yourself:
-The work you’re putting in here is different.
+The work you're putting in here is different.
 
-You’re not just working…
-You’re building a system.
+You're not just working…
+You're building a system.
 A machine.
 Something that works for you — not the other way around.
 
@@ -52,7 +53,7 @@ For you.
 For your future.
 For your kids.
 
-If you can handle the daily grind you didn’t choose…
+If you can handle the daily grind you didn't choose…
 You can handle building something you did.`,
     closer: "Take simple steps and build momentum.",
   },
@@ -234,17 +235,10 @@ You can handle building something you did.`,
     step: 7,
     emoji: "🗓️",
     title: "30 Day Calendar",
-    tagline: "Randomize TikTok + Amazon ideas into a simple daily posting plan.",
+    tagline: "Every TikTok Shop + Amazon strategy mapped into a daily posting plan. Open a day, execute, close it.",
     icon: Timer,
-    bullets: [
-      "Pick 1 TikTok Shop strategy prompt per day",
-      "Pick 1 Amazon Curation strategy prompt per day",
-      "Alternate the opening hook style so content feels fresh",
-      "Batch-record every 3 days, then schedule daily posts",
-      "Track what got clicks/saves and reuse winners in week 3 and 4",
-      "Miss a day? Resume the next day — no restart needed",
-    ],
-    closer: "Use this calendar to remove decision fatigue and just execute.",
+    calendar30: true,
+    closer: "Miss a day? Resume the next day — no restart needed.",
   },
   {
     id: "speed-it-up",

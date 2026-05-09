@@ -103,7 +103,7 @@ function FunnelPage() {
 
           <div className="mt-6 grid gap-12 md:grid-cols-2 md:items-start">
             <div>
-              <h1 className="font-display uppercase text-4xl md:text-6xl font-black tracking-tight leading-[0.95] text-white">
+              <h1 className="font-display uppercase text-4xl md:text-6xl font-black tracking-tight leading-[0.95] text-foreground">
                 You already work hard every day.{" "}
                 <span className="text-primary">None of it is yours yet.</span>
               </h1>
@@ -128,8 +128,8 @@ function FunnelPage() {
 
             {/* FORM CARD */}
             <div className="relative">
-              <div className="rounded-lg border border-[#1f1f1f] bg-surface p-6 md:p-8 shadow-glow">
-                <h2 className="font-display uppercase text-2xl font-black tracking-tight text-white">
+              <div className="rounded-lg border border-border bg-surface p-6 md:p-8 shadow-glow">
+                <h2 className="font-display uppercase text-2xl font-black tracking-tight text-foreground">
                   Get Instant Access
                 </h2>
                 <p className="mt-2 text-sm text-muted-foreground">
@@ -152,7 +152,7 @@ function FunnelPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Alex"
-                      className="rounded-md border border-[#222] bg-[#0d0d0d] px-4 py-3 text-sm text-white outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                      className="rounded-md border border-border bg-input px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                     />
                   </label>
                   <label className="grid gap-1.5">
@@ -165,7 +165,7 @@ function FunnelPage() {
                       type="email"
                       required
                       placeholder="you@domain.com"
-                      className="rounded-md border border-[#222] bg-[#0d0d0d] px-4 py-3 text-sm text-white outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                      className="rounded-md border border-border bg-input px-4 py-3 text-sm text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                     />
                   </label>
                   <button
@@ -193,20 +193,20 @@ function FunnelPage() {
       </section>
 
       {/* SOUND FAMILIAR */}
-      <section className="px-6 py-20 border-t border-[#1a1a1a]">
+      <section className="px-6 py-20 border-t border-border">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-destructive">
               <AlertTriangle className="h-3.5 w-3.5" /> Sound familiar?
             </div>
-            <h2 className="mt-5 font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-white">
+            <h2 className="mt-5 font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-foreground">
               You've been working. <span className="text-primary">Just not on anything that's yours.</span>
             </h2>
           </div>
 
           <div className="mt-10 grid gap-4 sm:grid-cols-2">
             {PAINS.map((p) => (
-              <div key={p} className="rounded-lg border border-[#1f1f1f] bg-surface p-5 flex items-start gap-3">
+              <div key={p} className="rounded-lg border border-border bg-surface p-5 flex items-start gap-3">
                 <span className="mt-1 h-2 w-2 rounded-full bg-destructive shrink-0" />
                 <span className="text-[15px] text-foreground/90">{p}</span>
               </div>
@@ -216,10 +216,10 @@ function FunnelPage() {
       </section>
 
       {/* SYSTEM PROBLEM */}
-      <section className="px-6 py-20 border-t border-[#1a1a1a]">
+      <section className="px-6 py-20 border-t border-border">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-3xl">
-            <h2 className="font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-white">
+            <h2 className="font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-foreground">
               You don't have a motivation problem.{" "}
               <span className="text-primary">You have a system problem.</span>
             </h2>
@@ -231,11 +231,11 @@ function FunnelPage() {
 
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             {COLUMNS.map(({ icon: Icon, title, body }) => (
-              <div key={title} className="rounded-lg border border-[#1f1f1f] bg-surface p-6">
+              <div key={title} className="rounded-lg border border-border bg-surface p-6">
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-primary/15 text-primary">
                   <Icon className="h-5 w-5" />
                 </div>
-                <h3 className="mt-4 font-display uppercase text-lg font-black tracking-tight text-white">
+                <h3 className="mt-4 font-display uppercase text-lg font-black tracking-tight text-foreground">
                   {title}
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{body}</p>
@@ -246,24 +246,24 @@ function FunnelPage() {
       </section>
 
       {/* WHAT YOU GET */}
-      <section className="px-6 py-20 border-t border-[#1a1a1a]">
+      <section className="px-6 py-20 border-t border-border">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
               What you get on day 1
             </div>
-            <h2 className="mt-5 font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-white">
+            <h2 className="mt-5 font-display uppercase text-3xl md:text-5xl font-black tracking-tight leading-[1] text-foreground">
               Open the email. <span className="text-primary">Do the thing.</span>
             </h2>
           </div>
 
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {DAY1.map(({ icon: Icon, title, body }) => (
-              <div key={title} className="rounded-lg border border-[#1f1f1f] bg-surface p-6">
+              <div key={title} className="rounded-lg border border-border bg-surface p-6">
                 <div className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-primary/15 text-primary">
                   <Icon className="h-5 w-5" />
                 </div>
-                <h3 className="mt-4 font-display uppercase text-lg font-black tracking-tight text-white">
+                <h3 className="mt-4 font-display uppercase text-lg font-black tracking-tight text-foreground">
                   {title}
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{body}</p>
@@ -272,8 +272,8 @@ function FunnelPage() {
           </div>
 
           {/* repeated CTA */}
-          <div className="mt-14 rounded-lg border border-[#1f1f1f] bg-surface p-8 md:p-10 text-center shadow-glow">
-            <h3 className="font-display uppercase text-2xl md:text-3xl font-black tracking-tight text-white">
+          <div className="mt-14 rounded-lg border border-border bg-surface p-8 md:p-10 text-center shadow-glow">
+            <h3 className="font-display uppercase text-2xl md:text-3xl font-black tracking-tight text-foreground">
               Ready to build something <span className="text-primary">that's actually yours?</span>
             </h3>
             <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
