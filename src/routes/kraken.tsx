@@ -28,14 +28,14 @@ const VIDEOS: { youtubeId: string; title: string; tag: string; quote: string; at
     attribution: "Real Estate Agent",
   },
   {
-    youtubeId: "",
+    youtubeId: "https://youtu.be/K5IYG4QB9RA?si=Z6kWhPNN96Y01IAH",
     title: "Micro Blading Client",
     tag: "Results",
     quote: "Helped me Build my Business, Super Happy with my results",
     attribution: "Micro Blading Client",
   },
   {
-    youtubeId: "",
+    youtubeId: "https://youtu.be/mXDCp4C24EA?si=uiKnKRN28zH19nKV",
     title: "Esthetician Client",
     tag: "Results",
     quote: "5 days & 145 leads. Multiple Appointments booked.",
