@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, Plus } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 export const Route = createFileRoute("/offer")({ component: OfferPage });
 
@@ -20,9 +21,48 @@ const FAQ = [
   "Is this a subscription?",
 ];
 
+function StickyCTA() {
+  const [visible, setVisible] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 420);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div
+      className="fixed bottom-0 left-0 right-0 z-50 transition-all duration-300"
+      style={{
+        transform: visible ? "translateY(0)" : "translateY(100%)",
+        opacity: visible ? 1 : 0,
+        background: "rgba(2,9,22,0.97)",
+        backdropFilter: "blur(12px)",
+        borderTop: "1px solid rgba(255,255,255,0.08)",
+        boxShadow: "0 -8px 32px rgba(0,0,0,0.4)",
+      }}
+    >
+      <div className="mx-auto max-w-6xl px-6 py-3 flex items-center justify-between gap-4">
+        <div className="hidden sm:block">
+          <p className="text-sm font-black uppercase tracking-wider text-white">The Vault</p>
+          <p className="text-xs text-[#8ea0ba]">Less than a movie night · lifetime access</p>
+        </div>
+        <a
+          href="mailto:matt@krakenvault.com?subject=Kraken%20Vault%20Access"
+          className="ml-auto inline-flex items-center gap-2 rounded-md bg-[#1973ea] px-6 py-3 text-sm font-black uppercase tracking-[0.12em] text-white transition hover:brightness-110 whitespace-nowrap"
+        >
+          Get Instant Access — $24.99 →
+        </a>
+      </div>
+    </div>
+  );
+}
+
 function OfferPage() {
   return (
     <main className="min-h-screen bg-[#e9edf2] text-[#0b1220]">
+      <StickyCTA />
       <section className="mx-auto max-w-6xl px-6 pt-8 pb-16">
         <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.18em] font-bold text-[#6e7f96]">
           <span className="text-[#111827]">Keyboard Kraken</span>
