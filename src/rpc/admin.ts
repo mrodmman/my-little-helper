@@ -1,5 +1,5 @@
 /**
- * Admin authentication server functions.
+ * Admin authentication + user management server functions.
  */
 "use server";
 
@@ -40,3 +40,42 @@ export const adminLogout = createServerFn().handler(async () => {
   }
   return { ok: true };
 });
+
+// ── User management ────────────────────────────────────────────────────────────
+
+export type AdminUser = {
+  id: string;
+  email: string;
+  first_name: string | null;
+  role: string;
+  created_at: number | null;
+  last_login: number | null;
+};
+
+export const listUsers = createServerFn().handler(async () => {
+  const env = await getEnv();
+  const result = await env.DB.prepare(
+    `SELECT id, email, first_name, role, created_at, last_login
+     FROM users ORDER BY created_at DESC`
+  ).all<AdminUser>();
+  return result.results ?? [];
+});
+
+export const updateUserRole = createServerFn()
+  .inputValidator((d: { id: string; role: string }) => d)
+  .handler(async ({ data }) => {
+    const env = await getEnv();
+    await env.DB.prepare(`UPDATE users SET role = ? WHERE id = ?`)
+      .bind(data.role, data.id).run();
+    return { ok: true };
+  });
+
+export const deleteUser = createServerFn()
+  .inputValidator((id: string) => id)
+  .handler(async ({ data: id }) => {
+    const env = await getEnv();
+    await env.DB.prepare(`DELETE FROM sessions WHERE user_id = ?`).bind(id).run();
+    await env.DB.prepare(`DELETE FROM users WHERE id = ?`).bind(id).run();
+    return { ok: true };
+  });
+
