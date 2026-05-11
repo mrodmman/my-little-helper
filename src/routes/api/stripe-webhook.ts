@@ -156,7 +156,7 @@ async function sendAccessEmail(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "Matt <matt@krakenvault.com>",
+      from: `${env.FROM_NAME} <${env.FROM_EMAIL}>`,
       to: email,
       subject: "Your Kraken Vault access is ready 🔓",
       html: `<p>${greeting}</p>
