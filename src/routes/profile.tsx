@@ -198,7 +198,7 @@ function ProfilePage() {
 
             <div className="mt-6 p-4 rounded-2xl border border-border bg-surface/40 text-sm text-muted-foreground">
               Billing management coming soon. Reach out to{" "}
-              <a href="mailto:support@krakenvault.com" className="text-primary hover:underline">support@krakenvault.com</a>{" "}
+              <a href="mailto:support@kbkcompanies.com" className="text-primary hover:underline">support@kbkcompanies.com</a>{" "}
               for plan changes.
             </div>
           </section>

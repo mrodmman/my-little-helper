@@ -161,7 +161,7 @@ async function sendAccessEmail(
       subject: "Your Kraken Vault access is ready 🔓",
       html: `<p>${greeting}</p>
 <p>Payment confirmed — your Kraken Vault account is live.</p>
-<p>Sign in at <a href="https://krakenvault.com/login">krakenvault.com/login</a>:</p>
+<p>Sign in at <a href="https://keyboardkraken.kbkcompanies.com/login">keyboardkraken.kbkcompanies.com/login</a>:</p>
 ${credBlock}
 <p>Welcome to the Vault. — Matt</p>`,
     }),

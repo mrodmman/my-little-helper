@@ -15,6 +15,7 @@ export interface Env {
   STRIPE_WEBHOOK_SECRET: string;
   FROM_EMAIL: string;
   FROM_NAME: string;
+  TO_EMAIL: string;
 }
 
 type CloudflareWorkersModule = {
