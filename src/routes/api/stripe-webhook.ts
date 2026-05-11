@@ -105,6 +105,11 @@ async function handleCheckoutComplete(session: CheckoutSession, env: Awaited<Ret
 
   await ensureAuthSchema(env);
 
+  // Remove from drip if they were a lead
+  await env.DB.prepare("UPDATE drip_subscribers SET status = 'unsubscribed' WHERE email = ?")
+    .bind(email)
+    .run();
+
   const existing = await env.DB.prepare("SELECT id FROM users WHERE email = ?")
     .bind(email)
     .first<{ id: string }>();
