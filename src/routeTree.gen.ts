@@ -9,29 +9,55 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VaultThankYouRouteImport } from './routes/vault-thank-you'
 import { Route as VaultRouteImport } from './routes/vault'
+import { Route as UnsubscribedRouteImport } from './routes/unsubscribed'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as ThankYouRouteImport } from './routes/thank-you'
 import { Route as SubscribeRouteImport } from './routes/subscribe'
+import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OfferRouteImport } from './routes/offer'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LeadKitRouteImport } from './routes/lead-kit'
+import { Route as KrakenRouteImport } from './routes/kraken'
 import { Route as JumpstartRouteImport } from './routes/jumpstart'
 import { Route as FunnelRouteImport } from './routes/funnel'
 import { Route as FastTrackRouteImport } from './routes/fast-track'
+import { Route as BizThankYouRouteImport } from './routes/biz-thank-you'
+import { Route as AiLeadKitRouteImport } from './routes/ai-lead-kit'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ModuleModuleIdRouteImport } from './routes/module.$moduleId'
+import { Route as AuthRegisterRouteImport } from './routes/auth/register'
+import { Route as AuthProvisionRouteImport } from './routes/auth/provision'
+import { Route as AuthLogoutRouteImport } from './routes/auth/logout'
+import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as ApiUploadRouteImport } from './routes/api/upload'
+import { Route as ApiSubscribeBizRouteImport } from './routes/api/subscribe-biz'
+import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe-webhook'
+import { Route as ApiContactRouteImport } from './routes/api/contact'
+import { Route as ApiCheckoutRouteImport } from './routes/api/checkout'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminModulesRouteImport } from './routes/admin/modules'
 import { Route as AdminAssetsRouteImport } from './routes/admin/assets'
 import { Route as ApiCdnKeyRouteImport } from './routes/api/cdn.$key'
 import { Route as AdminModulesModuleIdRouteImport } from './routes/admin/modules.$moduleId'
 
+const VaultThankYouRoute = VaultThankYouRouteImport.update({
+  id: '/vault-thank-you',
+  path: '/vault-thank-you',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VaultRoute = VaultRouteImport.update({
   id: '/vault',
   path: '/vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnsubscribedRoute = UnsubscribedRouteImport.update({
+  id: '/unsubscribed',
+  path: '/unsubscribed',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UnsubscribeRoute = UnsubscribeRouteImport.update({
@@ -49,6 +75,11 @@ const SubscribeRoute = SubscribeRouteImport.update({
   path: '/subscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -64,6 +95,16 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LeadKitRoute = LeadKitRouteImport.update({
+  id: '/lead-kit',
+  path: '/lead-kit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KrakenRoute = KrakenRouteImport.update({
+  id: '/kraken',
+  path: '/kraken',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const JumpstartRoute = JumpstartRouteImport.update({
   id: '/jumpstart',
   path: '/jumpstart',
@@ -77,6 +118,16 @@ const FunnelRoute = FunnelRouteImport.update({
 const FastTrackRoute = FastTrackRouteImport.update({
   id: '/fast-track',
   path: '/fast-track',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BizThankYouRoute = BizThankYouRouteImport.update({
+  id: '/biz-thank-you',
+  path: '/biz-thank-you',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiLeadKitRoute = AiLeadKitRouteImport.update({
+  id: '/ai-lead-kit',
+  path: '/ai-lead-kit',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -99,10 +150,55 @@ const ModuleModuleIdRoute = ModuleModuleIdRouteImport.update({
   path: '/module/$moduleId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRegisterRoute = AuthRegisterRouteImport.update({
+  id: '/auth/register',
+  path: '/auth/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthProvisionRoute = AuthProvisionRouteImport.update({
+  id: '/auth/provision',
+  path: '/auth/provision',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLogoutRoute = AuthLogoutRouteImport.update({
+  id: '/auth/logout',
+  path: '/auth/logout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/auth/login',
+  path: '/auth/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiUploadRoute = ApiUploadRouteImport.update({
   id: '/api/upload',
   path: '/api/upload',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSubscribeBizRoute = ApiSubscribeBizRouteImport.update({
+  id: '/api/subscribe-biz',
+  path: '/api/subscribe-biz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiStripeWebhookRoute = ApiStripeWebhookRouteImport.update({
+  id: '/api/stripe-webhook',
+  path: '/api/stripe-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiContactRoute = ApiContactRouteImport.update({
+  id: '/api/contact',
+  path: '/api/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCheckoutRoute = ApiCheckoutRouteImport.update({
+  id: '/api/checkout',
+  path: '/api/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminModulesRoute = AdminModulesRouteImport.update({
   id: '/modules',
@@ -128,19 +224,35 @@ const AdminModulesModuleIdRoute = AdminModulesModuleIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/ai-lead-kit': typeof AiLeadKitRoute
+  '/biz-thank-you': typeof BizThankYouRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
   '/jumpstart': typeof JumpstartRoute
+  '/kraken': typeof KrakenRoute
+  '/lead-kit': typeof LeadKitRoute
   '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
   '/subscribe': typeof SubscribeRoute
   '/thank-you': typeof ThankYouRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/unsubscribed': typeof UnsubscribedRoute
   '/vault': typeof VaultRoute
+  '/vault-thank-you': typeof VaultThankYouRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
+  '/admin/users': typeof AdminUsersRoute
+  '/api/checkout': typeof ApiCheckoutRoute
+  '/api/contact': typeof ApiContactRoute
+  '/api/stripe-webhook': typeof ApiStripeWebhookRoute
+  '/api/subscribe-biz': typeof ApiSubscribeBizRoute
   '/api/upload': typeof ApiUploadRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/logout': typeof AuthLogoutRoute
+  '/auth/provision': typeof AuthProvisionRoute
+  '/auth/register': typeof AuthRegisterRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
@@ -148,19 +260,35 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-lead-kit': typeof AiLeadKitRoute
+  '/biz-thank-you': typeof BizThankYouRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
   '/jumpstart': typeof JumpstartRoute
+  '/kraken': typeof KrakenRoute
+  '/lead-kit': typeof LeadKitRoute
   '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
   '/subscribe': typeof SubscribeRoute
   '/thank-you': typeof ThankYouRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/unsubscribed': typeof UnsubscribedRoute
   '/vault': typeof VaultRoute
+  '/vault-thank-you': typeof VaultThankYouRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
+  '/admin/users': typeof AdminUsersRoute
+  '/api/checkout': typeof ApiCheckoutRoute
+  '/api/contact': typeof ApiContactRoute
+  '/api/stripe-webhook': typeof ApiStripeWebhookRoute
+  '/api/subscribe-biz': typeof ApiSubscribeBizRoute
   '/api/upload': typeof ApiUploadRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/logout': typeof AuthLogoutRoute
+  '/auth/provision': typeof AuthProvisionRoute
+  '/auth/register': typeof AuthRegisterRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
   '/admin': typeof AdminIndexRoute
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
@@ -170,19 +298,35 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/ai-lead-kit': typeof AiLeadKitRoute
+  '/biz-thank-you': typeof BizThankYouRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
   '/jumpstart': typeof JumpstartRoute
+  '/kraken': typeof KrakenRoute
+  '/lead-kit': typeof LeadKitRoute
   '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
   '/subscribe': typeof SubscribeRoute
   '/thank-you': typeof ThankYouRoute
   '/unsubscribe': typeof UnsubscribeRoute
+  '/unsubscribed': typeof UnsubscribedRoute
   '/vault': typeof VaultRoute
+  '/vault-thank-you': typeof VaultThankYouRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
+  '/admin/users': typeof AdminUsersRoute
+  '/api/checkout': typeof ApiCheckoutRoute
+  '/api/contact': typeof ApiContactRoute
+  '/api/stripe-webhook': typeof ApiStripeWebhookRoute
+  '/api/subscribe-biz': typeof ApiSubscribeBizRoute
   '/api/upload': typeof ApiUploadRoute
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/logout': typeof AuthLogoutRoute
+  '/auth/provision': typeof AuthProvisionRoute
+  '/auth/register': typeof AuthRegisterRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
@@ -193,19 +337,35 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/ai-lead-kit'
+    | '/biz-thank-you'
     | '/fast-track'
     | '/funnel'
     | '/jumpstart'
+    | '/kraken'
+    | '/lead-kit'
     | '/login'
     | '/offer'
     | '/profile'
+    | '/register'
     | '/subscribe'
     | '/thank-you'
     | '/unsubscribe'
+    | '/unsubscribed'
     | '/vault'
+    | '/vault-thank-you'
     | '/admin/assets'
     | '/admin/modules'
+    | '/admin/users'
+    | '/api/checkout'
+    | '/api/contact'
+    | '/api/stripe-webhook'
+    | '/api/subscribe-biz'
     | '/api/upload'
+    | '/auth/login'
+    | '/auth/logout'
+    | '/auth/provision'
+    | '/auth/register'
     | '/module/$moduleId'
     | '/admin/'
     | '/admin/modules/$moduleId'
@@ -213,19 +373,35 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ai-lead-kit'
+    | '/biz-thank-you'
     | '/fast-track'
     | '/funnel'
     | '/jumpstart'
+    | '/kraken'
+    | '/lead-kit'
     | '/login'
     | '/offer'
     | '/profile'
+    | '/register'
     | '/subscribe'
     | '/thank-you'
     | '/unsubscribe'
+    | '/unsubscribed'
     | '/vault'
+    | '/vault-thank-you'
     | '/admin/assets'
     | '/admin/modules'
+    | '/admin/users'
+    | '/api/checkout'
+    | '/api/contact'
+    | '/api/stripe-webhook'
+    | '/api/subscribe-biz'
     | '/api/upload'
+    | '/auth/login'
+    | '/auth/logout'
+    | '/auth/provision'
+    | '/auth/register'
     | '/module/$moduleId'
     | '/admin'
     | '/admin/modules/$moduleId'
@@ -234,19 +410,35 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/ai-lead-kit'
+    | '/biz-thank-you'
     | '/fast-track'
     | '/funnel'
     | '/jumpstart'
+    | '/kraken'
+    | '/lead-kit'
     | '/login'
     | '/offer'
     | '/profile'
+    | '/register'
     | '/subscribe'
     | '/thank-you'
     | '/unsubscribe'
+    | '/unsubscribed'
     | '/vault'
+    | '/vault-thank-you'
     | '/admin/assets'
     | '/admin/modules'
+    | '/admin/users'
+    | '/api/checkout'
+    | '/api/contact'
+    | '/api/stripe-webhook'
+    | '/api/subscribe-biz'
     | '/api/upload'
+    | '/auth/login'
+    | '/auth/logout'
+    | '/auth/provision'
+    | '/auth/register'
     | '/module/$moduleId'
     | '/admin/'
     | '/admin/modules/$moduleId'
@@ -256,28 +448,57 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  AiLeadKitRoute: typeof AiLeadKitRoute
+  BizThankYouRoute: typeof BizThankYouRoute
   FastTrackRoute: typeof FastTrackRoute
   FunnelRoute: typeof FunnelRoute
   JumpstartRoute: typeof JumpstartRoute
+  KrakenRoute: typeof KrakenRoute
+  LeadKitRoute: typeof LeadKitRoute
   LoginRoute: typeof LoginRoute
   OfferRoute: typeof OfferRoute
   ProfileRoute: typeof ProfileRoute
+  RegisterRoute: typeof RegisterRoute
   SubscribeRoute: typeof SubscribeRoute
   ThankYouRoute: typeof ThankYouRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
+  UnsubscribedRoute: typeof UnsubscribedRoute
   VaultRoute: typeof VaultRoute
+  VaultThankYouRoute: typeof VaultThankYouRoute
+  ApiCheckoutRoute: typeof ApiCheckoutRoute
+  ApiContactRoute: typeof ApiContactRoute
+  ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
+  ApiSubscribeBizRoute: typeof ApiSubscribeBizRoute
   ApiUploadRoute: typeof ApiUploadRoute
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthLogoutRoute: typeof AuthLogoutRoute
+  AuthProvisionRoute: typeof AuthProvisionRoute
+  AuthRegisterRoute: typeof AuthRegisterRoute
   ModuleModuleIdRoute: typeof ModuleModuleIdRoute
   ApiCdnKeyRoute: typeof ApiCdnKeyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vault-thank-you': {
+      id: '/vault-thank-you'
+      path: '/vault-thank-you'
+      fullPath: '/vault-thank-you'
+      preLoaderRoute: typeof VaultThankYouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vault': {
       id: '/vault'
       path: '/vault'
       fullPath: '/vault'
       preLoaderRoute: typeof VaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/unsubscribed': {
+      id: '/unsubscribed'
+      path: '/unsubscribed'
+      fullPath: '/unsubscribed'
+      preLoaderRoute: typeof UnsubscribedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/unsubscribe': {
@@ -301,6 +522,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -322,6 +550,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lead-kit': {
+      id: '/lead-kit'
+      path: '/lead-kit'
+      fullPath: '/lead-kit'
+      preLoaderRoute: typeof LeadKitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kraken': {
+      id: '/kraken'
+      path: '/kraken'
+      fullPath: '/kraken'
+      preLoaderRoute: typeof KrakenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/jumpstart': {
       id: '/jumpstart'
       path: '/jumpstart'
@@ -341,6 +583,20 @@ declare module '@tanstack/react-router' {
       path: '/fast-track'
       fullPath: '/fast-track'
       preLoaderRoute: typeof FastTrackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/biz-thank-you': {
+      id: '/biz-thank-you'
+      path: '/biz-thank-you'
+      fullPath: '/biz-thank-you'
+      preLoaderRoute: typeof BizThankYouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-lead-kit': {
+      id: '/ai-lead-kit'
+      path: '/ai-lead-kit'
+      fullPath: '/ai-lead-kit'
+      preLoaderRoute: typeof AiLeadKitRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -371,12 +627,75 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ModuleModuleIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/register': {
+      id: '/auth/register'
+      path: '/auth/register'
+      fullPath: '/auth/register'
+      preLoaderRoute: typeof AuthRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/provision': {
+      id: '/auth/provision'
+      path: '/auth/provision'
+      fullPath: '/auth/provision'
+      preLoaderRoute: typeof AuthProvisionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/logout': {
+      id: '/auth/logout'
+      path: '/auth/logout'
+      fullPath: '/auth/logout'
+      preLoaderRoute: typeof AuthLogoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/login': {
+      id: '/auth/login'
+      path: '/auth/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/upload': {
       id: '/api/upload'
       path: '/api/upload'
       fullPath: '/api/upload'
       preLoaderRoute: typeof ApiUploadRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/subscribe-biz': {
+      id: '/api/subscribe-biz'
+      path: '/api/subscribe-biz'
+      fullPath: '/api/subscribe-biz'
+      preLoaderRoute: typeof ApiSubscribeBizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/stripe-webhook': {
+      id: '/api/stripe-webhook'
+      path: '/api/stripe-webhook'
+      fullPath: '/api/stripe-webhook'
+      preLoaderRoute: typeof ApiStripeWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/contact': {
+      id: '/api/contact'
+      path: '/api/contact'
+      fullPath: '/api/contact'
+      preLoaderRoute: typeof ApiContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/checkout': {
+      id: '/api/checkout'
+      path: '/api/checkout'
+      fullPath: '/api/checkout'
+      preLoaderRoute: typeof ApiCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/modules': {
       id: '/admin/modules'
@@ -424,12 +743,14 @@ const AdminModulesRouteWithChildren = AdminModulesRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminAssetsRoute: typeof AdminAssetsRoute
   AdminModulesRoute: typeof AdminModulesRouteWithChildren
+  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAssetsRoute: AdminAssetsRoute,
   AdminModulesRoute: AdminModulesRouteWithChildren,
+  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
@@ -438,20 +759,44 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  AiLeadKitRoute: AiLeadKitRoute,
+  BizThankYouRoute: BizThankYouRoute,
   FastTrackRoute: FastTrackRoute,
   FunnelRoute: FunnelRoute,
   JumpstartRoute: JumpstartRoute,
+  KrakenRoute: KrakenRoute,
+  LeadKitRoute: LeadKitRoute,
   LoginRoute: LoginRoute,
   OfferRoute: OfferRoute,
   ProfileRoute: ProfileRoute,
+  RegisterRoute: RegisterRoute,
   SubscribeRoute: SubscribeRoute,
   ThankYouRoute: ThankYouRoute,
   UnsubscribeRoute: UnsubscribeRoute,
+  UnsubscribedRoute: UnsubscribedRoute,
   VaultRoute: VaultRoute,
+  VaultThankYouRoute: VaultThankYouRoute,
+  ApiCheckoutRoute: ApiCheckoutRoute,
+  ApiContactRoute: ApiContactRoute,
+  ApiStripeWebhookRoute: ApiStripeWebhookRoute,
+  ApiSubscribeBizRoute: ApiSubscribeBizRoute,
   ApiUploadRoute: ApiUploadRoute,
+  AuthLoginRoute: AuthLoginRoute,
+  AuthLogoutRoute: AuthLogoutRoute,
+  AuthProvisionRoute: AuthProvisionRoute,
+  AuthRegisterRoute: AuthRegisterRoute,
   ModuleModuleIdRoute: ModuleModuleIdRoute,
   ApiCdnKeyRoute: ApiCdnKeyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
