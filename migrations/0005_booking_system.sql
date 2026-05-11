@@ -2,10 +2,13 @@ CREATE TABLE IF NOT EXISTS booking_settings (
   id INTEGER PRIMARY KEY CHECK (id = 1),
   working_days TEXT NOT NULL DEFAULT '[1,2,3,4,5]',
   blackout_dates TEXT NOT NULL DEFAULT '[]',
+  daily_time_blocks TEXT NOT NULL DEFAULT '[]',
+  date_time_blocks TEXT NOT NULL DEFAULT '[]',
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-INSERT OR IGNORE INTO booking_settings (id, working_days, blackout_dates) VALUES (1, '[1,2,3,4,5]', '[]');
+INSERT OR IGNORE INTO booking_settings (id, working_days, blackout_dates, daily_time_blocks, date_time_blocks)
+VALUES (1, '[1,2,3,4,5]', '[]', '[]', '[]');
 
 CREATE TABLE IF NOT EXISTS bookings (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
