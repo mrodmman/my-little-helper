@@ -63,7 +63,7 @@ function LoginPage() {
       <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-primary/10 blur-3xl -z-10" />
 
       <div className="w-full max-w-md">
-        <Link to="/" className="block text-center text-xs uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground mb-8">
+        <Link to="/kraken" className="block text-center text-xs uppercase tracking-[0.3em] text-muted-foreground hover:text-foreground mb-8">
           ← The Kraken Vault
         </Link>
 

@@ -62,7 +62,7 @@ function ProfilePage() {
     <div className="min-h-screen text-foreground">
       <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/70 border-b border-border">
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+          <Link to="/vault" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-4 w-4" /> The Vault
           </Link>
           <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Profile</div>

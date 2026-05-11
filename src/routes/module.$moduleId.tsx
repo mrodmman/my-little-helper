@@ -42,7 +42,7 @@ export const Route = createFileRoute("/module/$moduleId")({
     <div className="min-h-screen flex items-center justify-center text-center px-6">
       <div>
         <h1 className="text-3xl font-bold mb-3">Module not found</h1>
-        <Link to="/" className="text-primary hover:underline">Back to The Vault</Link>
+        <Link to="/vault" className="text-primary hover:underline">Back to The Vault</Link>
       </div>
     </div>
   ),
@@ -161,7 +161,7 @@ function ModulePage() {
       {/* Top bar */}
       <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/70 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-6">
-          <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link to="/vault" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="h-4 w-4" /> The Vault
           </Link>
           <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground hidden sm:block">

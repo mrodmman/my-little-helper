@@ -39,14 +39,14 @@ function AdminDashboard() {
       label: "Progress",
       value: "D1",
       icon: TrendingUp,
-      to: "/",
+      to: "/vault",
       description: "Stored in Cloudflare D1 by session",
     },
     {
       label: "Users",
       value: "Anon",
       icon: Users,
-      to: "/",
+      to: "/vault",
       description: "Cookie-based sessions, no login required",
     },
   ];
