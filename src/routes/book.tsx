@@ -4,11 +4,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 
 const BLUE = '#1763ff';
-// Replace this with your own hero/background image URL anytime.
-// You can use:
-// 1) A hosted URL (Cloudflare R2, S3, CDN, etc.)
-// 2) A local public asset path like `/images/booking-bg.jpg`
-const BG_IMAGE = 'https://i.ibb.co/tTgxPHM9/file-50.jpg';
+const PRIMARY_BG_IMAGE = 'https://i.ibb.co/g1GKLtj/file-51.jpg';
+const SECONDARY_BG_IMAGE = 'https://i.ibb.co/tTgxPHM9/file-50.jpg';
+const FALLBACK_BG_IMAGE = '/images/booking-bg.jpg';
 
 export const Route = createFileRoute('/book')({ component: BookPage });
 
@@ -21,6 +19,7 @@ function BookPage() {
   const [phone, setPhone] = useState('');
   const [notes, setNotes] = useState('');
   const [message, setMessage] = useState('');
+  const [bgImage, setBgImage] = useState(PRIMARY_BG_IMAGE);
 
   const isoDate = useMemo(() => (date ? format(date, 'yyyy-MM-dd') : ''), [date]);
 
@@ -45,22 +44,34 @@ function BookPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#030814] text-white" style={{ fontFamily: 'Inter,system-ui,sans-serif' }}>
+    <main className="min-h-screen bg-background text-foreground" style={{ fontFamily: 'Inter,system-ui,sans-serif' }}>
       <div className="relative min-h-screen overflow-hidden">
-        <div className="absolute inset-0 bg-center bg-cover opacity-30" style={{ backgroundImage: `url(${BG_IMAGE})` }} />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#040b19]/95 via-[#030814]/90 to-[#030814]" />
+        <img
+          src={bgImage}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover opacity-45"
+          onError={() => {
+            setBgImage((current) => {
+              if (current === PRIMARY_BG_IMAGE) return SECONDARY_BG_IMAGE;
+              if (current === SECONDARY_BG_IMAGE) return FALLBACK_BG_IMAGE;
+              return current;
+            });
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#040b19]/70 via-[#030814]/65 to-[#030814]/80" />
 
         <div className="relative mx-auto max-w-6xl p-4 md:p-8">
           <h1 className="text-5xl md:text-7xl font-black uppercase leading-[0.92]">
             Book your <span style={{ color: BLUE }}>strategy</span> call
           </h1>
-          <p className="mt-3 text-lg text-white/80">Pick a time that works for you. Submit your details to confirm instantly.</p>
+          <p className="mt-3 text-lg text-muted-foreground">Pick a time that works for you. Submit your details to confirm instantly.</p>
 
-          <div className="mt-8 rounded-3xl border border-blue-500/30 bg-[#081122]/75 backdrop-blur p-4 md:p-6 grid gap-6 lg:grid-cols-2">
+          <div className="mt-8 rounded-3xl border border-border bg-surface/75 backdrop-blur p-4 md:p-6 grid gap-6 lg:grid-cols-2">
             <section>
               <h2 className="text-2xl font-extrabold">1 • Choose a date & time</h2>
-              <p className="text-sm text-white/70">All times shown in your local timezone.</p>
-              <div className="mt-4 rounded-2xl border border-blue-400/20 bg-black/20 p-3">
+              <p className="text-sm text-muted-foreground">All times shown in your local timezone.</p>
+              <div className="mt-4 rounded-2xl border border-border bg-background/30 p-3">
                 <Calendar mode="single" selected={date} onSelect={setDate} className="rounded-md border-0" />
               </div>
 
@@ -70,7 +81,7 @@ function BookPage() {
                   <button
                     key={t}
                     onClick={() => setSelected(t)}
-                    className="rounded-xl border border-blue-500 px-3 py-2 font-extrabold transition"
+                    className="rounded-xl border border-border px-3 py-2 font-extrabold transition"
                     style={{ background: selected === t ? BLUE : 'rgba(0,0,0,0.25)' }}
                   >
                     {t}
@@ -82,17 +93,17 @@ function BookPage() {
             <section>
               <h2 className="text-2xl font-extrabold">2 • Your details</h2>
               <div className="space-y-3 mt-4">
-                <input placeholder="Full Name" className="w-full rounded-xl bg-[#07101f] p-3 border border-blue-500/30" value={name} onChange={(e) => setName(e.target.value)} />
-                <input placeholder="Email" className="w-full rounded-xl bg-[#07101f] p-3 border border-blue-500/30" value={email} onChange={(e) => setEmail(e.target.value)} />
-                <input placeholder="Phone (optional)" className="w-full rounded-xl bg-[#07101f] p-3 border border-blue-500/30" value={phone} onChange={(e) => setPhone(e.target.value)} />
-                <textarea placeholder="What would you like help with?" className="w-full rounded-xl bg-[#07101f] p-3 border border-blue-500/30 min-h-28" value={notes} onChange={(e) => setNotes(e.target.value)} />
+                <input placeholder="Full Name" className="w-full rounded-xl bg-background/40 p-3 border border-border" value={name} onChange={(e) => setName(e.target.value)} />
+                <input placeholder="Email" className="w-full rounded-xl bg-background/40 p-3 border border-border" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input placeholder="Phone (optional)" className="w-full rounded-xl bg-background/40 p-3 border border-border" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                <textarea placeholder="What would you like help with?" className="w-full rounded-xl bg-background/40 p-3 border border-border min-h-28" value={notes} onChange={(e) => setNotes(e.target.value)} />
 
-                <div className="rounded-2xl border border-blue-500/30 p-4 bg-black/20">
+                <div className="rounded-2xl border border-border p-4 bg-background/30">
                   <h3 className="font-extrabold text-blue-400">BOOKING SUMMARY</h3>
-                  <p className="mt-2 text-sm text-white/80">Date: {date ? format(date, 'EEEE, MMM d, yyyy') : '—'}</p>
-                  <p className="text-sm text-white/80">Time: {selected || '—'}</p>
-                  <p className="text-sm text-white/80">Duration: 60 minutes</p>
-                  <p className="text-sm text-white/80">Type: Strategy Call</p>
+                  <p className="mt-2 text-sm text-muted-foreground">Date: {date ? format(date, 'EEEE, MMM d, yyyy') : '—'}</p>
+                  <p className="text-sm text-muted-foreground">Time: {selected || '—'}</p>
+                  <p className="text-sm text-muted-foreground">Duration: 60 minutes</p>
+                  <p className="text-sm text-muted-foreground">Type: Strategy Call</p>
                 </div>
 
                 <button onClick={submit} className="w-full rounded-xl px-4 py-3 text-xl font-extrabold" style={{ background: BLUE }}>

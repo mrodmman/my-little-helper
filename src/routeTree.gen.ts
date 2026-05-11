@@ -25,6 +25,8 @@ import { Route as KrakenRouteImport } from './routes/kraken'
 import { Route as JumpstartRouteImport } from './routes/jumpstart'
 import { Route as FunnelRouteImport } from './routes/funnel'
 import { Route as FastTrackRouteImport } from './routes/fast-track'
+import { Route as CancelRouteImport } from './routes/cancel'
+import { Route as BookRouteImport } from './routes/book'
 import { Route as BizThankYouRouteImport } from './routes/biz-thank-you'
 import { Route as AiLeadKitRouteImport } from './routes/ai-lead-kit'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -42,8 +44,10 @@ import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as ApiCheckoutRouteImport } from './routes/api/checkout'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminModulesRouteImport } from './routes/admin/modules'
+import { Route as AdminAvailabilityRouteImport } from './routes/admin/availability'
 import { Route as AdminAssetsRouteImport } from './routes/admin/assets'
 import { Route as ApiCdnKeyRouteImport } from './routes/api/cdn.$key'
+import { Route as ApiBookingActionRouteImport } from './routes/api/booking.$action'
 import { Route as AdminModulesModuleIdRouteImport } from './routes/admin/modules.$moduleId'
 
 const WorkWithMeRoute = WorkWithMeRouteImport.update({
@@ -124,6 +128,16 @@ const FunnelRoute = FunnelRouteImport.update({
 const FastTrackRoute = FastTrackRouteImport.update({
   id: '/fast-track',
   path: '/fast-track',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CancelRoute = CancelRouteImport.update({
+  id: '/cancel',
+  path: '/cancel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookRoute = BookRouteImport.update({
+  id: '/book',
+  path: '/book',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BizThankYouRoute = BizThankYouRouteImport.update({
@@ -211,6 +225,11 @@ const AdminModulesRoute = AdminModulesRouteImport.update({
   path: '/modules',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAvailabilityRoute = AdminAvailabilityRouteImport.update({
+  id: '/availability',
+  path: '/availability',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAssetsRoute = AdminAssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
@@ -219,6 +238,11 @@ const AdminAssetsRoute = AdminAssetsRouteImport.update({
 const ApiCdnKeyRoute = ApiCdnKeyRouteImport.update({
   id: '/api/cdn/$key',
   path: '/api/cdn/$key',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiBookingActionRoute = ApiBookingActionRouteImport.update({
+  id: '/api/booking/$action',
+  path: '/api/booking/$action',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminModulesModuleIdRoute = AdminModulesModuleIdRouteImport.update({
@@ -232,6 +256,8 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/ai-lead-kit': typeof AiLeadKitRoute
   '/biz-thank-you': typeof BizThankYouRoute
+  '/book': typeof BookRoute
+  '/cancel': typeof CancelRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
   '/jumpstart': typeof JumpstartRoute
@@ -249,6 +275,7 @@ export interface FileRoutesByFullPath {
   '/vault-thank-you': typeof VaultThankYouRoute
   '/work-with-me': typeof WorkWithMeRoute
   '/admin/assets': typeof AdminAssetsRoute
+  '/admin/availability': typeof AdminAvailabilityRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
   '/admin/users': typeof AdminUsersRoute
   '/api/checkout': typeof ApiCheckoutRoute
@@ -263,12 +290,15 @@ export interface FileRoutesByFullPath {
   '/module/$moduleId': typeof ModuleModuleIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
+  '/api/booking/$action': typeof ApiBookingActionRoute
   '/api/cdn/$key': typeof ApiCdnKeyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-lead-kit': typeof AiLeadKitRoute
   '/biz-thank-you': typeof BizThankYouRoute
+  '/book': typeof BookRoute
+  '/cancel': typeof CancelRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
   '/jumpstart': typeof JumpstartRoute
@@ -286,6 +316,7 @@ export interface FileRoutesByTo {
   '/vault-thank-you': typeof VaultThankYouRoute
   '/work-with-me': typeof WorkWithMeRoute
   '/admin/assets': typeof AdminAssetsRoute
+  '/admin/availability': typeof AdminAvailabilityRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
   '/admin/users': typeof AdminUsersRoute
   '/api/checkout': typeof ApiCheckoutRoute
@@ -300,6 +331,7 @@ export interface FileRoutesByTo {
   '/module/$moduleId': typeof ModuleModuleIdRoute
   '/admin': typeof AdminIndexRoute
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
+  '/api/booking/$action': typeof ApiBookingActionRoute
   '/api/cdn/$key': typeof ApiCdnKeyRoute
 }
 export interface FileRoutesById {
@@ -308,6 +340,8 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/ai-lead-kit': typeof AiLeadKitRoute
   '/biz-thank-you': typeof BizThankYouRoute
+  '/book': typeof BookRoute
+  '/cancel': typeof CancelRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
   '/jumpstart': typeof JumpstartRoute
@@ -325,6 +359,7 @@ export interface FileRoutesById {
   '/vault-thank-you': typeof VaultThankYouRoute
   '/work-with-me': typeof WorkWithMeRoute
   '/admin/assets': typeof AdminAssetsRoute
+  '/admin/availability': typeof AdminAvailabilityRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
   '/admin/users': typeof AdminUsersRoute
   '/api/checkout': typeof ApiCheckoutRoute
@@ -339,6 +374,7 @@ export interface FileRoutesById {
   '/module/$moduleId': typeof ModuleModuleIdRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
+  '/api/booking/$action': typeof ApiBookingActionRoute
   '/api/cdn/$key': typeof ApiCdnKeyRoute
 }
 export interface FileRouteTypes {
@@ -348,6 +384,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai-lead-kit'
     | '/biz-thank-you'
+    | '/book'
+    | '/cancel'
     | '/fast-track'
     | '/funnel'
     | '/jumpstart'
@@ -365,6 +403,7 @@ export interface FileRouteTypes {
     | '/vault-thank-you'
     | '/work-with-me'
     | '/admin/assets'
+    | '/admin/availability'
     | '/admin/modules'
     | '/admin/users'
     | '/api/checkout'
@@ -379,12 +418,15 @@ export interface FileRouteTypes {
     | '/module/$moduleId'
     | '/admin/'
     | '/admin/modules/$moduleId'
+    | '/api/booking/$action'
     | '/api/cdn/$key'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/ai-lead-kit'
     | '/biz-thank-you'
+    | '/book'
+    | '/cancel'
     | '/fast-track'
     | '/funnel'
     | '/jumpstart'
@@ -402,6 +444,7 @@ export interface FileRouteTypes {
     | '/vault-thank-you'
     | '/work-with-me'
     | '/admin/assets'
+    | '/admin/availability'
     | '/admin/modules'
     | '/admin/users'
     | '/api/checkout'
@@ -416,6 +459,7 @@ export interface FileRouteTypes {
     | '/module/$moduleId'
     | '/admin'
     | '/admin/modules/$moduleId'
+    | '/api/booking/$action'
     | '/api/cdn/$key'
   id:
     | '__root__'
@@ -423,6 +467,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ai-lead-kit'
     | '/biz-thank-you'
+    | '/book'
+    | '/cancel'
     | '/fast-track'
     | '/funnel'
     | '/jumpstart'
@@ -440,6 +486,7 @@ export interface FileRouteTypes {
     | '/vault-thank-you'
     | '/work-with-me'
     | '/admin/assets'
+    | '/admin/availability'
     | '/admin/modules'
     | '/admin/users'
     | '/api/checkout'
@@ -454,6 +501,7 @@ export interface FileRouteTypes {
     | '/module/$moduleId'
     | '/admin/'
     | '/admin/modules/$moduleId'
+    | '/api/booking/$action'
     | '/api/cdn/$key'
   fileRoutesById: FileRoutesById
 }
@@ -462,6 +510,8 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AiLeadKitRoute: typeof AiLeadKitRoute
   BizThankYouRoute: typeof BizThankYouRoute
+  BookRoute: typeof BookRoute
+  CancelRoute: typeof CancelRoute
   FastTrackRoute: typeof FastTrackRoute
   FunnelRoute: typeof FunnelRoute
   JumpstartRoute: typeof JumpstartRoute
@@ -488,6 +538,7 @@ export interface RootRouteChildren {
   AuthProvisionRoute: typeof AuthProvisionRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   ModuleModuleIdRoute: typeof ModuleModuleIdRoute
+  ApiBookingActionRoute: typeof ApiBookingActionRoute
   ApiCdnKeyRoute: typeof ApiCdnKeyRoute
 }
 
@@ -603,6 +654,20 @@ declare module '@tanstack/react-router' {
       path: '/fast-track'
       fullPath: '/fast-track'
       preLoaderRoute: typeof FastTrackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cancel': {
+      id: '/cancel'
+      path: '/cancel'
+      fullPath: '/cancel'
+      preLoaderRoute: typeof CancelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book': {
+      id: '/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof BookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/biz-thank-you': {
@@ -724,6 +789,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminModulesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/availability': {
+      id: '/admin/availability'
+      path: '/availability'
+      fullPath: '/admin/availability'
+      preLoaderRoute: typeof AdminAvailabilityRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/assets': {
       id: '/admin/assets'
       path: '/assets'
@@ -736,6 +808,13 @@ declare module '@tanstack/react-router' {
       path: '/api/cdn/$key'
       fullPath: '/api/cdn/$key'
       preLoaderRoute: typeof ApiCdnKeyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/booking/$action': {
+      id: '/api/booking/$action'
+      path: '/api/booking/$action'
+      fullPath: '/api/booking/$action'
+      preLoaderRoute: typeof ApiBookingActionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/modules/$moduleId': {
@@ -762,6 +841,7 @@ const AdminModulesRouteWithChildren = AdminModulesRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminAssetsRoute: typeof AdminAssetsRoute
+  AdminAvailabilityRoute: typeof AdminAvailabilityRoute
   AdminModulesRoute: typeof AdminModulesRouteWithChildren
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -769,6 +849,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAssetsRoute: AdminAssetsRoute,
+  AdminAvailabilityRoute: AdminAvailabilityRoute,
   AdminModulesRoute: AdminModulesRouteWithChildren,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
@@ -781,6 +862,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AiLeadKitRoute: AiLeadKitRoute,
   BizThankYouRoute: BizThankYouRoute,
+  BookRoute: BookRoute,
+  CancelRoute: CancelRoute,
   FastTrackRoute: FastTrackRoute,
   FunnelRoute: FunnelRoute,
   JumpstartRoute: JumpstartRoute,
@@ -807,6 +890,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthProvisionRoute: AuthProvisionRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   ModuleModuleIdRoute: ModuleModuleIdRoute,
+  ApiBookingActionRoute: ApiBookingActionRoute,
   ApiCdnKeyRoute: ApiCdnKeyRoute,
 }
 export const routeTree = rootRouteImport
