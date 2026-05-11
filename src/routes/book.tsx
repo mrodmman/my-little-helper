@@ -4,7 +4,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 
 const BLUE = '#1763ff';
-const BG_IMAGE = 'https://images.unsplash.com/photo-1527498913931-c302284a62d7?auto=format&fit=crop&w=1800&q=80';
+// Replace this with your own hero/background image URL anytime.
+// You can use:
+// 1) A hosted URL (Cloudflare R2, S3, CDN, etc.)
+// 2) A local public asset path like `/images/booking-bg.jpg`
+const BG_IMAGE = '/images/booking-bg.jpg';
 
 export const Route = createFileRoute('/book')({ component: BookPage });
 
@@ -43,7 +47,7 @@ function BookPage() {
   return (
     <main className="min-h-screen bg-[#030814] text-white" style={{ fontFamily: 'Inter,system-ui,sans-serif' }}>
       <div className="relative min-h-screen overflow-hidden">
-        <img src={BG_IMAGE} alt="Booking background" className="absolute inset-0 h-full w-full object-cover opacity-30" />
+        <div className="absolute inset-0 bg-center bg-cover opacity-30" style={{ backgroundImage: `url(${BG_IMAGE})` }} />
         <div className="absolute inset-0 bg-gradient-to-b from-[#040b19]/95 via-[#030814]/90 to-[#030814]" />
 
         <div className="relative mx-auto max-w-6xl p-4 md:p-8">
