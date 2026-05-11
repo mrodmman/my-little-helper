@@ -99,10 +99,6 @@ function OfferPage() {
 
           <div className="rounded-2xl bg-[#020916] p-6 shadow-2xl border border-[#0c1f3a]">
             <img src="https://i.ibb.co/XhcGS64/file-49.jpg" alt="Vault" className="w-full rounded-xl" />
-            <p className="mt-5 text-sm text-[#9db1cc] leading-relaxed">
-              <span className="text-[#2a7fff] font-bold">AI, automation, content, funnels,</span> and
-              practical systems — connected properly so they actually work together.
-            </p>
           </div>
         </div>
       </section>
