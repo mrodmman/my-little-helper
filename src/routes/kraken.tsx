@@ -444,20 +444,21 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
             }}
           >
             <div
-              className="text-[10px] font-bold uppercase tracking-[0.25em] mb-5"
-              style={{ color: P }}
+              className="inline-flex items-center rounded-md px-4 py-2 text-sm font-black uppercase tracking-[0.14em] mb-6"
+              style={{ background: P, color: "#fff" }}
             >
-              — Business Owners
+              Business Owners
             </div>
-            <h3 className="font-sans uppercase text-2xl font-black tracking-tight mb-4 leading-tight" style={{ color: FG }}>
-              You need systems,<br />not more manual work.
-            </h3>
+            <p className="mb-6 text-lg leading-relaxed" style={{ color: fg(0.58) }}>
+              Your business runs on duct tape and willpower. Competitors are quietly wiring AI and online systems
+              into every workflow — and the gap is widening every quarter you wait.
+            </p>
             <ul className="space-y-2.5 mb-8 flex-1">
               {[
-                "No consistent lead pipeline",
-                "Operations are manual and reactive",
-                "Too much time on work AI should handle",
-                "Marketing that doesn't compound",
+                "Inconsistent lead flow and follow-up",
+                "Manual tasks eating your best hours",
+                "Marketing that resets every week",
+                "Tools that don't talk to each other",
               ].map((p) => (
                 <li key={p} className="flex items-start gap-2.5 text-sm" style={{ color: fg(0.55) }}>
                   <span
@@ -513,20 +514,21 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
             }}
           >
             <div
-              className="text-[10px] font-bold uppercase tracking-[0.25em] mb-5"
-              style={{ color: V }}
+              className="inline-flex items-center rounded-md px-4 py-2 text-sm font-black uppercase tracking-[0.14em] mb-6"
+              style={{ background: P, color: "#fff" }}
             >
-              — Builders & Creators
+              Getting Started Online
             </div>
-            <h3 className="font-sans uppercase text-2xl font-black tracking-tight mb-4 leading-tight" style={{ color: FG }}>
-              Stop consuming.<br />Start building.
-            </h3>
+            <p className="mb-6 text-lg leading-relaxed" style={{ color: fg(0.58) }}>
+              You want to build something online — a brand, a product, an income stream — but every tutorial
+              assumes you already know the stack. You keep starting and stalling.
+            </p>
             <ul className="space-y-2.5 mb-8 flex-1">
               {[
-                "Information overload, no clear path",
-                "Learning without building anything",
-                "Content that doesn't compound into leads",
-                "No monetization system in place",
+                "Step-by-step path, no guessing",
+                "One action per day (45-60 min)",
+                "Real assets you can use immediately",
+                "Build while keeping your day job",
               ].map((p) => (
                 <li key={p} className="flex items-start gap-2.5 text-sm" style={{ color: fg(0.55) }}>
                   <span
