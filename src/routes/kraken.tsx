@@ -125,7 +125,6 @@ function KrakenPage() {
         <KrakenNav onOpenContact={() => setContactOpen(true)} />
         <HeroSection onOpenContact={() => setContactOpen(true)} />
         <ChoosePathSection onOpenContact={() => setContactOpen(true)} />
-        <FreeGuideSection />
         <ProofSection />
         <AboutSection />
         <VaultSection />
@@ -424,12 +423,12 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
       style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}
     >
       <div className="mx-auto max-w-6xl">
-        <div className="mb-12">
-          <h2 className="font-sans uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1]" style={{ color: FG }}>
+        <div className="mb-12 text-center">
+          <h2 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.95]">
             Different goals.{" "}
             <span style={{ color: P }}>Same problem.</span>
           </h2>
-          <p className="mt-4 max-w-lg" style={{ color: fg(0.48) }}>
+          <p className="mt-4 mx-auto max-w-2xl text-lg" style={{ color: fg(0.48) }}>
             Most people don't need more information. They need structure.
           </p>
         </div>
@@ -445,20 +444,21 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
             }}
           >
             <div
-              className="text-[10px] font-bold uppercase tracking-[0.25em] mb-5"
-              style={{ color: P }}
+              className="inline-flex items-center rounded-md px-4 py-2 text-sm font-black uppercase tracking-[0.14em] mb-6"
+              style={{ background: P, color: "#fff" }}
             >
-              — Business Owners
+              Business Owners
             </div>
-            <h3 className="font-sans uppercase text-2xl font-black tracking-tight mb-4 leading-tight" style={{ color: FG }}>
-              You need systems,<br />not more manual work.
-            </h3>
+            <p className="mb-6 text-lg leading-relaxed" style={{ color: fg(0.58) }}>
+              Your business runs on duct tape and willpower. Competitors are quietly wiring AI and online systems
+              into every workflow — and the gap is widening every quarter you wait.
+            </p>
             <ul className="space-y-2.5 mb-8 flex-1">
               {[
-                "No consistent lead pipeline",
-                "Operations are manual and reactive",
-                "Too much time on work AI should handle",
-                "Marketing that doesn't compound",
+                "Inconsistent lead flow and follow-up",
+                "Manual tasks eating your best hours",
+                "Marketing that resets every week",
+                "Tools that don't talk to each other",
               ].map((p) => (
                 <li key={p} className="flex items-start gap-2.5 text-sm" style={{ color: fg(0.55) }}>
                   <span
@@ -469,21 +469,40 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
                 </li>
               ))}
             </ul>
-            <Link
-              to="/lead-kit"
-              className="mb-3 inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
-              style={{ background: P, color: "#ffffff", boxShadow: `0 0 24px rgba(26,92,255,0.22)` }}
-            >
-              Get the free starter kit <ArrowRight className="h-4 w-4" />
-            </Link>
-            <button
-              type="button"
-              onClick={onOpenContact}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2 text-sm font-bold uppercase tracking-wider transition hover:underline"
-              style={{ color: fg(0.5) }}
-            >
-              Work With Me <ArrowRight className="h-3.5 w-3.5" />
-            </button>
+            <div className="rounded-lg p-6 mt-auto" style={{ background: P, border: "1px solid rgba(255,255,255,0.18)" }}>
+              <div
+                className="inline-flex items-center gap-2 rounded-md px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] mb-4"
+                style={{ background: "rgba(255,255,255,0.18)", color: "#fff" }}
+              >
+                100% Free
+              </div>
+              <h4 className="font-sans uppercase text-2xl font-black tracking-tight leading-[1] text-white">
+                AI Lead System Starter Kit
+              </h4>
+              <p className="mt-3 text-white/80 text-sm leading-relaxed">
+                Build and deploy a real lead capture system that alerts you the moment someone fills out your form — using AI, GitHub, and Cloudflare.
+              </p>
+              <div className="mt-5 flex flex-col gap-3">
+                <Link
+                  to="/lead-kit"
+                  className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:brightness-95"
+                  style={{ color: P }}
+                >
+                  Get the starter kit <ArrowRight className="h-4 w-4" />
+                </Link>
+                <button
+                  type="button"
+                  onClick={onOpenContact}
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2 text-xs font-bold uppercase tracking-wider transition hover:underline"
+                  style={{ color: "rgba(255,255,255,0.80)" }}
+                >
+                  Work With Me <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+              </div>
+              <span className="mt-3 block text-[11px] uppercase tracking-wider text-white/55">
+                Instant access · 100% free · No spam
+              </span>
+            </div>
           </div>
 
           <div
@@ -495,20 +514,21 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
             }}
           >
             <div
-              className="text-[10px] font-bold uppercase tracking-[0.25em] mb-5"
-              style={{ color: V }}
+              className="inline-flex items-center rounded-md px-4 py-2 text-sm font-black uppercase tracking-[0.14em] mb-6"
+              style={{ background: P, color: "#fff" }}
             >
-              — Builders & Creators
+              Getting Started Online
             </div>
-            <h3 className="font-sans uppercase text-2xl font-black tracking-tight mb-4 leading-tight" style={{ color: FG }}>
-              Stop consuming.<br />Start building.
-            </h3>
+            <p className="mb-6 text-lg leading-relaxed" style={{ color: fg(0.58) }}>
+              You want to build something online — a brand, a product, an income stream — but every tutorial
+              assumes you already know the stack. You keep starting and stalling.
+            </p>
             <ul className="space-y-2.5 mb-8 flex-1">
               {[
-                "Information overload, no clear path",
-                "Learning without building anything",
-                "Content that doesn't compound into leads",
-                "No monetization system in place",
+                "Step-by-step path, no guessing",
+                "One action per day (45-60 min)",
+                "Real assets you can use immediately",
+                "Build while keeping your day job",
               ].map((p) => (
                 <li key={p} className="flex items-start gap-2.5 text-sm" style={{ color: fg(0.55) }}>
                   <span
@@ -519,66 +539,40 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
                 </li>
               ))}
             </ul>
-            <Link
-              to="/funnel"
-              className="mb-3 inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
-              style={{ background: V, color: "#ffffff", boxShadow: `0 0 24px rgba(41,82,204,0.22)` }}
-            >
-              Get the free guide <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              to="/offer"
-              className="inline-flex items-center justify-center gap-2 px-5 py-2 text-sm font-bold uppercase tracking-wider transition hover:underline"
-              style={{ color: fg(0.5) }}
-            >
-              Explore the Vault <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+            <div className="rounded-lg p-6 mt-auto" style={{ background: P, border: "1px solid rgba(255,255,255,0.18)" }}>
+              <div
+                className="inline-flex items-center gap-2 rounded-md px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] mb-4"
+                style={{ background: "rgba(255,255,255,0.18)", color: "#fff" }}
+              >
+                100% Free
+              </div>
+              <h4 className="font-sans uppercase text-2xl font-black tracking-tight leading-[1] text-white">
+                Start Here — The Free 7-Day Jumpstart Guide.
+              </h4>
+              <p className="mt-3 text-white/80 text-sm leading-relaxed">
+                One action per day. No fluff — just the first real steps to launch your online system and build momentum fast.
+              </p>
+              <div className="mt-5 flex flex-col gap-3">
+                <Link
+                  to="/funnel"
+                  className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:brightness-95"
+                  style={{ color: P }}
+                >
+                  Get the free guide <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  to="/offer"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2 text-xs font-bold uppercase tracking-wider transition hover:underline"
+                  style={{ color: "rgba(255,255,255,0.80)" }}
+                >
+                  Explore the Vault <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+              <span className="mt-3 block text-[11px] uppercase tracking-wider text-white/55">
+                Instant access · No spam · No credit card
+              </span>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-
-
-// ── 4.5. FREE GUIDE CTA ───────────────────────────────────────────────────────
-
-function FreeGuideSection() {
-  return (
-    <section
-      className="px-6 py-16 md:py-20"
-      style={{ background: P, borderTop: `1px solid rgba(0,0,0,0.12)` }}
-    >
-      <div className="mx-auto max-w-4xl flex flex-col md:flex-row md:items-center gap-8 md:gap-16">
-        <div className="flex-1">
-          <div
-            className="inline-flex items-center gap-2 rounded-md px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] mb-4"
-            style={{ background: "rgba(255,255,255,0.18)", color: "#fff" }}
-          >
-            100% Free
-          </div>
-          <h2
-            className="font-sans uppercase text-3xl md:text-4xl font-black tracking-tight leading-[1] text-white"
-          >
-            Start here — the free<br />7-day jumpstart guide.
-          </h2>
-          <p className="mt-4 text-white/75 text-base leading-relaxed max-w-md">
-            One action per day. 45 minutes. Built for people who still have a day job.
-            No fluff — just the first real steps to building something online.
-          </p>
-        </div>
-        <div className="flex flex-col gap-3 md:items-start">
-          <Link
-            to="/funnel"
-            className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-7 py-4 text-sm font-black uppercase tracking-wider transition hover:brightness-95"
-            style={{ color: P }}
-          >
-            Get the free guide <ArrowRight className="h-4 w-4" />
-          </Link>
-          <span className="text-[11px] uppercase tracking-wider text-white/55">
-            Instant access · No spam · No credit card
-          </span>
         </div>
       </div>
     </section>
