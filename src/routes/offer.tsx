@@ -176,7 +176,7 @@ function OfferPage() {
             <span className="text-[#4a90e2]">You just need a clearer path.</span>
           </h2>
           <p className="mt-4 text-lg text-[#98a7bf]">
-            A new release on Amazon costs $24.99. So does lifetime access to The Vault.
+            And you can start for less than a movie night.
           </p>
           <div className="mt-9 rounded-2xl border border-white/10 bg-white/5 p-8">
             <div className="text-7xl font-black">
