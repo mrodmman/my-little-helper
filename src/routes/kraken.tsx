@@ -469,13 +469,20 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
                 </li>
               ))}
             </ul>
+            <Link
+              to="/lead-kit"
+              className="mb-3 inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
+              style={{ background: P, color: "#ffffff", boxShadow: `0 0 24px rgba(26,92,255,0.22)` }}
+            >
+              Get the free starter kit <ArrowRight className="h-4 w-4" />
+            </Link>
             <button
               type="button"
               onClick={onOpenContact}
-              className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
-              style={{ background: P, color: "#ffffff", boxShadow: `0 0 24px rgba(26,92,255,0.22)` }}
+              className="inline-flex items-center justify-center gap-2 px-5 py-2 text-sm font-bold uppercase tracking-wider transition hover:underline"
+              style={{ color: fg(0.5) }}
             >
-              Work With Me <ArrowRight className="h-4 w-4" />
+              Work With Me <ArrowRight className="h-3.5 w-3.5" />
             </button>
           </div>
 
@@ -514,17 +521,17 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
             </ul>
             <Link
               to="/funnel"
-              className="mb-3 inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition"
-              style={{ border: `1px solid rgba(26,92,255,0.3)`, color: P, background: "transparent" }}
+              className="mb-3 inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
+              style={{ background: V, color: "#ffffff", boxShadow: `0 0 24px rgba(41,82,204,0.22)` }}
             >
               Get the free guide <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               to="/offer"
-              className="inline-flex items-center justify-center gap-2 rounded-md px-5 py-3 text-sm font-black uppercase tracking-wider transition"
-              style={{ border: `1px solid rgba(41,82,204,0.36)`, color: V, background: "transparent" }}
+              className="inline-flex items-center justify-center gap-2 px-5 py-2 text-sm font-bold uppercase tracking-wider transition hover:underline"
+              style={{ color: fg(0.5) }}
             >
-              Explore the Vault <ArrowRight className="h-4 w-4" />
+              Explore the Vault <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
         </div>
