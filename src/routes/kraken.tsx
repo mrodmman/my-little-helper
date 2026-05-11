@@ -259,7 +259,7 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
             </h1>
 
             <p className="mt-7 text-lg leading-relaxed max-w-lg" style={{ color: fg(0.55) }}>
-              AI, automation, content, funnels, and practical systems — connected properly so they actually work together.
+              understand what matters, how the pieces connect, and how to start building real online systems that generate money step-by-step.
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
