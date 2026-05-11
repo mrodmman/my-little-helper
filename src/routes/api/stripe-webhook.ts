@@ -98,6 +98,7 @@ interface CheckoutSession {
 
 async function handleCheckoutComplete(session: CheckoutSession, env: Awaited<ReturnType<typeof getEnv>>) {
   const email = (session.customer_details?.email ?? session.customer_email ?? "").trim().toLowerCase();
+  console.log('[webhook] checkout.session.completed — email:', email || '(missing)');
   if (!email) return;
 
   const rawName = session.customer_details?.name ?? "";
@@ -149,7 +150,7 @@ async function sendAccessEmail(
 <p>Change your password after your first sign-in.</p>`
     : `<p>Sign in with your existing email and password.</p>`;
 
-  await fetch("https://api.resend.com/emails", {
+  const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${env.RESEND_API_KEY}`,
@@ -166,6 +167,13 @@ ${credBlock}
 <p>Welcome to the Vault. — Matt</p>`,
     }),
   });
+
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '(unreadable)');
+    console.error(`sendAccessEmail failed for ${email}: ${res.status} ${detail}`);
+  } else {
+    console.log(`sendAccessEmail sent to ${email}`);
+  }
 }
 
 // ── Types ─────────────────────────────────────────────────────────────────────
