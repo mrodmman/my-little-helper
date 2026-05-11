@@ -43,7 +43,7 @@ export const Route = createFileRoute("/api/checkout")({
         if (!res.ok) {
           const err = await res.text();
           console.error("Stripe session error:", err);
-          return new Response("Failed to create checkout session", { status: 502 });
+          return new Response(`Stripe error: ${err}`, { status: 502 });
         }
 
         const session = await res.json() as { url: string };
