@@ -25,12 +25,24 @@ function AdminAvailability() {
   }, [password]);
 
   async function save() {
+    if (!password.trim()) {
+      setMessage('Error saving settings: Admin password is required.');
+      return;
+    }
+
     setSaving(true);
     setMessage('');
     try {
       const res = await fetch('/api/booking/admin/settings', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-password': password }, body: JSON.stringify(settings) });
-      const data = await res.json();
-      setMessage(data.ok ? 'Availability settings saved successfully.' : `Error saving settings: ${data.error || 'Unknown error'}`);
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.ok) {
+        const reason = data.error || `Request failed (${res.status})`;
+        setMessage(`Error saving settings: ${reason}`);
+        return;
+      }
+
+      setMessage('Availability settings saved successfully.');
     } catch {
       setMessage('Error saving settings: Network request failed.');
     } finally {

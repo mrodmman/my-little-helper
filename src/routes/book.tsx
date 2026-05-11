@@ -50,7 +50,7 @@ function BookPage() {
           src={bgImage}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover opacity-45"
+          className="absolute inset-0 h-full w-full object-cover opacity-70"
           onError={() => {
             setBgImage((current) => {
               if (current === PRIMARY_BG_IMAGE) return SECONDARY_BG_IMAGE;
@@ -59,7 +59,7 @@ function BookPage() {
             });
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#040b19]/70 via-[#030814]/65 to-[#030814]/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#040b19]/45 via-[#030814]/40 to-[#030814]/55" />
 
         <div className="relative mx-auto max-w-6xl p-4 md:p-8">
           <h1 className="text-5xl md:text-7xl font-black uppercase leading-[0.92]">
@@ -106,7 +106,7 @@ function BookPage() {
                   <p className="text-sm text-muted-foreground">Type: Strategy Call</p>
                 </div>
 
-                <button onClick={submit} className="w-full rounded-xl px-4 py-3 text-xl font-extrabold" style={{ background: BLUE }}>
+                <button onClick={submit} disabled={!selected} className="w-full rounded-xl px-4 py-3 text-xl font-extrabold text-white disabled:opacity-50 disabled:cursor-not-allowed" style={{ background: BLUE }}>
                   CONFIRM BOOKING
                 </button>
                 {!!message && <p className="text-sm text-blue-300">{message}</p>}
