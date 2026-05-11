@@ -49,7 +49,7 @@ function StickyCTA() {
           <p className="text-xs text-[#8ea0ba]">Less than a movie night · lifetime access</p>
         </div>
         <a
-          href="mailto:matt@krakenvault.com?subject=Kraken%20Vault%20Access"
+          href="/api/checkout"
           className="ml-auto inline-flex items-center gap-2 rounded-md bg-[#1973ea] px-6 py-3 text-sm font-black uppercase tracking-[0.12em] text-white transition hover:brightness-110 whitespace-nowrap"
         >
           Get Instant Access — $24.99 →
@@ -86,7 +86,7 @@ function OfferPage() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
-                href="mailto:matt@krakenvault.com?subject=Kraken%20Vault%20Access"
+                href="/api/checkout"
                 className="inline-flex rounded-md bg-[#1973ea] px-7 py-4 text-sm font-black uppercase tracking-[0.12em] text-white"
               >
                 Get Instant Access — $24.99 →
@@ -99,10 +99,6 @@ function OfferPage() {
 
           <div className="rounded-2xl bg-[#020916] p-6 shadow-2xl border border-[#0c1f3a]">
             <img src="https://i.ibb.co/XhcGS64/file-49.jpg" alt="Vault" className="w-full rounded-xl" />
-            <p className="mt-5 text-sm text-[#9db1cc] leading-relaxed">
-              <span className="text-[#2a7fff] font-bold">AI, automation, content, funnels,</span> and
-              practical systems — connected properly so they actually work together.
-            </p>
           </div>
         </div>
       </section>
@@ -152,7 +148,7 @@ function OfferPage() {
           <p className="mt-4 text-lg text-[#98a7bf]">A new release on Amazon costs $24.99. So does lifetime access to The Vault.</p>
           <div className="mt-9 rounded-2xl border border-white/10 bg-white/5 p-8">
             <div className="text-7xl font-black">$24.99 <span className="text-base align-middle font-bold text-[#8fa0bb]">one-time · no subscription ever</span></div>
-            <a href="mailto:matt@krakenvault.com?subject=Kraken%20Vault%20Access" className="mt-7 inline-flex rounded-md bg-[#1973ea] px-10 py-4 text-sm font-black uppercase tracking-[0.13em]">Get Instant Access — $24.99 →</a>
+            <a href="/api/checkout" className="mt-7 inline-flex rounded-md bg-[#1973ea] px-10 py-4 text-sm font-black uppercase tracking-[0.13em]">Get Instant Access — $24.99 →</a>
             <p className="mt-4 text-xs uppercase tracking-[0.16em] text-[#8ea0ba]">14-day money-back guarantee · secure checkout</p>
           </div>
         </div>
@@ -169,7 +165,7 @@ function OfferPage() {
           ))}
         </div>
         <div className="mt-10 text-center">
-          <a href="mailto:matt@krakenvault.com?subject=Kraken%20Vault%20Access" className="inline-flex rounded-md bg-[#1973ea] px-8 py-4 text-sm font-black uppercase tracking-[0.13em] text-white">Get Instant Access — $24.99 →</a>
+          <a href="/api/checkout" className="inline-flex rounded-md bg-[#1973ea] px-8 py-4 text-sm font-black uppercase tracking-[0.13em] text-white">Get Instant Access — $24.99 →</a>
           <p className="mt-12 text-xs uppercase tracking-[0.16em] text-[#7b889b]">© Keyboard Kraken · The Vault</p>
         </div>
       </section>
