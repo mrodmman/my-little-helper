@@ -38,8 +38,10 @@ export async function sendDripEmail(
     body: JSON.stringify({
       from: `${env.FROM_NAME} <${env.FROM_EMAIL}>`,
       to: email,
-      template_id: templateId,
-      ...(firstName ? { variables: { first_name: firstName } } : {}),
+      template: {
+        id: templateId,
+        variables: { first_name: firstName ?? '' },
+      },
     }),
   });
 
