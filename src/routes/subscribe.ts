@@ -70,12 +70,14 @@ export const Route = createFileRoute('/subscribe')({
 
         const id = crypto.randomUUID();
         const nowSec = Math.floor(Date.now() / 1000);
+        // step 0 fires immediately; next cron fires on day 2 for step 1
         const nextSendAt = nowSec + 2 * 86400;
 
         try {
+          // Insert with sequence_step=1 since step 0 is sent immediately below
           await env.DB.prepare(
             `INSERT INTO drip_subscribers (id, email, first_name, sequence_step, next_send_at, subscribed_at, status)
-             VALUES (?, ?, ?, 0, ?, ?, 'active')`,
+             VALUES (?, ?, ?, 1, ?, ?, 'active')`,
           )
             .bind(id, email, firstName, nextSendAt, nowSec)
             .run();
