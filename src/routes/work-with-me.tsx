@@ -24,10 +24,10 @@ const VIDEOS = [
 ];
 
 const PAINS = [
-  "Leads come in, but follow-up is inconsistent or too slow",
-  "Too much manual admin eating your week",
-  "Tools don't connect cleanly — data lives in five places",
-  "Growth depends on daily hustle, not systems",
+  "Need more presence online",
+  "Need more leads",
+  "Need better follow-up systems",
+  "Want to take the overwhelm out of setting up a system to take advantage of AI and the internet",
 ];
 
 const INCLUDES = [
@@ -107,13 +107,10 @@ function WorkWithMePage() {
       <section className="px-6 py-14 border-t border-black/10">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-3xl sm:text-4xl font-black uppercase tracking-tight">Results, in their own words.</h2>
+          <p className="mt-2 text-sm text-black/50 uppercase tracking-wider">Formerly Lead Net Marketing</p>
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {VIDEOS.map((v) => {
-              const id = extractYoutubeId(v.youtubeId);
-              return <a key={v.title} href={`https://www.youtube.com/watch?v=${id}`} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-black/10 bg-white overflow-hidden">
-                <div className="aspect-video bg-[#071022] flex items-center justify-center"><div className="h-12 w-12 rounded-full bg-[#1a5cff] text-white flex items-center justify-center"><Play className="h-5 w-5 fill-current" /></div></div>
-                <div className="p-4"><p className="text-xs font-black uppercase tracking-wider">{v.title}</p><p className="mt-2 text-sm text-black/65">“{v.quote}”</p></div>
-              </a>;
+              return <VideoInlineCard key={v.title} {...v} />;
             })}
           </div>
         </div>
@@ -157,5 +154,38 @@ function WorkWithMePage() {
         </div>
       </section>
     </main>
+  );
+}
+
+function VideoInlineCard({ youtubeId, title, quote }: { youtubeId: string; title: string; quote: string }) {
+  const [play, setPlay] = useState(false);
+  const videoId = extractYoutubeId(youtubeId);
+  const thumbUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+
+  return (
+    <div className="rounded-lg border border-black/10 bg-white overflow-hidden">
+      <div className="relative aspect-video bg-[#071022]">
+        {play ? (
+          <iframe
+            src={embedUrl}
+            title={title}
+            className="h-full w-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : (
+          <button type="button" className="group h-full w-full" onClick={() => setPlay(true)} aria-label={`Play ${title} video`}>
+            <img src={thumbUrl} alt={title} className="h-full w-full object-cover" />
+            <span className="absolute inset-0 flex items-center justify-center">
+              <span className="h-14 w-14 rounded-full flex items-center justify-center" style={{ background: "rgba(26,92,255,0.12)", border: "1.5px solid rgba(26,92,255,0.55)", boxShadow: "0 0 24px rgba(26,92,255,0.35), inset 0 0 12px rgba(26,92,255,0.08)" }}>
+                <Play className="h-5 w-5 fill-current ml-0.5 text-[#1a5cff] group-hover:scale-110 transition-transform" />
+              </span>
+            </span>
+          </button>
+        )}
+      </div>
+      <div className="p-4"><p className="text-xs font-black uppercase tracking-wider">{title}</p><p className="mt-2 text-sm text-black/65">“{quote}”</p></div>
+    </div>
   );
 }
