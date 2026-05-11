@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WorkWithMeRouteImport } from './routes/work-with-me'
 import { Route as VaultThankYouRouteImport } from './routes/vault-thank-you'
 import { Route as VaultRouteImport } from './routes/vault'
 import { Route as UnsubscribedRouteImport } from './routes/unsubscribed'
@@ -45,6 +46,11 @@ import { Route as AdminAssetsRouteImport } from './routes/admin/assets'
 import { Route as ApiCdnKeyRouteImport } from './routes/api/cdn.$key'
 import { Route as AdminModulesModuleIdRouteImport } from './routes/admin/modules.$moduleId'
 
+const WorkWithMeRoute = WorkWithMeRouteImport.update({
+  id: '/work-with-me',
+  path: '/work-with-me',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VaultThankYouRoute = VaultThankYouRouteImport.update({
   id: '/vault-thank-you',
   path: '/vault-thank-you',
@@ -241,6 +247,7 @@ export interface FileRoutesByFullPath {
   '/unsubscribed': typeof UnsubscribedRoute
   '/vault': typeof VaultRoute
   '/vault-thank-you': typeof VaultThankYouRoute
+  '/work-with-me': typeof WorkWithMeRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
   '/admin/users': typeof AdminUsersRoute
@@ -277,6 +284,7 @@ export interface FileRoutesByTo {
   '/unsubscribed': typeof UnsubscribedRoute
   '/vault': typeof VaultRoute
   '/vault-thank-you': typeof VaultThankYouRoute
+  '/work-with-me': typeof WorkWithMeRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
   '/admin/users': typeof AdminUsersRoute
@@ -315,6 +323,7 @@ export interface FileRoutesById {
   '/unsubscribed': typeof UnsubscribedRoute
   '/vault': typeof VaultRoute
   '/vault-thank-you': typeof VaultThankYouRoute
+  '/work-with-me': typeof WorkWithMeRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
   '/admin/users': typeof AdminUsersRoute
@@ -354,6 +363,7 @@ export interface FileRouteTypes {
     | '/unsubscribed'
     | '/vault'
     | '/vault-thank-you'
+    | '/work-with-me'
     | '/admin/assets'
     | '/admin/modules'
     | '/admin/users'
@@ -390,6 +400,7 @@ export interface FileRouteTypes {
     | '/unsubscribed'
     | '/vault'
     | '/vault-thank-you'
+    | '/work-with-me'
     | '/admin/assets'
     | '/admin/modules'
     | '/admin/users'
@@ -427,6 +438,7 @@ export interface FileRouteTypes {
     | '/unsubscribed'
     | '/vault'
     | '/vault-thank-you'
+    | '/work-with-me'
     | '/admin/assets'
     | '/admin/modules'
     | '/admin/users'
@@ -465,6 +477,7 @@ export interface RootRouteChildren {
   UnsubscribedRoute: typeof UnsubscribedRoute
   VaultRoute: typeof VaultRoute
   VaultThankYouRoute: typeof VaultThankYouRoute
+  WorkWithMeRoute: typeof WorkWithMeRoute
   ApiCheckoutRoute: typeof ApiCheckoutRoute
   ApiContactRoute: typeof ApiContactRoute
   ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
@@ -480,6 +493,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/work-with-me': {
+      id: '/work-with-me'
+      path: '/work-with-me'
+      fullPath: '/work-with-me'
+      preLoaderRoute: typeof WorkWithMeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vault-thank-you': {
       id: '/vault-thank-you'
       path: '/vault-thank-you'
@@ -776,6 +796,7 @@ const rootRouteChildren: RootRouteChildren = {
   UnsubscribedRoute: UnsubscribedRoute,
   VaultRoute: VaultRoute,
   VaultThankYouRoute: VaultThankYouRoute,
+  WorkWithMeRoute: WorkWithMeRoute,
   ApiCheckoutRoute: ApiCheckoutRoute,
   ApiContactRoute: ApiContactRoute,
   ApiStripeWebhookRoute: ApiStripeWebhookRoute,
