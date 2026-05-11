@@ -25,29 +25,11 @@ export const Route = createFileRoute('/unsubscribe')({
           }
         }
 
-        return new Response(
-          `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Unsubscribed — Kraken Vault</title>
-  <style>
-    body { font-family: sans-serif; background: #0a0a0a; color: #e5e5e5; max-width: 480px; margin: 80px auto; padding: 0 24px; text-align: center; }
-    h1 { font-size: 1.5rem; margin-bottom: 0.75rem; }
-    p { color: #a3a3a3; line-height: 1.6; }
-    a { color: #22d3ee; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-  </style>
-</head>
-<body>
-  <h1>You've been unsubscribed.</h1>
-  <p>You won't receive any more emails from Kraken Vault.</p>
-  <p style="margin-top:2rem"><a href="/">← Back to home</a></p>
-</body>
-</html>`,
-          { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8' } },
-        );
+        // Redirect to the React-rendered confirmation page so the client
+        // router picks it up correctly whether navigating fresh or in-app.
+        const dest = new URL('/unsubscribed', url.origin);
+        if (email) dest.searchParams.set('email', email);
+        return Response.redirect(dest.toString(), 302);
       },
     },
   },
