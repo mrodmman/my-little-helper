@@ -49,6 +49,7 @@ import { Route as AdminAssetsRouteImport } from './routes/admin/assets'
 import { Route as ApiCdnKeyRouteImport } from './routes/api/cdn.$key'
 import { Route as ApiBookingActionRouteImport } from './routes/api/booking.$action'
 import { Route as AdminModulesModuleIdRouteImport } from './routes/admin/modules.$moduleId'
+import { Route as ApiBookingAdminSettingsRouteImport } from './routes/api/booking.admin.settings'
 
 const WorkWithMeRoute = WorkWithMeRouteImport.update({
   id: '/work-with-me',
@@ -250,6 +251,11 @@ const AdminModulesModuleIdRoute = AdminModulesModuleIdRouteImport.update({
   path: '/$moduleId',
   getParentRoute: () => AdminModulesRoute,
 } as any)
+const ApiBookingAdminSettingsRoute = ApiBookingAdminSettingsRouteImport.update({
+  id: '/api/booking/admin/settings',
+  path: '/api/booking/admin/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -292,6 +298,7 @@ export interface FileRoutesByFullPath {
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
   '/api/booking/$action': typeof ApiBookingActionRoute
   '/api/cdn/$key': typeof ApiCdnKeyRoute
+  '/api/booking/admin/settings': typeof ApiBookingAdminSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -333,6 +340,7 @@ export interface FileRoutesByTo {
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
   '/api/booking/$action': typeof ApiBookingActionRoute
   '/api/cdn/$key': typeof ApiCdnKeyRoute
+  '/api/booking/admin/settings': typeof ApiBookingAdminSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -376,6 +384,7 @@ export interface FileRoutesById {
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
   '/api/booking/$action': typeof ApiBookingActionRoute
   '/api/cdn/$key': typeof ApiCdnKeyRoute
+  '/api/booking/admin/settings': typeof ApiBookingAdminSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -420,6 +429,7 @@ export interface FileRouteTypes {
     | '/admin/modules/$moduleId'
     | '/api/booking/$action'
     | '/api/cdn/$key'
+    | '/api/booking/admin/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -461,6 +471,7 @@ export interface FileRouteTypes {
     | '/admin/modules/$moduleId'
     | '/api/booking/$action'
     | '/api/cdn/$key'
+    | '/api/booking/admin/settings'
   id:
     | '__root__'
     | '/'
@@ -503,6 +514,7 @@ export interface FileRouteTypes {
     | '/admin/modules/$moduleId'
     | '/api/booking/$action'
     | '/api/cdn/$key'
+    | '/api/booking/admin/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -540,6 +552,7 @@ export interface RootRouteChildren {
   ModuleModuleIdRoute: typeof ModuleModuleIdRoute
   ApiBookingActionRoute: typeof ApiBookingActionRoute
   ApiCdnKeyRoute: typeof ApiCdnKeyRoute
+  ApiBookingAdminSettingsRoute: typeof ApiBookingAdminSettingsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -824,6 +837,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminModulesModuleIdRouteImport
       parentRoute: typeof AdminModulesRoute
     }
+    '/api/booking/admin/settings': {
+      id: '/api/booking/admin/settings'
+      path: '/api/booking/admin/settings'
+      fullPath: '/api/booking/admin/settings'
+      preLoaderRoute: typeof ApiBookingAdminSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -892,6 +912,7 @@ const rootRouteChildren: RootRouteChildren = {
   ModuleModuleIdRoute: ModuleModuleIdRoute,
   ApiBookingActionRoute: ApiBookingActionRoute,
   ApiCdnKeyRoute: ApiCdnKeyRoute,
+  ApiBookingAdminSettingsRoute: ApiBookingAdminSettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

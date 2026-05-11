@@ -18,7 +18,7 @@ function AdminAvailability() {
 
   useEffect(() => {
     if (!password) return;
-    void fetch('/api/booking/admin/settings', { headers: { 'x-admin-password': password } }).then(async (r) => {
+    void fetch('/api/booking/admin-settings', { headers: { 'x-admin-password': password } }).then(async (r) => {
       const d = await r.json();
       if (d.settings) setSettings(d.settings);
     });
@@ -33,7 +33,7 @@ function AdminAvailability() {
     setSaving(true);
     setMessage('');
     try {
-      const res = await fetch('/api/booking/admin/settings', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-password': password }, body: JSON.stringify(settings) });
+      const res = await fetch('/api/booking/admin-settings', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-password': password }, body: JSON.stringify(settings) });
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data.ok) {
