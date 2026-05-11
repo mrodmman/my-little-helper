@@ -80,7 +80,7 @@ export const Route = createFileRoute('/api/booking/$action')({
   server: { handlers: {
     GET: async ({ params, request }) => {
       const env = getEnv();
-      if (params.action === 'admin/settings') {
+      if (params.action === 'admin-settings') {
         const pass = request.headers.get('x-admin-password');
         if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
         const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
@@ -105,7 +105,7 @@ export const Route = createFileRoute('/api/booking/$action')({
     },
     POST: async ({ params, request }) => {
       const env = getEnv();
-      if (params.action === 'admin/settings') {
+      if (params.action === 'admin-settings') {
         const pass = request.headers.get('x-admin-password');
         if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
         const body = (await request.json()) as Settings;
