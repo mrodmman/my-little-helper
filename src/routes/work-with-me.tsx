@@ -107,8 +107,7 @@ function WorkWithMePage() {
 
       <section className="px-6 py-20">
         <div className="mx-auto max-w-6xl">
-          <div className="inline-flex rounded-md bg-[#1a5cff]/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-[#1a5cff]">For starter kit subscribers</div>
-          <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight leading-[0.95]">You need more leads, <span className="text-[#1a5cff]">and a better way to manage them.</span></h1>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black uppercase tracking-tight leading-[0.95]">You need more leads, <span className="text-[#1a5cff]">and a better way to manage them.</span></h1>
           <div className="mt-8 flex flex-wrap gap-3">
             <a href={BOOK_CALL_URL} target="_blank" rel="noopener noreferrer" className="rounded-md bg-[#1a5cff] px-6 py-3 text-sm font-black uppercase tracking-wider text-white inline-flex items-center gap-2">Book a Strategy Call <ArrowRight className="h-4 w-4" /></a>
           </div>
