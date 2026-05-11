@@ -423,12 +423,12 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
       style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}
     >
       <div className="mx-auto max-w-6xl">
-        <div className="mb-12">
-          <h2 className="font-sans uppercase text-3xl sm:text-4xl font-black tracking-tight leading-[1]" style={{ color: FG }}>
+        <div className="mb-12 text-center">
+          <h2 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.95]">
             Different goals.{" "}
             <span style={{ color: P }}>Same problem.</span>
           </h2>
-          <p className="mt-4 max-w-lg" style={{ color: fg(0.48) }}>
+          <p className="mt-4 mx-auto max-w-2xl text-lg" style={{ color: fg(0.48) }}>
             Most people don't need more information. They need structure.
           </p>
         </div>
