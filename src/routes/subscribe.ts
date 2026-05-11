@@ -10,7 +10,19 @@ export const Route = createFileRoute('/subscribe')({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const env = getEnv();
+        console.log('[subscribe] handler reached');
+        let env;
+        try {
+          env = getEnv();
+          console.log('[subscribe] env loaded');
+        } catch (e) {
+          console.error('[subscribe] getEnv failed:', e);
+          return new Response(JSON.stringify({ error: 'env unavailable', detail: String(e) }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
+
         let body: { email?: string; first_name?: string };
         try {
           body = await request.json();
@@ -23,6 +35,7 @@ export const Route = createFileRoute('/subscribe')({
 
         const email = body.email?.trim();
         const firstName = body.first_name?.trim() ?? null;
+        console.log('[subscribe] email:', email, 'firstName:', firstName);
 
         if (!email) {
           return new Response(JSON.stringify({ error: 'email is required' }), {
@@ -31,15 +44,25 @@ export const Route = createFileRoute('/subscribe')({
           });
         }
 
-        // Silently succeed if already subscribed
-        const existing = await env.DB.prepare(
-          'SELECT id FROM drip_subscribers WHERE email = ?',
-        )
-          .bind(email)
-          .first();
+        // Check for existing subscriber
+        let existing;
+        try {
+          existing = await env.DB.prepare(
+            'SELECT id FROM drip_subscribers WHERE email = ?',
+          )
+            .bind(email)
+            .first();
+          console.log('[subscribe] existing check done, found:', !!existing);
+        } catch (e) {
+          console.error('[subscribe] DB select failed:', e);
+          return new Response(JSON.stringify({ error: 'DB error', detail: String(e) }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
 
         if (existing) {
-          return new Response(JSON.stringify({ success: true }), {
+          return new Response(JSON.stringify({ success: true, note: 'already subscribed' }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
           });
@@ -47,18 +70,28 @@ export const Route = createFileRoute('/subscribe')({
 
         const id = crypto.randomUUID();
         const nowSec = Math.floor(Date.now() / 1000);
-        // step 1 fires on day 2 relative to signup
         const nextSendAt = nowSec + 2 * 86400;
 
-        await env.DB.prepare(
-          `INSERT INTO drip_subscribers (id, email, first_name, sequence_step, next_send_at, subscribed_at, status)
-           VALUES (?, ?, ?, 0, ?, ?, 'active')`,
-        )
-          .bind(id, email, firstName, nextSendAt, nowSec)
-          .run();
+        try {
+          await env.DB.prepare(
+            `INSERT INTO drip_subscribers (id, email, first_name, sequence_step, next_send_at, subscribed_at, status)
+             VALUES (?, ?, ?, 0, ?, ?, 'active')`,
+          )
+            .bind(id, email, firstName, nextSendAt, nowSec)
+            .run();
+          console.log('[subscribe] inserted subscriber');
+        } catch (e) {
+          console.error('[subscribe] DB insert failed:', e);
+          return new Response(JSON.stringify({ error: 'DB insert error', detail: String(e) }), {
+            status: 500,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        }
 
-        // Send step 0 immediately
-        await sendDripEmail(email, firstName, TEMPLATE_IDS[TEMPLATE_ORDER[0]], env);
+        const templateId = TEMPLATE_IDS[TEMPLATE_ORDER[0]];
+        console.log('[subscribe] sending drip email, templateId:', templateId);
+        await sendDripEmail(email, firstName, templateId, env);
+        console.log('[subscribe] sendDripEmail done');
 
         return new Response(JSON.stringify({ success: true }), {
           status: 200,
