@@ -21,7 +21,10 @@
   ],
   "vars": {
     "ADMIN_SECRET": "M9640940",
-    "SESSION_SECRET": "REPLACE_WITH_WRANGLER_SECRET"
+    "SESSION_SECRET": "REPLACE_WITH_WRANGLER_SECRET",
+    "FROM_NAME": "KeyboardKraken",
+    "FROM_EMAIL": "KeyboardKraken@kbkcompanies.com",
+    "TO_EMAIL": "KeyboardKraken@kbkcompanies.com"
   },
   "triggers": {
     "crons": ["0 10 * * *"]
