@@ -28,7 +28,7 @@ function AdminLayout() {
       <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/80 border-b border-border">
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <Link to="/" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/kraken" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
               ← Public site
             </Link>
             <span className="text-muted-foreground/40">|</span>
