@@ -190,74 +190,71 @@ Output:
 
 const WORKFLOW_STEPS = [
   {
-    title: "Generate the initial lead capture website",
+    title: "Step 1: Generate the initial lead capture website",
     subtitle: "Use Lovable (or another AI builder) to create the project",
+    details: [
+      `Create a free account on Lovable.dev Go to lovable.dev and sign up. Lovable is an AI-powered app builder that generates a full React + Vite project from a plain-English prompt. You can also use Bolt.new or v0.dev — they all export real code you can push to GitHub.`,
+      `Start a new project Click "New Project" inside Lovable. Give it a name like "LeadCaptureSite" or your business name. This creates a blank workspace where your AI-generated code will live.`,
+      `Paste in Prompt 1 from the guide Copy the full text of Prompt 1 (the "Generate the Initial Lead System" prompt) and paste it into the Lovable chat. Be sure to include the entire prompt — the tech stack, architecture, form fields, and all. Lovable will generate the full project structure for you.`,
+      `Review the generated preview Lovable will show a live preview of the site. Scroll through it and verify you see: a hero section, a benefits section, a contact form with name/email/phone/message fields, and a thank-you state. The visuals don't need to be perfect at this stage — you're checking structure, not design.`,
+      `Confirm the project files exist In Lovable's file explorer, check that you can see: package.json, vite.config.ts, src/ folder, and a functions/ or src/lib/ folder for the form submission handler. If any of these are missing, ask Lovable to regenerate with Prompt 1 again.`,
+    ],
   },
   {
-    title: "Push the project to GitHub",
+    title: "Step 2: Push the project to GitHub",
     subtitle: "Export your generated code into a GitHub repository",
+    details: [
+      `Create a free GitHub account if you don't have one Go to github.com and sign up. Your username will appear in repo URLs, so pick something professional.`,
+      `Create a new GitHub repository Click the "+" icon in GitHub → "New repository". Name it something like lead-capture-site. Set it to Private if you want (Cloudflare can still access it). Do NOT initialize it with a README — Lovable will push the files itself.`,
+      `Connect Lovable to your GitHub account In Lovable, go to Settings → GitHub Integration. Authorize Lovable to access your GitHub repos. Select the empty repo you just created. Lovable will push all generated project files into it automatically.`,
+      `Verify the push was successful Go to your GitHub repo in the browser and refresh. You should see all your project files: src/, public/, package.json, vite.config.ts, etc. If the repo is still empty, go back to Lovable and push again from the GitHub settings panel.`,
+    ],
   },
   {
-    title: "Audit and fix Cloudflare compatibility issues",
+    title: "Step 3: Audit and fix Cloudflare compatibility issues",
     subtitle: "Use Claude or GitHub AI to review and patch the code",
+    details: [
+      `Open your GitHub repo in claude.ai or GitHub Copilot In Claude, use the "Connect to GitHub" option or paste the relevant files (vite.config.ts, package.json, and your form submission handler) directly into the chat. In GitHub, use the Copilot Chat panel with your repo open.`,
+      `Paste in Prompt 2 from the guide Paste the full "Cloudflare Deployment Audit" prompt into Claude or Copilot Chat. The AI will scan the code and flag: Node-only imports, missing Vite config settings, TypeScript errors, and any form submission logic that won't work on Cloudflare Pages.`,
+      `Apply the suggested fixes The AI will return updated code for any changed files. Copy and paste each fixed file back into your GitHub repo using the web editor (click a file → pencil icon → paste → commit). Or use GitHub Desktop to apply changes locally first.`,
+      `Confirm the build succeeds locally (optional but recommended) If you have Node.js installed, open PowerShell in the project folder and run: npm install npm run build. If both commands complete without errors, you're ready to deploy. If you don't have Node, skip to Step 4 — Cloudflare will attempt the build in the cloud and show you any errors there.`,
+    ],
   },
   {
-    title: "Deploy from GitHub to Cloudflare Pages",
+    title: "Step 4: Deploy from GitHub to Cloudflare Pages",
     subtitle: "Connect your repo and launch your live site",
+    details: [
+      `Log into Cloudflare and go to Pages Go to dash.cloudflare.com. In the left sidebar, click "Workers & Pages". Then click "Create application" → "Pages" → "Connect to Git".`,
+      `Authorize GitHub and select your repo Cloudflare will ask you to connect your GitHub account. Authorize it, then select the repo you pushed your project to in Step 2. Click "Begin setup".`,
+      `Set the build configuration Cloudflare will ask for build settings. Use these exact values: Framework preset: Vite, Build command: npm run build, Build output directory: dist. Leave everything else as default. Click "Save and Deploy".`,
+      `Wait for the build to complete Cloudflare will pull your code from GitHub, run npm install + npm run build, and deploy the output. This takes about 60–90 seconds. Watch the build log — if it fails, read the error and go back to Step 3 for another AI audit pass.`,
+      `Open your live site When the build succeeds, Cloudflare gives you a URL like yoursite.pages.dev. Open it and verify the site loads correctly, the form is visible, and all sections appear. From now on, any commit pushed to GitHub will trigger an automatic redeploy.`,
+    ],
   },
   {
-    title: "Connect Telegram lead notifications",
+    title: "Step 5: Connect Telegram lead notifications",
     subtitle: "Wire up instant alerts when someone fills out the form",
+    details: [
+      `Open Telegram and find BotFather In Telegram (mobile or desktop), use the search bar to find @BotFather. This is Telegram's official bot for creating new bots. Start a chat with it.`,
+      `Create your bot and get the token Send the command /newbot to BotFather. It will ask for a display name, then a username (must end in "bot", e.g. MyLeadsBot). BotFather will reply with your bot token — a string that looks like: 123456789:AAExampleTokenGoesHere.`,
+      `Get your Telegram Chat ID Search for your new bot in Telegram and send it any message (e.g. "hello"). Then open this URL in your browser — replace YOUR_BOT_TOKEN with your actual token: https://api.telegram.org/botYOUR_BOT_TOKEN/getUpdates. In the JSON response, find the "chat" object and copy the "id" number. That's your Chat ID. For personal chats it's a positive number; for groups it starts with a minus sign.`,
+      `Paste Prompt 3 into Claude with your project files Open Claude and paste in the "Connect Telegram Lead Alerts" prompt. Include the contents of your current form submission file and functions/api/contact.ts if it exists. Claude will return updated code that sends a Telegram message on every lead submission.`,
+      `Add the updated files to GitHub Copy the updated files Claude returns and commit them to your GitHub repo. The main file to update is usually functions/api/contact.ts (the Cloudflare Pages Function). Also add or update the .env.example file.`,
+      `Add environment variables to Cloudflare Pages In your Cloudflare Pages project, go to Settings → Environment Variables → Add variable. Add both: TELEGRAM_BOT_TOKEN = your_token_here and TELEGRAM_CHAT_ID = your_chat_id_here. After saving, trigger a new deployment (push any small change to GitHub, or use the "Retry deployment" button in Cloudflare).`,
+    ],
   },
   {
-    title: "Submit a test lead and confirm end-to-end",
+    title: "Step 6: Submit a test lead and confirm end-to-end",
     subtitle: "Verify the full system works before going live",
+    details: [
+      `Open your live Cloudflare Pages URL Go to yoursite.pages.dev in a regular browser window (not localhost). You want to test the live deployed version, not your local dev environment, since the Telegram function only runs on Cloudflare's edge servers.`,
+      `Fill out the form with test data Enter realistic-looking test data in all fields — a name, a valid email address format, a phone number, and a message. This matters because the form validates all fields before submitting. Click the submit button.`,
+      `Confirm the thank-you state appears After clicking submit, the form should either redirect to a thank-you page or show a thank-you state inline (depending on how it was built). If you see an error message instead, check the browser console (F12 → Console) for the error and report it back to Claude for a fix.`,
+      `Check Telegram for the alert Within a few seconds of submitting, you should receive a Telegram message from your bot containing all the lead data: name, email, phone, message, timestamp, and source page. If no message arrives within 30 seconds, check the troubleshooting steps below.`,
+      `Troubleshoot if needed If no Telegram message arrives: 1. Check env vars are saved in Cloudflare Pages Settings; 2. Trigger a fresh deployment (env vars need a redeploy to apply); 3. Verify you sent a message to the bot before testing; 4. Re-check the Chat ID (group IDs start with a minus sign); 5. Open Cloudflare Pages → Functions → Logs to see server errors.`,
+      `You're live — what's next Once the full flow works, your lead system is production-ready. You can now: connect a custom domain, add the leads to a Google Sheet via n8n, set up follow-up email sequences, or expand the form with additional fields. Every future change pushes through GitHub → Cloudflare automatically.`,
+    ],
   },
-];
-
-const WORKFLOW_STEP_DETAILS = [
-  [
-    "Create a free account on Lovable.dev",
-    "Start a new project",
-    "Paste in Prompt 1 from the guide",
-    "Review the generated preview",
-    "Confirm the project files exist",
-  ],
-  [
-    "Create a free GitHub account if you don't have one",
-    "Create a new GitHub repository",
-    "Connect Lovable to your GitHub account",
-    "Verify the push was successful",
-  ],
-  [
-    "Open your GitHub repo in claude.ai or GitHub Copilot",
-    "Paste in Prompt 2 from the guide",
-    "Apply the suggested fixes",
-    "Confirm the build succeeds locally (optional but recommended)",
-  ],
-  [
-    "Log into Cloudflare and go to Pages",
-    "Authorize GitHub and select your repo",
-    "Set the build configuration",
-    "Wait for the build to complete",
-    "Open your live site",
-  ],
-  [
-    "Open Telegram and find BotFather",
-    "Create your bot and get the token",
-    "Get your Telegram Chat ID",
-    "Paste Prompt 3 into Claude with your project files",
-    "Add the updated files to GitHub",
-    "Add environment variables to Cloudflare Pages",
-  ],
-  [
-    "Open your live Cloudflare Pages URL",
-    "Fill out the form with test data",
-    "Confirm the thank-you state appears",
-    "Check Telegram for the alert",
-    "Troubleshoot if needed",
-    "You're live — what's next",
-  ],
 ];
 
 const PROBLEMS_SOLVED = [
@@ -396,7 +393,7 @@ function AiLeadKitPage() {
                     Step details
                   </p>
                   <ul className="space-y-2">
-                    {WORKFLOW_STEP_DETAILS[i].map((detail) => (
+                    {step.details.map((detail) => (
                       <li
                         key={detail}
                         className="flex items-start gap-2.5 text-sm text-foreground/80 leading-relaxed"
