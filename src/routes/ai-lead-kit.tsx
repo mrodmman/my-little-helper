@@ -197,6 +197,57 @@ const WORKFLOW_STEPS = [
   "Submit a real test lead and confirm the workflow works end-to-end.",
 ];
 
+const WORKFLOW_STEP_DETAILS = [
+  {
+    title: "Generate the initial lead capture website",
+    details: [
+      "Create your first version in Lovable (or your preferred AI builder) with a landing page and lead form.",
+      "Keep the tech stack React + Vite + TypeScript so deployment to Cloudflare Pages stays straightforward.",
+      "Use Prompt 1 from this page to force production-ready structure instead of mockup-only output.",
+    ],
+  },
+  {
+    title: "Push the project to GitHub",
+    details: [
+      "Export the generated project and create a GitHub repository for clean version control.",
+      "Commit the initial baseline before making Cloudflare compatibility fixes.",
+      "This creates a reliable rollback point and enables auto-deploy via Cloudflare Pages.",
+    ],
+  },
+  {
+    title: "Audit and fix Cloudflare compatibility",
+    details: [
+      "Use Prompt 2 in Claude or GitHub Copilot to check Vite config, scripts, env usage, and TypeScript issues.",
+      "Remove Node-only backend patterns (Express, fs, server.listen, etc.) and keep runtime Worker-compatible.",
+      "Keep the current design mostly intact while fixing deployment blockers.",
+    ],
+  },
+  {
+    title: "Deploy from GitHub to Cloudflare Pages",
+    details: [
+      "Create a new Cloudflare Pages project connected to your GitHub repository.",
+      "Set build command/output directory according to your project config.",
+      "Trigger the first deployment and confirm the site boots successfully.",
+    ],
+  },
+  {
+    title: "Connect Telegram lead notifications",
+    details: [
+      "Use Prompt 3 to wire lead submissions to Telegram via a server-side Cloudflare-compatible endpoint.",
+      "Store TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID as Cloudflare environment variables.",
+      "Verify secrets remain server-side only and are never exposed in frontend code.",
+    ],
+  },
+  {
+    title: "Run a real end-to-end test",
+    details: [
+      "Submit a real test lead from the deployed site.",
+      "Confirm form submission succeeds and thank-you behavior appears as expected.",
+      "Verify Telegram receives the lead payload with correct fields and timestamp.",
+    ],
+  },
+];
+
 const PROBLEMS_SOLVED = [
   "Most AI site builders create nice-looking mockups that are not connected to real business workflows.",
   "People spend hours tweaking designs but never launch anything.",
@@ -366,16 +417,32 @@ function AiLeadKitPage() {
           <h2 className="font-display text-3xl font-black uppercase tracking-tight text-foreground md:text-4xl mb-8">
             6-step overview
           </h2>
-          <ol className="space-y-4">
+          <div className="space-y-4">
             {WORKFLOW_STEPS.map((step, i) => (
-              <li key={step} className="flex items-start gap-4">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-[12px] font-black text-white">
-                  {i + 1}
-                </span>
-                <span className="text-foreground/85 leading-relaxed pt-0.5">{step}</span>
-              </li>
+              <details key={step} className="rounded-lg border border-border bg-surface p-5 group" open={i === 0}>
+                <summary className="flex cursor-pointer list-none items-start gap-4">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-[12px] font-black text-white">
+                    {i + 1}
+                  </span>
+                  <div className="pt-0.5">
+                    <p className="text-foreground font-semibold leading-relaxed">{step}</p>
+                    <p className="text-xs text-muted-foreground mt-1">Click to expand implementation details.</p>
+                  </div>
+                </summary>
+                <div className="mt-4 pl-11">
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary mb-2">Step details</p>
+                  <ul className="space-y-2">
+                    {WORKFLOW_STEP_DETAILS[i].details.map((detail) => (
+                      <li key={detail} className="flex items-start gap-2.5 text-sm text-foreground/80 leading-relaxed">
+                        <CheckCircle2 className="h-4 w-4 mt-0.5 text-primary shrink-0" />
+                        {detail}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </details>
             ))}
-          </ol>
+          </div>
         </div>
       </section>
 
