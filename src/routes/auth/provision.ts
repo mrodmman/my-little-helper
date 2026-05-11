@@ -60,7 +60,7 @@ export const Route = createFileRoute('/auth/provision')({
             subject: 'Your Kraken Vault access is ready',
             html: `<p>Hi${firstName ? ` ${firstName}` : ''},</p>
 <p>Your Kraken Vault account has been created.</p>
-<p>Sign in at <a href="https://krakenvault.com/login">krakenvault.com/login</a> using:</p>
+<p>Sign in at <a href="https://keyboardkraken.kbkcompanies.com/login">keyboardkraken.kbkcompanies.com/login</a> using:</p>
 <p><strong>Email:</strong> ${email}<br>
 <strong>Temporary password:</strong> ${tempPassword}</p>
 <p>Change your password after signing in.</p>
