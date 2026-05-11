@@ -1,13 +1,26 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { getEnv } from '@/lib/env';
 
-const MEET_LINK = 'https://meet.google.com/[MY-STATIC-CODE]';
+const MEET_LINK = 'https://meet.google.com/ohf-nmom-pva';
 
 function json(data: unknown, status = 200) { return new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } }); }
 
-type Settings = { workingDays: number[]; blackoutDates: string[]; dailyTimeBlocks: { weekday: number; time: string }[]; dateTimeBlocks: { date: string; time: string }[] };
+type Settings = {
+  availabilityMode?: 'rules' | 'allowlist';
+  workingDays: number[];
+  blackoutDates: string[];
+  dailyTimeBlocks: { weekday: number; time: string }[];
+  dateTimeBlocks: { date: string; time: string }[];
+  allowedDateTimes?: { date: string; time: string }[];
+};
 
 function slotsForDate(date: string, settings: Settings) {
+  if (settings.availabilityMode === 'allowlist') {
+    return (settings.allowedDateTimes ?? [])
+      .filter((x) => x.date === date)
+      .map((x) => x.time)
+      .sort();
+  }
   const d = new Date(`${date}T00:00:00`);
   if (!settings.workingDays.includes(d.getDay()) || settings.blackoutDates.includes(date)) return [] as string[];
   const slots: string[] = [];
@@ -15,6 +28,21 @@ function slotsForDate(date: string, settings: Settings) {
   const recurring = new Set(settings.dailyTimeBlocks.filter((x) => x.weekday === d.getDay()).map((x) => x.time));
   const specific = new Set(settings.dateTimeBlocks.filter((x) => x.date === date).map((x) => x.time));
   return slots.filter((s) => !recurring.has(s) && !specific.has(s));
+}
+
+function parseSettingsRow(row: any): Settings {
+  const rawBlackout = JSON.parse(row?.blackout_dates ?? '[]') as string[];
+  const availabilityMode: 'rules' | 'allowlist' = rawBlackout.includes('__MODE_ALLOWLIST__') ? 'allowlist' : 'rules';
+  const blackoutDates = rawBlackout.filter((d) => d !== '__MODE_ALLOWLIST__');
+  const dateTimeBlocks = JSON.parse(row?.date_time_blocks ?? '[]') as { date: string; time: string }[];
+  return {
+    availabilityMode,
+    workingDays: JSON.parse(row?.working_days ?? '[1,2,3,4,5]'),
+    blackoutDates,
+    dailyTimeBlocks: JSON.parse(row?.daily_time_blocks ?? '[]'),
+    dateTimeBlocks,
+    allowedDateTimes: availabilityMode === 'allowlist' ? dateTimeBlocks : [],
+  };
 }
 
 async function sendSms(env: ReturnType<typeof getEnv>, to: string, body: string) {
@@ -56,12 +84,12 @@ export const Route = createFileRoute('/api/booking/$action')({
         const pass = request.headers.get('x-admin-password');
         if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
         const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
-        return json({ settings: { workingDays: JSON.parse(row?.working_days ?? '[1,2,3,4,5]'), blackoutDates: JSON.parse(row?.blackout_dates ?? '[]'), dailyTimeBlocks: JSON.parse(row?.daily_time_blocks ?? '[]'), dateTimeBlocks: JSON.parse(row?.date_time_blocks ?? '[]') } });
+        return json({ settings: parseSettingsRow(row) });
       }
       if (params.action === 'availability') {
         const date = new URL(request.url).searchParams.get('date') || new Date().toISOString().slice(0, 10);
         const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
-        const settings: Settings = { workingDays: JSON.parse(row?.working_days ?? '[1,2,3,4,5]'), blackoutDates: JSON.parse(row?.blackout_dates ?? '[]'), dailyTimeBlocks: JSON.parse(row?.daily_time_blocks ?? '[]'), dateTimeBlocks: JSON.parse(row?.date_time_blocks ?? '[]') };
+        const settings: Settings = parseSettingsRow(row);
         const daySlots = slotsForDate(date, settings);
         const busy = await env.DB.prepare("SELECT starts_at FROM bookings WHERE status='Confirmed' AND starts_at >= ? AND starts_at < ?").bind(`${date}T00:00:00.000Z`, `${date}T23:59:59.999Z`).all<{ starts_at: string }>();
         const busySet = new Set((busy.results ?? []).map((x) => x.starts_at.slice(11, 16)));
@@ -81,7 +109,17 @@ export const Route = createFileRoute('/api/booking/$action')({
         const pass = request.headers.get('x-admin-password');
         if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
         const body = (await request.json()) as Settings;
-        await env.DB.prepare("INSERT INTO booking_settings (id,working_days,blackout_dates,daily_time_blocks,date_time_blocks,updated_at) VALUES (1,?,?,?,?,datetime('now')) ON CONFLICT(id) DO UPDATE SET working_days=excluded.working_days, blackout_dates=excluded.blackout_dates, daily_time_blocks=excluded.daily_time_blocks, date_time_blocks=excluded.date_time_blocks, updated_at=datetime('now')").bind(JSON.stringify(body.workingDays ?? [1, 2, 3, 4, 5]), JSON.stringify(body.blackoutDates ?? []), JSON.stringify(body.dailyTimeBlocks ?? []), JSON.stringify(body.dateTimeBlocks ?? [])).run();
+        const merged: Settings = {
+          availabilityMode: body.availabilityMode ?? 'rules',
+          workingDays: body.workingDays ?? [1, 2, 3, 4, 5],
+          blackoutDates: body.blackoutDates ?? [],
+          dailyTimeBlocks: body.dailyTimeBlocks ?? [],
+          dateTimeBlocks: body.dateTimeBlocks ?? [],
+          allowedDateTimes: body.allowedDateTimes ?? [],
+        };
+        const blackoutForSave = merged.availabilityMode === 'allowlist' ? [...merged.blackoutDates, '__MODE_ALLOWLIST__'] : merged.blackoutDates;
+        const dateTimeForSave = merged.availabilityMode === 'allowlist' ? (merged.allowedDateTimes ?? []) : merged.dateTimeBlocks;
+        await env.DB.prepare("INSERT INTO booking_settings (id,working_days,blackout_dates,daily_time_blocks,date_time_blocks,updated_at) VALUES (1,?,?,?,?,datetime('now')) ON CONFLICT(id) DO UPDATE SET working_days=excluded.working_days, blackout_dates=excluded.blackout_dates, daily_time_blocks=excluded.daily_time_blocks, date_time_blocks=excluded.date_time_blocks, updated_at=datetime('now')").bind(JSON.stringify(merged.workingDays), JSON.stringify(blackoutForSave), JSON.stringify(merged.dailyTimeBlocks), JSON.stringify(dateTimeForSave)).run();
         return json({ ok: true });
       }
       if (params.action === 'create') {
