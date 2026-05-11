@@ -8,7 +8,7 @@ const BLUE = '#1763ff';
 // You can use:
 // 1) A hosted URL (Cloudflare R2, S3, CDN, etc.)
 // 2) A local public asset path like `/images/booking-bg.jpg`
-const BG_IMAGE = '/images/booking-bg.jpg';
+const BG_IMAGE = 'https://i.ibb.co/tTgxPHM9/file-50.jpg';
 
 export const Route = createFileRoute('/book')({ component: BookPage });
 
