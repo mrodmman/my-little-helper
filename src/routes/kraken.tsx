@@ -851,14 +851,15 @@ function FinalCtaSection({ onOpenContact }: { onOpenContact: () => void }) {
 
 function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!open) return null;
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setStatus(null);
+    setError(null);
     const formData = new FormData(e.currentTarget);
     const payload = {
       name: String(formData.get("name") ?? "").trim(),
@@ -874,28 +875,46 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
 
     setLoading(false);
     if (res.ok) {
-      setStatus("Thanks — message sent.");
-      e.currentTarget.reset();
+      setSent(true);
       return;
     }
-    setStatus("Could not send right now. Please try again.");
+    setError("Could not send right now. Please try again.");
   };
 
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center px-4">
       <button type="button" className="absolute inset-0 bg-black/40" onClick={onClose} aria-label="Close contact modal" />
       <div className="relative w-full max-w-md rounded-xl p-6" style={glass}>
-        <h3 className="text-xl font-bold">Work With Me</h3>
-        <form className="mt-4 space-y-3" onSubmit={onSubmit}>
-          <input name="name" required placeholder="Name" className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm" />
-          <input name="email" type="email" required placeholder="Email" className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm" />
-          <textarea name="message" required rows={4} placeholder="Message" className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm" />
-          {status && <p className="text-sm" style={{ color: fg(0.65) }}>{status}</p>}
-          <div className="flex justify-end gap-2">
-            <button type="button" onClick={onClose} className="rounded-md px-4 py-2 text-sm">Cancel</button>
-            <button type="submit" disabled={loading} className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white">{loading ? "Sending..." : "Send"}</button>
+        {sent ? (
+          <div className="py-4 text-center space-y-4">
+            <div className="text-3xl">✓</div>
+            <h3 className="text-xl font-bold">Message received.</h3>
+            <p className="text-sm leading-relaxed" style={{ color: fg(0.6) }}>
+              Thanks for reaching out. I review every message personally and will be in touch within 1–2 business days.
+            </p>
+            <button
+              onClick={onClose}
+              className="mt-2 rounded-md bg-blue-600 px-6 py-2 text-sm text-white"
+            >
+              Close
+            </button>
           </div>
-        </form>
+        ) : (
+          <>
+            <h3 className="text-xl font-bold">Work With Me</h3>
+            <p className="mt-1 text-sm" style={{ color: fg(0.55) }}>Tell me what you're working on.</p>
+            <form className="mt-4 space-y-3" onSubmit={onSubmit}>
+              <input name="name" required placeholder="Name" className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm" />
+              <input name="email" type="email" required placeholder="Email" className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm" />
+              <textarea name="message" required rows={4} placeholder="What are you working on?" className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm" />
+              {error && <p className="text-sm text-red-500">{error}</p>}
+              <div className="flex justify-end gap-2">
+                <button type="button" onClick={onClose} className="rounded-md px-4 py-2 text-sm">Cancel</button>
+                <button type="submit" disabled={loading} className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white">{loading ? "Sending..." : "Send"}</button>
+              </div>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );
