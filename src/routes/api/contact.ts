@@ -28,7 +28,7 @@ export const Route = createFileRoute('/api/contact')({
           },
           body: JSON.stringify({
             from: `${env.FROM_NAME} <${env.FROM_EMAIL}>`,
-            to: [env.FROM_EMAIL],
+            to: [env.TO_EMAIL],
             subject: `New Work With Me message from ${name}`,
             text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
             reply_to: email,
