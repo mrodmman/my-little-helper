@@ -1,26 +1,50 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useRef, useState, useTransition } from "react";
-import { ArrowLeft, Camera, CheckCircle2, CreditCard, Crown, Mail, User, Bell, Shield, RotateCcw, LogOut } from "lucide-react";
+import { ArrowLeft, Camera, CheckCircle2, Crown, Mail, User, Bell, Shield, RotateCcw, LogOut } from "lucide-react";
 import { resetAllProgress } from "@/rpc/progress";
+import { getAuthUser, updateProfile } from "@/rpc/auth";
 
 export const Route = createFileRoute("/profile")({
   component: ProfilePage,
+  loader: async () => {
+    const user = await getAuthUser().catch(() => null);
+    if (!user) throw redirect({ to: "/login" });
+    return { user };
+  },
   head: () => ({
     meta: [
       { title: "Your profile — Kraken Vault" },
-      { name: "description", content: "Edit your Kraken Vault profile, avatar, and subscription." },
+      { name: "description", content: "Edit your Kraken Vault profile." },
     ],
   }),
 });
 
 function ProfilePage() {
+  const { user } = Route.useLoaderData();
+
   const [avatar, setAvatar] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const [name, setName] = useState("Matt Kraken");
-  const [email, setEmail] = useState("matt@krakenvault.com");
-  const [bio, setBio] = useState("Building a system that actually works. Grocery store manager turned online operator.");
+  const [name, setName] = useState(user.first_name ?? "");
+  const [saving, setSaving] = useState(false);
+  const [saveOk, setSaveOk] = useState(false);
   const [resetDone, setResetDone] = useState(false);
   const [, startTransition] = useTransition();
+
+  const handleSave = () => {
+    setSaving(true);
+    setSaveOk(false);
+    startTransition(async () => {
+      const result = await updateProfile({ data: { first_name: name } }).catch(() => ({ ok: false }));
+      setSaving(false);
+      if (result.ok) setSaveOk(true);
+    });
+  };
+
+  const handleSignOut = () => {
+    fetch("/auth/logout", { method: "POST" }).finally(() => {
+      window.location.href = "/";
+    });
+  };
 
   const handleResetProgress = () => {
     if (!confirm("Reset ALL your progress? This cannot be undone.")) return;
@@ -30,11 +54,9 @@ function ProfilePage() {
     });
   };
 
-  const onPick = (f: File | undefined) => {
-    if (!f) return;
-    const url = URL.createObjectURL(f);
-    setAvatar(url);
-  };
+  const initials = name.trim()
+    ? name.trim().split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()
+    : user.email.slice(0, 2).toUpperCase();
 
   return (
     <div className="min-h-screen text-foreground">
@@ -53,7 +75,7 @@ function ProfilePage() {
           <div className="glass-card rounded-2xl p-2 text-sm">
             {[
               { icon: User, label: "Profile", active: true },
-              { icon: CreditCard, label: "Subscription" },
+              { icon: Crown, label: "Subscription" },
               { icon: Bell, label: "Notifications" },
               { icon: Shield, label: "Security" },
             ].map((i) => (
@@ -69,7 +91,10 @@ function ProfilePage() {
               </button>
             ))}
             <div className="border-t border-border my-2" />
-            <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-muted-foreground hover:text-destructive transition-colors">
+            <button
+              onClick={handleSignOut}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-muted-foreground hover:text-destructive transition-colors"
+            >
               <LogOut className="h-4 w-4" /> Sign out
             </button>
           </div>
@@ -86,7 +111,7 @@ function ProfilePage() {
                 <div className="h-24 w-24 rounded-full bg-gradient-primary/30 border border-primary/40 overflow-hidden flex items-center justify-center text-2xl font-bold text-primary-foreground shadow-glow">
                   {avatar
                     ? <img src={avatar} alt="" className="h-full w-full object-cover" />
-                    : name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
+                    : initials}
                 </div>
                 <button
                   type="button"
@@ -101,7 +126,10 @@ function ProfilePage() {
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  onChange={(e) => onPick(e.target.files?.[0])}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) setAvatar(URL.createObjectURL(f));
+                  }}
                 />
               </div>
               <div className="text-sm text-muted-foreground">
@@ -120,32 +148,37 @@ function ProfilePage() {
               <Field label="Name" icon={User}>
                 <input
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => { setName(e.target.value); setSaveOk(false); }}
+                  placeholder="Your name"
                   className="w-full bg-transparent focus:outline-none text-sm"
                 />
               </Field>
               <Field label="Email" icon={Mail}>
                 <input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-transparent focus:outline-none text-sm"
+                  value={user.email}
+                  readOnly
+                  className="w-full bg-transparent focus:outline-none text-sm text-muted-foreground cursor-default"
                 />
               </Field>
             </div>
 
-            <div className="mt-4">
-              <label className="block text-xs uppercase tracking-wider text-muted-foreground mb-2">Short bio</label>
-              <textarea
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                rows={3}
-                className="w-full rounded-xl bg-surface/60 border border-border px-4 py-3 text-sm focus:outline-none focus:border-primary/60 focus:ring-1 focus:ring-primary/40"
-              />
+            <div className="mt-4 text-xs text-muted-foreground">
+              Role: <span className="capitalize font-medium text-foreground">{user.role ?? "member"}</span>
             </div>
 
-            <div className="mt-6 flex justify-end gap-2">
-              <button className="rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated px-4 py-2.5 text-sm">Cancel</button>
-              <button className="rounded-xl bg-gradient-primary text-primary-foreground px-4 py-2.5 text-sm font-semibold shadow-glow hover:opacity-90">Save changes</button>
+            <div className="mt-6 flex justify-end items-center gap-3">
+              {saveOk && (
+                <span className="flex items-center gap-1.5 text-xs text-primary">
+                  <CheckCircle2 className="h-3.5 w-3.5" /> Saved
+                </span>
+              )}
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="rounded-xl bg-gradient-primary text-primary-foreground px-4 py-2.5 text-sm font-semibold shadow-glow hover:opacity-90 disabled:opacity-50 transition-opacity"
+              >
+                {saving ? "Saving…" : "Save changes"}
+              </button>
             </div>
           </section>
 
@@ -156,50 +189,17 @@ function ProfilePage() {
                 <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
                   <Crown className="h-5 w-5 text-primary" /> Subscription
                 </h2>
-                <p className="text-sm text-muted-foreground mt-1">Manage your plan and billing.</p>
+                <p className="text-sm text-muted-foreground mt-1">Your current access level.</p>
               </div>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-primary/15 border border-primary/30 px-3 py-1 text-xs font-semibold text-primary">
-                <CheckCircle2 className="h-3.5 w-3.5" /> Active
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-primary/15 border border-primary/30 px-3 py-1 text-xs font-semibold text-primary capitalize">
+                <CheckCircle2 className="h-3.5 w-3.5" /> {user.role ?? "member"}
               </span>
             </div>
 
-            <div className="mt-6 grid md:grid-cols-3 gap-3">
-              {[
-                { name: "Free", price: "$0", note: "Module 1 + Fast Track preview" },
-                { name: "Crew", price: "$19/mo", note: "All modules + asset vault", current: true },
-                { name: "Captain", price: "$49/mo", note: "Crew + 1:1 office hours" },
-              ].map((p) => (
-                <div
-                  key={p.name}
-                  className={`rounded-2xl border p-5 ${
-                    p.current
-                      ? "border-primary/50 bg-gradient-primary/10 shadow-glow"
-                      : "border-border bg-surface/40"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="font-semibold">{p.name}</div>
-                    {p.current && <span className="text-[10px] uppercase tracking-wider text-primary">Current</span>}
-                  </div>
-                  <div className="mt-2 text-2xl font-bold">{p.price}</div>
-                  <div className="text-xs text-muted-foreground mt-1">{p.note}</div>
-                  {!p.current && (
-                    <button className="mt-4 w-full rounded-lg border border-border hover:border-primary/50 py-2 text-xs font-semibold transition-colors">
-                      Switch to {p.name}
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 text-sm">
-              <div className="text-muted-foreground">
-                Next charge <span className="text-foreground font-medium">June 5, 2026</span> · Visa •••• 4242
-              </div>
-              <div className="flex gap-2">
-                <button className="rounded-lg border border-border bg-surface/60 hover:bg-surface-elevated px-3 py-2 text-xs">Update payment</button>
-                <button className="rounded-lg border border-border bg-surface/60 hover:bg-surface-elevated px-3 py-2 text-xs text-muted-foreground hover:text-destructive">Cancel plan</button>
-              </div>
+            <div className="mt-6 p-4 rounded-2xl border border-border bg-surface/40 text-sm text-muted-foreground">
+              Billing management coming soon. Reach out to{" "}
+              <a href="mailto:support@krakenvault.com" className="text-primary hover:underline">support@krakenvault.com</a>{" "}
+              for plan changes.
             </div>
           </section>
 
@@ -210,7 +210,7 @@ function ProfilePage() {
               Reset Progress
             </h2>
             <p className="text-sm text-muted-foreground mb-4">
-              Clear all lesson completion data for your current session. This can't be undone.
+              Clear all lesson completion data. This can't be undone.
             </p>
             {resetDone ? (
               <div className="flex items-center gap-2 text-sm text-primary">
