@@ -40,7 +40,7 @@ export async function sendDripEmail(
       to: email,
       template: {
         id: templateId,
-        variables: { first_name: firstName ?? '' },
+        variables: { first_name: firstName ?? '', email },
       },
     }),
   });

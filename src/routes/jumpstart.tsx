@@ -225,7 +225,7 @@ function JumpstartPage() {
 
       <section className="px-6 py-10">
         <div className="mx-auto grid max-w-4xl gap-4">
-          {DAYS.map((day) => (
+          {CALENDAR.map((day) => (
             <div
               key={day.n}
               className="grid gap-5 rounded-lg border border-border bg-surface p-6 md:grid-cols-[auto_1fr] md:gap-7 md:p-7"
@@ -240,15 +240,25 @@ function JumpstartPage() {
               </div>
               <div className="md:border-l md:border-border md:pl-7">
                 <h2 className="font-display text-xl font-black uppercase tracking-tight text-foreground md:text-2xl">
-                  {day.title}
+                  {day.theme}
                 </h2>
-                <ul className="mt-4 space-y-2.5">
-                  {day.bullets.map((bullet) => (
-                    <li key={bullet} className="flex items-start gap-2.5 text-[15px] leading-relaxed text-foreground/85">
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                      {bullet}
-                    </li>
-                  ))}
+                <p className="mt-1 text-sm text-muted-foreground">{day.sub}</p>
+                <ul className="mt-4 space-y-3">
+                  {day.posts.map((post) => {
+                    const cfg = PLATFORM_CONFIG[post.platform];
+                    return (
+                      <li key={post.title} className="flex items-start gap-2.5">
+                        <span className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${cfg.dot}`} />
+                        <div>
+                          <span className={`inline-flex items-center rounded border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider mr-2 ${cfg.tag}`}>
+                            {cfg.label}
+                          </span>
+                          <span className="text-[15px] font-semibold text-foreground">{post.title}</span>
+                          <p className="mt-0.5 text-sm text-muted-foreground leading-relaxed">{post.body}</p>
+                        </div>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </div>
