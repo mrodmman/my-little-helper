@@ -5,6 +5,7 @@ import { Calendar } from '@/components/ui/calendar';
 
 const BLUE = '#1763ff';
 const PRIMARY_BG_IMAGE = 'https://i.ibb.co/g1GKLtj/file-51.jpg';
+const SECONDARY_BG_IMAGE = 'https://i.ibb.co/tTgxPHM9/file-50.jpg';
 const FALLBACK_BG_IMAGE = '/images/booking-bg.jpg';
 
 export const Route = createFileRoute('/book')({ component: BookPage });
@@ -49,10 +50,16 @@ function BookPage() {
           src={bgImage}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover opacity-30"
-          onError={() => setBgImage(FALLBACK_BG_IMAGE)}
+          className="absolute inset-0 h-full w-full object-cover opacity-45"
+          onError={() => {
+            setBgImage((current) => {
+              if (current === PRIMARY_BG_IMAGE) return SECONDARY_BG_IMAGE;
+              if (current === SECONDARY_BG_IMAGE) return FALLBACK_BG_IMAGE;
+              return current;
+            });
+          }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#040b19]/95 via-[#030814]/90 to-[#030814]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#040b19]/70 via-[#030814]/65 to-[#030814]/80" />
 
         <div className="relative mx-auto max-w-6xl p-4 md:p-8">
           <h1 className="text-5xl md:text-7xl font-black uppercase leading-[0.92]">
