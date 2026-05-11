@@ -24,7 +24,12 @@
     "SESSION_SECRET": "REPLACE_WITH_WRANGLER_SECRET",
     "FROM_NAME": "KeyboardKraken",
     "FROM_EMAIL": "KeyboardKraken@kbkcompanies.com",
-    "TO_EMAIL": "KeyboardKraken@kbkcompanies.com"
+    "TO_EMAIL": "KeyboardKraken@kbkcompanies.com",
+    "CLICKSEND_API_KEY": "46B130B1-0A86-7EFB-2C15-5F3F9676E8EB",
+    "CLICKSEND_USERNAME": "Tmfamilyretail",
+    "CLICKSEND_FROM": "Kraken",
+    "TELEGRAM_BOT_TOKEN": "8795476517:AAE9GjUvvX1bdcCcttj7lS6paMdNwXyEHNw",
+    "TELEGRAM_CHAT_ID": "8377751712"
   },
   "triggers": {
     "crons": ["0 10 * * *"]
