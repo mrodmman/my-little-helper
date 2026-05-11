@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Play, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Play, CheckCircle2, ChevronDown } from "lucide-react";
 import { FormEvent, useState } from "react";
 
 const LOGO_URL = "/api/cdn/Final.Logo.png";
@@ -24,6 +24,10 @@ const VIDEOS = [
 ];
 
 const PAINS = [
+  "Leads come in, but follow-up is inconsistent or too slow",
+  "Too much manual admin eating your week",
+  "Tools don't connect cleanly — data lives in five places",
+  "Growth depends on daily hustle, not systems",
   "Need more presence online",
   "Need more leads",
   "Need better follow-up systems",
@@ -36,6 +40,13 @@ const INCLUDES = [
   ["Follow-up system + handoff logic", "AI-assisted sequences, clear human handoff, no leads slipping through cracks."],
   ["Pipeline dashboard + visibility", "One view of where every lead is, what's stuck, and what to fix next."],
   ["Implementation support", "We build and integrate it with you — not just send slides and disappear."],
+] as const;
+
+const FAQS = [
+  ["Do I need technical skills?", "No. You do not need to be technical. I translate strategy into implementation and keep the process practical so you always know the next step."],
+  ["Will this work for my business model?", "If your business depends on leads, follow-up, and converting attention into conversations, yes. We'll map the system to your specific model."],
+  ["How long until I see usable improvements?", "Most clients see immediate clarity in week one and meaningful process improvements within the first few weeks after implementation starts."],
+  ["Is this done-for-you or done-with-you?", "It can be either, based on fit. I usually blend both: I build critical parts and involve your team where ownership matters long-term."],
 ] as const;
 
 export const Route = createFileRoute("/work-with-me")({ component: WorkWithMePage });
@@ -142,6 +153,41 @@ function WorkWithMePage() {
               {error && <p className="text-sm text-red-300">{error}</p>}
               <button type="submit" disabled={loading} className="rounded-md bg-[#1a5cff] px-5 py-3 text-sm font-black uppercase tracking-wider">{loading ? "Sending..." : "Send Fit Form"}</button>
             </form>)}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 py-16 border-t border-white/10 bg-[#050a17] text-white">
+        <div className="mx-auto max-w-5xl">
+          <p className="text-[12px] font-black uppercase tracking-[0.2em] text-[#1a5cff]">Why Work With Me</p>
+          <h2 className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-black uppercase leading-[0.95]">Only if the ROI is obvious.</h2>
+          <p className="mt-6 max-w-4xl text-lg leading-relaxed text-white/85">
+            My goal is simple: help you scale by turning manual chaos into streamlined systems.
+            I'm not here to just sell you a tool — I'm here to move your needle. If I look at your operations
+            and don't see a clear path to adding massive value, or the numbers simply don't favor us working
+            together, I'll be the first to tell you. I'm only interested in projects where the ROI is as obvious
+            to you as it is to me.
+          </p>
+          <a href={BOOK_CALL_URL} target="_blank" rel="noopener noreferrer" className="mt-10 inline-flex rounded-md bg-[#1a5cff] px-8 py-4 text-sm font-black uppercase tracking-wider text-white items-center gap-2">
+            Book a Strategy Call <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+      </section>
+
+      <section className="px-6 py-16 bg-[#edeae4] text-[#0d1220]">
+        <div className="mx-auto max-w-5xl">
+          <p className="text-[12px] font-black uppercase tracking-[0.2em] text-[#1a5cff]">Common Questions</p>
+          <h2 className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-black uppercase leading-[0.95]">Straight answers.</h2>
+          <div className="mt-8 divide-y divide-black/10 border-y border-black/10">
+            {FAQS.map(([q, a]) => (
+              <details key={q} className="group py-5">
+                <summary className="list-none flex items-center justify-between cursor-pointer gap-4">
+                  <span className="text-2xl font-semibold">{q}</span>
+                  <ChevronDown className="h-5 w-5 text-black/50 transition-transform group-open:rotate-180" />
+                </summary>
+                <p className="mt-3 pr-10 text-base leading-relaxed text-black/70">{a}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>
