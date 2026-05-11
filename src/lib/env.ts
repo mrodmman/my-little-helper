@@ -11,6 +11,8 @@ export interface Env {
   ADMIN_SECRET: string;
   RESEND_API_KEY: string;
   SESSION_SECRET: string;
+  STRIPE_SECRET_KEY: string;
+  STRIPE_WEBHOOK_SECRET: string;
 }
 
 type CloudflareWorkersModule = {
