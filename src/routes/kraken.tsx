@@ -125,6 +125,7 @@ function KrakenPage() {
         <KrakenNav onOpenContact={() => setContactOpen(true)} />
         <HeroSection onOpenContact={() => setContactOpen(true)} />
         <ChoosePathSection onOpenContact={() => setContactOpen(true)} />
+        <FreeGuideSection />
         <ProofSection />
         <AboutSection />
         <VaultSection />
@@ -533,6 +534,49 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
 }
 
 
+
+// ── 4.5. FREE GUIDE CTA ───────────────────────────────────────────────────────
+
+function FreeGuideSection() {
+  return (
+    <section
+      className="px-6 py-16 md:py-20"
+      style={{ background: P, borderTop: `1px solid rgba(0,0,0,0.12)` }}
+    >
+      <div className="mx-auto max-w-4xl flex flex-col md:flex-row md:items-center gap-8 md:gap-16">
+        <div className="flex-1">
+          <div
+            className="inline-flex items-center gap-2 rounded-md px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] mb-4"
+            style={{ background: "rgba(255,255,255,0.18)", color: "#fff" }}
+          >
+            100% Free
+          </div>
+          <h2
+            className="font-sans uppercase text-3xl md:text-4xl font-black tracking-tight leading-[1] text-white"
+          >
+            Start here — the free<br />7-day jumpstart guide.
+          </h2>
+          <p className="mt-4 text-white/75 text-base leading-relaxed max-w-md">
+            One action per day. 45 minutes. Built for people who still have a day job.
+            No fluff — just the first real steps to building something online.
+          </p>
+        </div>
+        <div className="flex flex-col gap-3 md:items-start">
+          <Link
+            to="/funnel"
+            className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-7 py-4 text-sm font-black uppercase tracking-wider transition hover:brightness-95"
+            style={{ color: P }}
+          >
+            Get the free guide <ArrowRight className="h-4 w-4" />
+          </Link>
+          <span className="text-[11px] uppercase tracking-wider text-white/55">
+            Instant access · No spam · No credit card
+          </span>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 // ── 5. PROOF ──────────────────────────────────────────────────────────────────
 

@@ -29,7 +29,7 @@ export async function sendDripEmail(
   templateId: string,
   env: Env,
 ) {
-  await fetch('https://api.resend.com/emails', {
+  const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${env.RESEND_API_KEY}`,
@@ -38,9 +38,15 @@ export async function sendDripEmail(
     body: JSON.stringify({
       from: `${env.FROM_NAME} <${env.FROM_EMAIL}>`,
       to: email,
-      template: { id: templateId },
+      template_id: templateId,
+      ...(firstName ? { variables: { first_name: firstName } } : {}),
     }),
   });
+
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '(unreadable)');
+    console.error(`sendDripEmail failed for ${email} template=${templateId}: ${res.status} ${detail}`);
+  }
 }
 
 interface DripSubscriber {
