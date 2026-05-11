@@ -16,6 +16,10 @@ export interface Env {
   FROM_EMAIL: string;
   FROM_NAME: string;
   TO_EMAIL: string;
+  TWILIO_ACCOUNT_SID: string;
+  TWILIO_AUTH_TOKEN: string;
+  TWILIO_FROM_NUMBER: string;
+  OWNER_PHONE_NUMBER: string;
 }
 
 type CloudflareWorkersModule = {
