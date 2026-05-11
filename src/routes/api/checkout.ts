@@ -22,7 +22,7 @@ export const Route = createFileRoute("/api/checkout")({
           "line_items[0][price_data][unit_amount]": "2499",
           "line_items[0][quantity]": "1",
           "payment_intent_data[description]": "Kraken Vault — lifetime access",
-          "success_url": `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+          "success_url": `${origin}/vault-thank-you?session_id={CHECKOUT_SESSION_ID}`,
           "cancel_url": `${origin}/offer`,
           // Collect email so webhook has it for provisioning
           "customer_email": "",
@@ -43,7 +43,7 @@ export const Route = createFileRoute("/api/checkout")({
         if (!res.ok) {
           const err = await res.text();
           console.error("Stripe session error:", err);
-          return new Response(`Stripe error: ${err}`, { status: 502 });
+          return new Response("Failed to create checkout session", { status: 502 });
         }
 
         const session = await res.json() as { url: string };
