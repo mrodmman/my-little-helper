@@ -13,6 +13,8 @@ export interface Env {
   SESSION_SECRET: string;
   STRIPE_SECRET_KEY: string;
   STRIPE_WEBHOOK_SECRET: string;
+  FROM_EMAIL: string;
+  FROM_NAME: string;
 }
 
 type CloudflareWorkersModule = {

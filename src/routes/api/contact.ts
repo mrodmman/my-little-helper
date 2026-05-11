@@ -27,7 +27,7 @@ export const Route = createFileRoute('/api/contact')({
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: 'Kraken Vault Contact <onboarding@resend.dev>',
+            from: `${env.FROM_NAME} <${env.FROM_EMAIL}>`,
             to: ['matt@krakenvault.com'],
             subject: `New Work With Me message from ${name}`,
             text: `Name: ${name}\nEmail: ${email}\n\n${message}`,

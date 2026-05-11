@@ -36,7 +36,7 @@ export async function sendDripEmail(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: 'Matt <matt@krakenvault.com>',
+      from: `${env.FROM_NAME} <${env.FROM_EMAIL}>`,
       to: email,
       template: { id: templateId },
     }),
