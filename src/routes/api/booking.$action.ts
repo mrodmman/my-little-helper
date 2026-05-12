@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { getEnv } from '@/lib/env';
+import { getAdminSession } from '@/lib/session';
 
 const MEET_LINK = 'https://meet.google.com/ohf-nmom-pva';
 
@@ -80,9 +81,10 @@ export const Route = createFileRoute('/api/booking/$action')({
   server: { handlers: {
     GET: async ({ params, request }) => {
       const env = getEnv();
-      if (params.action === 'admin/settings') {
+      if (params.action === 'admin-settings') {
         const pass = request.headers.get('x-admin-password');
-        if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+        const adminSession = getAdminSession();
+        if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
         const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
         return json({ settings: parseSettingsRow(row) });
       }
@@ -105,9 +107,10 @@ export const Route = createFileRoute('/api/booking/$action')({
     },
     POST: async ({ params, request }) => {
       const env = getEnv();
-      if (params.action === 'admin/settings') {
+      if (params.action === 'admin-settings') {
         const pass = request.headers.get('x-admin-password');
-        if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+        const adminSession = getAdminSession();
+        if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
         const body = (await request.json()) as Settings;
         const merged: Settings = {
           availabilityMode: body.availabilityMode ?? 'rules',
