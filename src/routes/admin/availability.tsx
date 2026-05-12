@@ -7,26 +7,40 @@ type Settings = { availabilityMode?: 'rules' | 'allowlist'; workingDays: number[
 export const Route = createFileRoute('/admin/availability')({ component: AdminAvailability });
 
 function AdminAvailability() {
-  const [password, setPassword] = useState('');
   const [settings, setSettings] = useState<Settings>({ availabilityMode: 'allowlist', workingDays: [1,2,3,4,5], blackoutDates: [], dailyTimeBlocks: [], dateTimeBlocks: [], allowedDateTimes: [] });
   const [history, setHistory] = useState<Settings[]>([]);
   const [future, setFuture] = useState<Settings[]>([]);
   const [pickedDate, setPickedDate] = useState<Date | undefined>(new Date());
   const [time, setTime] = useState('09:00');
   const [message, setMessage] = useState('');
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (!password) return;
-    void fetch('/api/booking/admin/settings', { headers: { 'x-admin-password': password } }).then(async (r) => {
+    void fetch('/api/booking/admin-settings').then(async (r) => {
       const d = await r.json();
       if (d.settings) setSettings(d.settings);
     });
-  }, [password]);
+  }, []);
 
   async function save() {
-    const res = await fetch('/api/booking/admin/settings', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-password': password }, body: JSON.stringify(settings) });
-    const data = await res.json();
-    setMessage(data.ok ? 'Saved' : data.error);
+    setSaving(true);
+    setMessage('');
+    try {
+      const res = await fetch('/api/booking/admin-settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.ok) {
+        const reason = data.error || `Request failed (${res.status})`;
+        setMessage(`Error saving settings: ${reason}`);
+        return;
+      }
+
+      setMessage('Availability settings saved successfully.');
+    } catch {
+      setMessage('Error saving settings: Network request failed.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   const updateSettings = (updater: (curr: Settings) => Settings) => {
@@ -52,10 +66,9 @@ function AdminAvailability() {
 
   return <div className="space-y-6 max-w-5xl">
     <div><h1 className="text-2xl font-bold">Calendar & Availability</h1><p className="text-sm text-muted-foreground">Default mode is fully blocked. Add only the slots you want available, and use undo/redo anytime.</p></div>
-    <input type="password" placeholder="Admin Password" value={password} onChange={e=>setPassword(e.target.value)} className="w-full max-w-sm rounded-xl border border-border bg-surface/60 px-3 py-2" />
     <div className="flex gap-2">
-      <button className="rounded-lg border border-border px-3 py-2 text-sm" onClick={undo} disabled={!history.length}>Undo</button>
-      <button className="rounded-lg border border-border px-3 py-2 text-sm" onClick={redo} disabled={!future.length}>Redo</button>
+      <button className="rounded-lg border border-border px-3 py-2 text-sm" onClick={undo} disabled={!history.length || saving}>Undo</button>
+      <button className="rounded-lg border border-border px-3 py-2 text-sm" onClick={redo} disabled={!future.length || saving}>Redo</button>
     </div>
     <div className="grid lg:grid-cols-2 gap-6">
       <div className="glass-card rounded-2xl p-4 space-y-4">
@@ -89,7 +102,7 @@ function AdminAvailability() {
         </>}
       </div>
     </div>
-    <button onClick={save} className="rounded-xl bg-primary px-5 py-2 font-semibold">Save Availability Rules</button>
-    {message && <p className="text-sm text-primary">{message}</p>}
+    <button onClick={save} disabled={saving} className="rounded-xl bg-primary px-5 py-2 font-semibold disabled:opacity-60 disabled:cursor-not-allowed">{saving ? 'Saving...' : 'Save Availability Rules'}</button>
+    {message && <p className={`text-sm ${message.startsWith('Error') ? 'text-red-400' : 'text-primary'}`}>{message}</p>}
   </div>;
 }
