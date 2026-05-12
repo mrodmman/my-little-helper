@@ -1,9 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { getEnv } from '@/lib/env';
+import { getAdminSession } from '@/lib/session';
 
 const MEET_LINK = 'https://meet.google.com/ohf-nmom-pva';
 
 function json(data: unknown, status = 200) { return new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } }); }
+
+function errorMessage(err: unknown) {
+  return err instanceof Error ? err.message : String(err);
+}
 
 type Settings = {
   availabilityMode?: 'rules' | 'allowlist';
@@ -30,6 +35,36 @@ function slotsForDate(date: string, settings: Settings) {
   return slots.filter((s) => !recurring.has(s) && !specific.has(s));
 }
 
+
+async function addColumnIfMissing(env: ReturnType<typeof getEnv>, columnDef: string) {
+  try {
+    await env.DB.prepare(`ALTER TABLE booking_settings ADD COLUMN ${columnDef}`).run();
+  } catch {
+    // ignore if column already exists
+  }
+}
+
+async function ensureBookingSettingsSchema(env: ReturnType<typeof getEnv>) {
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS booking_settings (
+    id INTEGER PRIMARY KEY,
+    working_days TEXT,
+    blackout_dates TEXT,
+    daily_time_blocks TEXT,
+    date_time_blocks TEXT,
+    updated_at TEXT
+  )`).run();
+
+  await addColumnIfMissing(env, `working_days TEXT NOT NULL DEFAULT '[1,2,3,4,5]'`);
+  await addColumnIfMissing(env, `blackout_dates TEXT NOT NULL DEFAULT '[]'`);
+  await addColumnIfMissing(env, `daily_time_blocks TEXT NOT NULL DEFAULT '[]'`);
+  await addColumnIfMissing(env, `date_time_blocks TEXT NOT NULL DEFAULT '[]'`);
+  await addColumnIfMissing(env, `updated_at TEXT`);
+
+  await env.DB.prepare(`INSERT INTO booking_settings (id, working_days, blackout_dates, daily_time_blocks, date_time_blocks, updated_at)
+    VALUES (1, '[1,2,3,4,5]', '[]', '[]', '[]', datetime('now'))
+    ON CONFLICT(id) DO NOTHING`).run();
+}
+
 function parseSettingsRow(row: any): Settings {
   const rawBlackout = JSON.parse(row?.blackout_dates ?? '[]') as string[];
   const availabilityMode: 'rules' | 'allowlist' = rawBlackout.includes('__MODE_ALLOWLIST__') ? 'allowlist' : 'rules';
@@ -45,11 +80,13 @@ function parseSettingsRow(row: any): Settings {
   };
 }
 
-async function sendSms(env: ReturnType<typeof getEnv>, to: string, body: string) {
-  if (!to) return;
+type SmsResult = { ok: boolean; provider: 'clicksend' | 'twilio' | 'none'; reason?: string; debug?: string };
+
+async function sendSms(env: ReturnType<typeof getEnv>, to: string, body: string): Promise<SmsResult> {
+  if (!to) return { ok: false, provider: 'none', reason: 'No phone number provided' };
 
   if (env.CLICKSEND_USERNAME && env.CLICKSEND_API_KEY) {
-    await fetch('https://rest.clicksend.com/v3/sms/send', {
+    const res = await fetch('https://rest.clicksend.com/v3/sms/send', {
       method: 'POST',
       headers: {
         Authorization: `Basic ${btoa(`${env.CLICKSEND_USERNAME}:${env.CLICKSEND_API_KEY}`)}`,
@@ -59,12 +96,35 @@ async function sendSms(env: ReturnType<typeof getEnv>, to: string, body: string)
         messages: [{ source: 'cloudflare-worker', body, to, from: env.CLICKSEND_FROM || 'Kraken' }],
       }),
     });
-    return;
+    if (!res.ok) {
+      const detail = await res.text().catch(() => '');
+      return { ok: false, provider: 'clicksend', reason: `ClickSend ${res.status}${detail ? `: ${detail}` : ''}` };
+    }
+    const payload = await res.json().catch(() => null) as any;
+    const firstMsg = payload?.data?.messages?.[0];
+    const msgStatus = String(firstMsg?.status ?? '').toUpperCase();
+    const accepted = !msgStatus || ['SUCCESS', 'QUEUED', 'SENT'].includes(msgStatus);
+    if (!accepted) {
+      return {
+        ok: false,
+        provider: 'clicksend',
+        reason: `ClickSend message status ${firstMsg?.status ?? 'unknown'}`,
+        debug: JSON.stringify(firstMsg ?? payload),
+      };
+    }
+    return { ok: true, provider: 'clicksend', debug: msgStatus || 'accepted' };
   }
 
-  if (!env.TWILIO_ACCOUNT_SID || !env.TWILIO_AUTH_TOKEN || !env.TWILIO_FROM_NUMBER) return;
+  if (!env.TWILIO_ACCOUNT_SID || !env.TWILIO_AUTH_TOKEN || !env.TWILIO_FROM_NUMBER) {
+    return { ok: false, provider: 'none', reason: 'No SMS provider configured' };
+  }
   const form = new URLSearchParams({ To: to, From: env.TWILIO_FROM_NUMBER, Body: body });
-  await fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, { method: 'POST', headers: { Authorization: `Basic ${btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`)}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: form });
+  const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, { method: 'POST', headers: { Authorization: `Basic ${btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`)}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: form });
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '');
+    return { ok: false, provider: 'twilio', reason: `Twilio ${res.status}${detail ? `: ${detail}` : ''}` };
+  }
+  return { ok: true, provider: 'twilio' };
 }
 
 async function sendTelegram(env: ReturnType<typeof getEnv>, text: string) {
@@ -80,14 +140,21 @@ export const Route = createFileRoute('/api/booking/$action')({
   server: { handlers: {
     GET: async ({ params, request }) => {
       const env = getEnv();
-      if (params.action === 'admin/settings') {
-        const pass = request.headers.get('x-admin-password');
-        if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
-        const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
-        return json({ settings: parseSettingsRow(row) });
+      if (params.action === 'admin-settings') {
+        try {
+          const pass = request.headers.get('x-admin-password');
+          const adminSession = getAdminSession();
+          if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+          await ensureBookingSettingsSchema(env);
+          const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
+          return json({ settings: parseSettingsRow(row) });
+        } catch (err) {
+          return json({ error: `Admin settings GET failed: ${errorMessage(err)}` }, 500);
+        }
       }
       if (params.action === 'availability') {
         const date = new URL(request.url).searchParams.get('date') || new Date().toISOString().slice(0, 10);
+        await ensureBookingSettingsSchema(env);
         const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
         const settings: Settings = parseSettingsRow(row);
         const daySlots = slotsForDate(date, settings);
@@ -105,10 +172,13 @@ export const Route = createFileRoute('/api/booking/$action')({
     },
     POST: async ({ params, request }) => {
       const env = getEnv();
-      if (params.action === 'admin/settings') {
-        const pass = request.headers.get('x-admin-password');
-        if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
-        const body = (await request.json()) as Settings;
+      if (params.action === 'admin-settings') {
+        try {
+          const pass = request.headers.get('x-admin-password');
+          const adminSession = getAdminSession();
+          if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+          await ensureBookingSettingsSchema(env);
+          const body = (await request.json()) as Settings;
         const merged: Settings = {
           availabilityMode: body.availabilityMode ?? 'rules',
           workingDays: body.workingDays ?? [1, 2, 3, 4, 5],
@@ -121,6 +191,9 @@ export const Route = createFileRoute('/api/booking/$action')({
         const dateTimeForSave = merged.availabilityMode === 'allowlist' ? (merged.allowedDateTimes ?? []) : merged.dateTimeBlocks;
         await env.DB.prepare("INSERT INTO booking_settings (id,working_days,blackout_dates,daily_time_blocks,date_time_blocks,updated_at) VALUES (1,?,?,?,?,datetime('now')) ON CONFLICT(id) DO UPDATE SET working_days=excluded.working_days, blackout_dates=excluded.blackout_dates, daily_time_blocks=excluded.daily_time_blocks, date_time_blocks=excluded.date_time_blocks, updated_at=datetime('now')").bind(JSON.stringify(merged.workingDays), JSON.stringify(blackoutForSave), JSON.stringify(merged.dailyTimeBlocks), JSON.stringify(dateTimeForSave)).run();
         return json({ ok: true });
+        } catch (err) {
+          return json({ error: `Admin settings POST failed: ${errorMessage(err)}` }, 500);
+        }
       }
       if (params.action === 'create') {
         const body = await request.json() as { date: string; time: string; name: string; email: string; phone?: string; notes?: string };
@@ -134,10 +207,16 @@ export const Route = createFileRoute('/api/booking/$action')({
         const cancelLink = `${new URL(request.url).origin}/cancel?id=${bookingId}`;
         const userMsg = `Hi ${body.name}, your call is confirmed for ${body.date} ${body.time}. Meet link: ${MEET_LINK}. To cancel or reschedule: ${cancelLink}`;
         const ownerMsg = `New Booking! ${body.name} on ${body.date} ${body.time}. Link to manage: ${new URL(request.url).origin}/admin/availability`;
-        await sendSms(env, body.phone ?? '', userMsg);
+        const customerSms = await sendSms(env, body.phone ?? '', userMsg);
         if (env.OWNER_PHONE_NUMBER) await sendSms(env, env.OWNER_PHONE_NUMBER, ownerMsg);
         await sendTelegram(env, ownerMsg);
-        return json({ bookingId, message: userMsg });
+        return json({
+          bookingId,
+          message: customerSms.ok
+            ? `Booked! Confirmation sent by text. ${userMsg}`
+            : `Booked! We could not send your text confirmation (${customerSms.reason ?? 'unknown reason'}).`,
+          sms: customerSms,
+        });
       }
       return json({ error: 'Not found' }, 404);
     },
