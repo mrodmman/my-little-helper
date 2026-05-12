@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { getEnv } from '@/lib/env';
+import { getAdminSession } from '@/lib/session';
 
 const MEET_LINK = 'https://meet.google.com/ohf-nmom-pva';
 
@@ -28,6 +29,22 @@ function slotsForDate(date: string, settings: Settings) {
   const recurring = new Set(settings.dailyTimeBlocks.filter((x) => x.weekday === d.getDay()).map((x) => x.time));
   const specific = new Set(settings.dateTimeBlocks.filter((x) => x.date === date).map((x) => x.time));
   return slots.filter((s) => !recurring.has(s) && !specific.has(s));
+}
+
+
+async function ensureBookingSettingsSchema(env: ReturnType<typeof getEnv>) {
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS booking_settings (
+    id INTEGER PRIMARY KEY,
+    working_days TEXT,
+    blackout_dates TEXT,
+    daily_time_blocks TEXT,
+    date_time_blocks TEXT,
+    updated_at TEXT
+  )`).run();
+
+  await env.DB.prepare(`INSERT INTO booking_settings (id, working_days, blackout_dates, daily_time_blocks, date_time_blocks, updated_at)
+    VALUES (1, '[1,2,3,4,5]', '[]', '[]', '[]', datetime('now'))
+    ON CONFLICT(id) DO NOTHING`).run();
 }
 
 function parseSettingsRow(row: any): Settings {
@@ -80,14 +97,17 @@ export const Route = createFileRoute('/api/booking/$action')({
   server: { handlers: {
     GET: async ({ params, request }) => {
       const env = getEnv();
-      if (params.action === 'admin/settings') {
+      if (params.action === 'admin-settings') {
         const pass = request.headers.get('x-admin-password');
-        if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+        const adminSession = getAdminSession();
+        if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+        await ensureBookingSettingsSchema(env);
         const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
         return json({ settings: parseSettingsRow(row) });
       }
       if (params.action === 'availability') {
         const date = new URL(request.url).searchParams.get('date') || new Date().toISOString().slice(0, 10);
+        await ensureBookingSettingsSchema(env);
         const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
         const settings: Settings = parseSettingsRow(row);
         const daySlots = slotsForDate(date, settings);
@@ -105,9 +125,11 @@ export const Route = createFileRoute('/api/booking/$action')({
     },
     POST: async ({ params, request }) => {
       const env = getEnv();
-      if (params.action === 'admin/settings') {
+      if (params.action === 'admin-settings') {
         const pass = request.headers.get('x-admin-password');
-        if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+        const adminSession = getAdminSession();
+        if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+        await ensureBookingSettingsSchema(env);
         const body = (await request.json()) as Settings;
         const merged: Settings = {
           availabilityMode: body.availabilityMode ?? 'rules',
