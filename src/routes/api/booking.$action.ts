@@ -80,10 +80,10 @@ function parseSettingsRow(row: any): Settings {
   };
 }
 
-type SmsResult = { ok: boolean; reason?: string };
+type SmsResult = { ok: boolean; provider: 'clicksend' | 'twilio' | 'none'; reason?: string; debug?: string };
 
 async function sendSms(env: ReturnType<typeof getEnv>, to: string, body: string): Promise<SmsResult> {
-  if (!to) return { ok: false, reason: 'No phone number provided' };
+  if (!to) return { ok: false, provider: 'none', reason: 'No phone number provided' };
 
   if (env.CLICKSEND_USERNAME && env.CLICKSEND_API_KEY) {
     const res = await fetch('https://rest.clicksend.com/v3/sms/send', {
@@ -98,21 +98,33 @@ async function sendSms(env: ReturnType<typeof getEnv>, to: string, body: string)
     });
     if (!res.ok) {
       const detail = await res.text().catch(() => '');
-      return { ok: false, reason: `ClickSend ${res.status}${detail ? `: ${detail}` : ''}` };
+      return { ok: false, provider: 'clicksend', reason: `ClickSend ${res.status}${detail ? `: ${detail}` : ''}` };
     }
-    return { ok: true };
+    const payload = await res.json().catch(() => null) as any;
+    const firstMsg = payload?.data?.messages?.[0];
+    const msgStatus = String(firstMsg?.status ?? '').toUpperCase();
+    const accepted = !msgStatus || ['SUCCESS', 'QUEUED', 'SENT'].includes(msgStatus);
+    if (!accepted) {
+      return {
+        ok: false,
+        provider: 'clicksend',
+        reason: `ClickSend message status ${firstMsg?.status ?? 'unknown'}`,
+        debug: JSON.stringify(firstMsg ?? payload),
+      };
+    }
+    return { ok: true, provider: 'clicksend', debug: msgStatus || 'accepted' };
   }
 
   if (!env.TWILIO_ACCOUNT_SID || !env.TWILIO_AUTH_TOKEN || !env.TWILIO_FROM_NUMBER) {
-    return { ok: false, reason: 'No SMS provider configured' };
+    return { ok: false, provider: 'none', reason: 'No SMS provider configured' };
   }
   const form = new URLSearchParams({ To: to, From: env.TWILIO_FROM_NUMBER, Body: body });
   const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, { method: 'POST', headers: { Authorization: `Basic ${btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`)}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: form });
   if (!res.ok) {
     const detail = await res.text().catch(() => '');
-    return { ok: false, reason: `Twilio ${res.status}${detail ? `: ${detail}` : ''}` };
+    return { ok: false, provider: 'twilio', reason: `Twilio ${res.status}${detail ? `: ${detail}` : ''}` };
   }
-  return { ok: true };
+  return { ok: true, provider: 'twilio' };
 }
 
 async function sendTelegram(env: ReturnType<typeof getEnv>, text: string) {
@@ -122,6 +134,44 @@ async function sendTelegram(env: ReturnType<typeof getEnv>, text: string) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text }),
   });
+}
+
+async function sendBookingConfirmationEmail(
+  env: ReturnType<typeof getEnv>,
+  data: { name: string; email: string; date: string; time: string; meetLink: string; cancelLink: string; notes?: string },
+) {
+  if (!env.RESEND_API_KEY || !env.FROM_EMAIL || !env.FROM_NAME) return { ok: false, reason: 'Resend not configured' };
+
+  const html = `
+    <div style="font-family:Inter,Arial,sans-serif;line-height:1.5;color:#111">
+      <h2 style="margin-bottom:8px;">Your strategy call is confirmed ✅</h2>
+      <p>Hey ${data.name},</p>
+      <p>Your booking is confirmed for <strong>${data.date} at ${data.time}</strong>.</p>
+      <p><strong>Join link:</strong> <a href="${data.meetLink}">${data.meetLink}</a></p>
+      <p><strong>Need to cancel/reschedule?</strong> <a href="${data.cancelLink}">Manage booking</a></p>
+      ${data.notes ? `<p><strong>Your notes:</strong> ${data.notes}</p>` : ''}
+      <hr style="margin:24px 0;border:0;border-top:1px solid #e5e7eb;" />
+      <p style="font-size:12px;color:#6b7280;">If you did not request this booking, please ignore this email.</p>
+    </div>
+  `;
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: `${env.FROM_NAME} <${env.FROM_EMAIL}>`,
+      to: data.email,
+      subject: `Booking confirmed: ${data.date} ${data.time}`,
+      html,
+    }),
+  });
+
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '');
+    return { ok: false, reason: `Resend ${res.status}${detail ? `: ${detail}` : ''}` };
+  }
+
+  return { ok: true };
 }
 
 export const Route = createFileRoute('/api/booking/$action')({
@@ -194,16 +244,35 @@ export const Route = createFileRoute('/api/booking/$action')({
         await env.DB.prepare("INSERT INTO bookings (booking_id,name,email,phone,notes,starts_at,ends_at,status) VALUES (?,?,?,?,?,?,?,'Confirmed')").bind(bookingId, body.name, body.email, body.phone ?? '', body.notes ?? '', startsAt, endsAt).run();
         const cancelLink = `${new URL(request.url).origin}/cancel?id=${bookingId}`;
         const userMsg = `Hi ${body.name}, your call is confirmed for ${body.date} ${body.time}. Meet link: ${MEET_LINK}. To cancel or reschedule: ${cancelLink}`;
-        const ownerMsg = `New Booking! ${body.name} on ${body.date} ${body.time}. Link to manage: ${new URL(request.url).origin}/admin/availability`;
+        const ownerMsg = [
+          '📅 New Booking',
+          `Name: ${body.name}`,
+          `Email: ${body.email}`,
+          `Phone: ${body.phone || 'N/A'}`,
+          `Date: ${body.date}`,
+          `Time: ${body.time}`,
+          `Notes: ${body.notes || 'N/A'}`,
+          `Manage: ${new URL(request.url).origin}/admin/availability`,
+        ].join('\n');
         const customerSms = await sendSms(env, body.phone ?? '', userMsg);
         if (env.OWNER_PHONE_NUMBER) await sendSms(env, env.OWNER_PHONE_NUMBER, ownerMsg);
         await sendTelegram(env, ownerMsg);
+        const customerEmail = await sendBookingConfirmationEmail(env, {
+          name: body.name,
+          email: body.email,
+          date: body.date,
+          time: body.time,
+          meetLink: MEET_LINK,
+          cancelLink,
+          notes: body.notes,
+        });
         return json({
           bookingId,
           message: customerSms.ok
             ? `Booked! Confirmation sent by text. ${userMsg}`
             : `Booked! We could not send your text confirmation (${customerSms.reason ?? 'unknown reason'}).`,
           sms: customerSms,
+          email: customerEmail,
         });
       }
       return json({ error: 'Not found' }, 404);
