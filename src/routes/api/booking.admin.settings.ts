@@ -6,6 +6,10 @@ function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } });
 }
 
+function errorMessage(err: unknown) {
+  return err instanceof Error ? err.message : String(err);
+}
+
 type Settings = {
   availabilityMode?: 'rules' | 'allowlist';
   workingDays: number[];
@@ -50,21 +54,26 @@ export const Route = createFileRoute('/api/booking/admin/settings')({
   server: {
     handlers: {
       GET: async ({ request }) => {
-        const env = getEnv();
-        const pass = request.headers.get('x-admin-password');
-        const adminSession = getAdminSession();
-        if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
-        await ensureBookingSettingsSchema(env);
-        const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
-        return json({ settings: parseSettingsRow(row) });
+        try {
+          const env = getEnv();
+          const pass = request.headers.get('x-admin-password');
+          const adminSession = getAdminSession();
+          if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+          await ensureBookingSettingsSchema(env);
+          const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
+          return json({ settings: parseSettingsRow(row) });
+        } catch (err) {
+          return json({ error: `Admin settings GET failed: ${errorMessage(err)}` }, 500);
+        }
       },
       POST: async ({ request }) => {
-        const env = getEnv();
-        const pass = request.headers.get('x-admin-password');
-        const adminSession = getAdminSession();
-        if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
-        await ensureBookingSettingsSchema(env);
-        const body = (await request.json()) as Settings;
+        try {
+          const env = getEnv();
+          const pass = request.headers.get('x-admin-password');
+          const adminSession = getAdminSession();
+          if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+          await ensureBookingSettingsSchema(env);
+          const body = (await request.json()) as Settings;
         const merged: Settings = {
           availabilityMode: body.availabilityMode ?? 'rules',
           workingDays: body.workingDays ?? [1, 2, 3, 4, 5],
@@ -77,6 +86,9 @@ export const Route = createFileRoute('/api/booking/admin/settings')({
         const dateTimeForSave = merged.availabilityMode === 'allowlist' ? (merged.allowedDateTimes ?? []) : merged.dateTimeBlocks;
         await env.DB.prepare("INSERT INTO booking_settings (id,working_days,blackout_dates,daily_time_blocks,date_time_blocks,updated_at) VALUES (1,?,?,?,?,datetime('now')) ON CONFLICT(id) DO UPDATE SET working_days=excluded.working_days, blackout_dates=excluded.blackout_dates, daily_time_blocks=excluded.daily_time_blocks, date_time_blocks=excluded.date_time_blocks, updated_at=datetime('now')").bind(JSON.stringify(merged.workingDays), JSON.stringify(blackoutForSave), JSON.stringify(merged.dailyTimeBlocks), JSON.stringify(dateTimeForSave)).run();
         return json({ ok: true });
+        } catch (err) {
+          return json({ error: `Admin settings POST failed: ${errorMessage(err)}` }, 500);
+        }
       },
     },
   },
