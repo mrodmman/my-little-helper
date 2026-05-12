@@ -15,6 +15,22 @@ type Settings = {
   allowedDateTimes?: { date: string; time: string }[];
 };
 
+
+async function ensureBookingSettingsSchema(env: ReturnType<typeof getEnv>) {
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS booking_settings (
+    id INTEGER PRIMARY KEY,
+    working_days TEXT,
+    blackout_dates TEXT,
+    daily_time_blocks TEXT,
+    date_time_blocks TEXT,
+    updated_at TEXT
+  )`).run();
+
+  await env.DB.prepare(`INSERT INTO booking_settings (id, working_days, blackout_dates, daily_time_blocks, date_time_blocks, updated_at)
+    VALUES (1, '[1,2,3,4,5]', '[]', '[]', '[]', datetime('now'))
+    ON CONFLICT(id) DO NOTHING`).run();
+}
+
 function parseSettingsRow(row: any): Settings {
   const rawBlackout = JSON.parse(row?.blackout_dates ?? '[]') as string[];
   const availabilityMode: 'rules' | 'allowlist' = rawBlackout.includes('__MODE_ALLOWLIST__') ? 'allowlist' : 'rules';
@@ -38,6 +54,7 @@ export const Route = createFileRoute('/api/booking/admin/settings')({
         const pass = request.headers.get('x-admin-password');
         const adminSession = getAdminSession();
         if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+        await ensureBookingSettingsSchema(env);
         const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
         return json({ settings: parseSettingsRow(row) });
       },
@@ -46,6 +63,7 @@ export const Route = createFileRoute('/api/booking/admin/settings')({
         const pass = request.headers.get('x-admin-password');
         const adminSession = getAdminSession();
         if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+        await ensureBookingSettingsSchema(env);
         const body = (await request.json()) as Settings;
         const merged: Settings = {
           availabilityMode: body.availabilityMode ?? 'rules',
