@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { getEnv } from '@/lib/env';
+import { getAdminSession } from '@/lib/session';
 
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } });
@@ -35,14 +36,16 @@ export const Route = createFileRoute('/api/booking/admin/settings')({
       GET: async ({ request }) => {
         const env = getEnv();
         const pass = request.headers.get('x-admin-password');
-        if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+        const adminSession = getAdminSession();
+        if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
         const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
         return json({ settings: parseSettingsRow(row) });
       },
       POST: async ({ request }) => {
         const env = getEnv();
         const pass = request.headers.get('x-admin-password');
-        if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+        const adminSession = getAdminSession();
+        if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
         const body = (await request.json()) as Settings;
         const merged: Settings = {
           availabilityMode: body.availabilityMode ?? 'rules',

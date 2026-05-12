@@ -7,7 +7,6 @@ type Settings = { availabilityMode?: 'rules' | 'allowlist'; workingDays: number[
 export const Route = createFileRoute('/admin/availability')({ component: AdminAvailability });
 
 function AdminAvailability() {
-  const [password, setPassword] = useState('');
   const [settings, setSettings] = useState<Settings>({ availabilityMode: 'allowlist', workingDays: [1,2,3,4,5], blackoutDates: [], dailyTimeBlocks: [], dateTimeBlocks: [], allowedDateTimes: [] });
   const [history, setHistory] = useState<Settings[]>([]);
   const [future, setFuture] = useState<Settings[]>([]);
@@ -17,23 +16,17 @@ function AdminAvailability() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (!password) return;
-    void fetch('/api/booking/admin-settings', { headers: { 'x-admin-password': password } }).then(async (r) => {
+    void fetch('/api/booking/admin-settings').then(async (r) => {
       const d = await r.json();
       if (d.settings) setSettings(d.settings);
     });
-  }, [password]);
+  }, []);
 
   async function save() {
-    if (!password.trim()) {
-      setMessage('Error saving settings: Admin password is required.');
-      return;
-    }
-
     setSaving(true);
     setMessage('');
     try {
-      const res = await fetch('/api/booking/admin-settings', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-password': password }, body: JSON.stringify(settings) });
+      const res = await fetch('/api/booking/admin-settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settings) });
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok || !data.ok) {
@@ -73,7 +66,6 @@ function AdminAvailability() {
 
   return <div className="space-y-6 max-w-5xl">
     <div><h1 className="text-2xl font-bold">Calendar & Availability</h1><p className="text-sm text-muted-foreground">Default mode is fully blocked. Add only the slots you want available, and use undo/redo anytime.</p></div>
-    <input type="password" placeholder="Admin Password" value={password} onChange={e=>setPassword(e.target.value)} className="w-full max-w-sm rounded-xl border border-border bg-surface/60 px-3 py-2" />
     <div className="flex gap-2">
       <button className="rounded-lg border border-border px-3 py-2 text-sm" onClick={undo} disabled={!history.length || saving}>Undo</button>
       <button className="rounded-lg border border-border px-3 py-2 text-sm" onClick={redo} disabled={!future.length || saving}>Redo</button>
