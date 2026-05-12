@@ -36,6 +36,14 @@ function slotsForDate(date: string, settings: Settings) {
 }
 
 
+async function addColumnIfMissing(env: ReturnType<typeof getEnv>, columnDef: string) {
+  try {
+    await env.DB.prepare(`ALTER TABLE booking_settings ADD COLUMN ${columnDef}`).run();
+  } catch {
+    // ignore if column already exists
+  }
+}
+
 async function ensureBookingSettingsSchema(env: ReturnType<typeof getEnv>) {
   await env.DB.prepare(`CREATE TABLE IF NOT EXISTS booking_settings (
     id INTEGER PRIMARY KEY,
@@ -45,6 +53,12 @@ async function ensureBookingSettingsSchema(env: ReturnType<typeof getEnv>) {
     date_time_blocks TEXT,
     updated_at TEXT
   )`).run();
+
+  await addColumnIfMissing(env, `working_days TEXT NOT NULL DEFAULT '[1,2,3,4,5]'`);
+  await addColumnIfMissing(env, `blackout_dates TEXT NOT NULL DEFAULT '[]'`);
+  await addColumnIfMissing(env, `daily_time_blocks TEXT NOT NULL DEFAULT '[]'`);
+  await addColumnIfMissing(env, `date_time_blocks TEXT NOT NULL DEFAULT '[]'`);
+  await addColumnIfMissing(env, `updated_at TEXT`);
 
   await env.DB.prepare(`INSERT INTO booking_settings (id, working_days, blackout_dates, daily_time_blocks, date_time_blocks, updated_at)
     VALUES (1, '[1,2,3,4,5]', '[]', '[]', '[]', datetime('now'))
