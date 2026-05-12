@@ -136,6 +136,44 @@ async function sendTelegram(env: ReturnType<typeof getEnv>, text: string) {
   });
 }
 
+async function sendBookingConfirmationEmail(
+  env: ReturnType<typeof getEnv>,
+  data: { name: string; email: string; date: string; time: string; meetLink: string; cancelLink: string; notes?: string },
+) {
+  if (!env.RESEND_API_KEY || !env.FROM_EMAIL || !env.FROM_NAME) return { ok: false, reason: 'Resend not configured' };
+
+  const html = `
+    <div style="font-family:Inter,Arial,sans-serif;line-height:1.5;color:#111">
+      <h2 style="margin-bottom:8px;">Your strategy call is confirmed ✅</h2>
+      <p>Hey ${data.name},</p>
+      <p>Your booking is confirmed for <strong>${data.date} at ${data.time}</strong>.</p>
+      <p><strong>Join link:</strong> <a href="${data.meetLink}">${data.meetLink}</a></p>
+      <p><strong>Need to cancel/reschedule?</strong> <a href="${data.cancelLink}">Manage booking</a></p>
+      ${data.notes ? `<p><strong>Your notes:</strong> ${data.notes}</p>` : ''}
+      <hr style="margin:24px 0;border:0;border-top:1px solid #e5e7eb;" />
+      <p style="font-size:12px;color:#6b7280;">If you did not request this booking, please ignore this email.</p>
+    </div>
+  `;
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: `${env.FROM_NAME} <${env.FROM_EMAIL}>`,
+      to: data.email,
+      subject: `Booking confirmed: ${data.date} ${data.time}`,
+      html,
+    }),
+  });
+
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '');
+    return { ok: false, reason: `Resend ${res.status}${detail ? `: ${detail}` : ''}` };
+  }
+
+  return { ok: true };
+}
+
 export const Route = createFileRoute('/api/booking/$action')({
   server: { handlers: {
     GET: async ({ params, request }) => {
@@ -206,16 +244,35 @@ export const Route = createFileRoute('/api/booking/$action')({
         await env.DB.prepare("INSERT INTO bookings (booking_id,name,email,phone,notes,starts_at,ends_at,status) VALUES (?,?,?,?,?,?,?,'Confirmed')").bind(bookingId, body.name, body.email, body.phone ?? '', body.notes ?? '', startsAt, endsAt).run();
         const cancelLink = `${new URL(request.url).origin}/cancel?id=${bookingId}`;
         const userMsg = `Hi ${body.name}, your call is confirmed for ${body.date} ${body.time}. Meet link: ${MEET_LINK}. To cancel or reschedule: ${cancelLink}`;
-        const ownerMsg = `New Booking! ${body.name} on ${body.date} ${body.time}. Link to manage: ${new URL(request.url).origin}/admin/availability`;
+        const ownerMsg = [
+          '📅 New Booking',
+          `Name: ${body.name}`,
+          `Email: ${body.email}`,
+          `Phone: ${body.phone || 'N/A'}`,
+          `Date: ${body.date}`,
+          `Time: ${body.time}`,
+          `Notes: ${body.notes || 'N/A'}`,
+          `Manage: ${new URL(request.url).origin}/admin/availability`,
+        ].join('\n');
         const customerSms = await sendSms(env, body.phone ?? '', userMsg);
         if (env.OWNER_PHONE_NUMBER) await sendSms(env, env.OWNER_PHONE_NUMBER, ownerMsg);
         await sendTelegram(env, ownerMsg);
+        const customerEmail = await sendBookingConfirmationEmail(env, {
+          name: body.name,
+          email: body.email,
+          date: body.date,
+          time: body.time,
+          meetLink: MEET_LINK,
+          cancelLink,
+          notes: body.notes,
+        });
         return json({
           bookingId,
           message: customerSms.ok
             ? `Booked! Confirmation sent by text. ${userMsg}`
             : `Booked! We could not send your text confirmation (${customerSms.reason ?? 'unknown reason'}).`,
           sms: customerSms,
+          email: customerEmail,
         });
       }
       return json({ error: 'Not found' }, 404);
