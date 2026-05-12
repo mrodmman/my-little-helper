@@ -24,6 +24,16 @@ function BookPage() {
 
   const isoDate = useMemo(() => (date ? format(date, 'yyyy-MM-dd') : ''), [date]);
 
+  function toMessage(input: unknown, fallback = 'Done') {
+    if (typeof input === 'string') return input;
+    if (input == null) return fallback;
+    try {
+      return JSON.stringify(input);
+    } catch {
+      return fallback;
+    }
+  }
+
   useEffect(() => {
     if (!isoDate) return;
     void fetch(`/api/booking/availability?date=${isoDate}`).then(async (r) => {
@@ -45,7 +55,18 @@ function BookPage() {
         body: JSON.stringify({ date: isoDate, time: selected, name, email, phone, notes }),
       });
       const data = await res.json();
-      setMessage(data.message || data.error || 'Done');
+      if (!res.ok && res.status === 409) {
+        setMessage('That slot was just taken. Pick another available time and try again.');
+        if (isoDate) {
+          const availabilityRes = await fetch(`/api/booking/availability?date=${isoDate}`);
+          const availabilityData = await availabilityRes.json();
+          setTimes(availabilityData.slots ?? []);
+          setSelected('');
+        }
+        return;
+      }
+
+      setMessage(toMessage(data.message ?? data.error, 'Done'));
       if (res.ok) {
         setSelected('');
       }
