@@ -1,9 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { getEnv } from '@/lib/env';
+import { getAdminSession } from '@/lib/session';
 
 const MEET_LINK = 'https://meet.google.com/ohf-nmom-pva';
 
 function json(data: unknown, status = 200) { return new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } }); }
+
+function errorMessage(err: unknown) {
+  return err instanceof Error ? err.message : String(err);
+}
 
 type Settings = {
   availabilityMode?: 'rules' | 'allowlist';
@@ -30,6 +35,36 @@ function slotsForDate(date: string, settings: Settings) {
   return slots.filter((s) => !recurring.has(s) && !specific.has(s));
 }
 
+
+async function addColumnIfMissing(env: ReturnType<typeof getEnv>, columnDef: string) {
+  try {
+    await env.DB.prepare(`ALTER TABLE booking_settings ADD COLUMN ${columnDef}`).run();
+  } catch {
+    // ignore if column already exists
+  }
+}
+
+async function ensureBookingSettingsSchema(env: ReturnType<typeof getEnv>) {
+  await env.DB.prepare(`CREATE TABLE IF NOT EXISTS booking_settings (
+    id INTEGER PRIMARY KEY,
+    working_days TEXT,
+    blackout_dates TEXT,
+    daily_time_blocks TEXT,
+    date_time_blocks TEXT,
+    updated_at TEXT
+  )`).run();
+
+  await addColumnIfMissing(env, `working_days TEXT NOT NULL DEFAULT '[1,2,3,4,5]'`);
+  await addColumnIfMissing(env, `blackout_dates TEXT NOT NULL DEFAULT '[]'`);
+  await addColumnIfMissing(env, `daily_time_blocks TEXT NOT NULL DEFAULT '[]'`);
+  await addColumnIfMissing(env, `date_time_blocks TEXT NOT NULL DEFAULT '[]'`);
+  await addColumnIfMissing(env, `updated_at TEXT`);
+
+  await env.DB.prepare(`INSERT INTO booking_settings (id, working_days, blackout_dates, daily_time_blocks, date_time_blocks, updated_at)
+    VALUES (1, '[1,2,3,4,5]', '[]', '[]', '[]', datetime('now'))
+    ON CONFLICT(id) DO NOTHING`).run();
+}
+
 function parseSettingsRow(row: any): Settings {
   const rawBlackout = JSON.parse(row?.blackout_dates ?? '[]') as string[];
   const availabilityMode: 'rules' | 'allowlist' = rawBlackout.includes('__MODE_ALLOWLIST__') ? 'allowlist' : 'rules';
@@ -45,28 +80,6 @@ function parseSettingsRow(row: any): Settings {
   };
 }
 
-async function sendSms(env: ReturnType<typeof getEnv>, to: string, body: string) {
-  if (!to) return;
-
-  if (env.CLICKSEND_USERNAME && env.CLICKSEND_API_KEY) {
-    await fetch('https://rest.clicksend.com/v3/sms/send', {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${btoa(`${env.CLICKSEND_USERNAME}:${env.CLICKSEND_API_KEY}`)}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        messages: [{ source: 'cloudflare-worker', body, to, from: env.CLICKSEND_FROM || 'Kraken' }],
-      }),
-    });
-    return;
-  }
-
-  if (!env.TWILIO_ACCOUNT_SID || !env.TWILIO_AUTH_TOKEN || !env.TWILIO_FROM_NUMBER) return;
-  const form = new URLSearchParams({ To: to, From: env.TWILIO_FROM_NUMBER, Body: body });
-  await fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, { method: 'POST', headers: { Authorization: `Basic ${btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`)}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: form });
-}
-
 async function sendTelegram(env: ReturnType<typeof getEnv>, text: string) {
   if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return;
   await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -76,18 +89,63 @@ async function sendTelegram(env: ReturnType<typeof getEnv>, text: string) {
   });
 }
 
+async function sendBookingConfirmationEmail(
+  env: ReturnType<typeof getEnv>,
+  data: { name: string; email: string; date: string; time: string; meetLink: string; cancelLink: string; notes?: string },
+) {
+  if (!env.RESEND_API_KEY || !env.FROM_EMAIL || !env.FROM_NAME) return { ok: false, reason: 'Resend not configured' };
+
+  const html = `
+    <div style="font-family:Inter,Arial,sans-serif;line-height:1.5;color:#111">
+      <h2 style="margin-bottom:8px;">Your strategy call is confirmed ✅</h2>
+      <p>Hey ${data.name},</p>
+      <p>Your booking is confirmed for <strong>${data.date} at ${data.time}</strong>.</p>
+      <p><strong>Join link:</strong> <a href="${data.meetLink}">${data.meetLink}</a></p>
+      <p><strong>Need to cancel/reschedule?</strong> <a href="${data.cancelLink}">Manage booking</a></p>
+      ${data.notes ? `<p><strong>Your notes:</strong> ${data.notes}</p>` : ''}
+      <hr style="margin:24px 0;border:0;border-top:1px solid #e5e7eb;" />
+      <p style="font-size:12px;color:#6b7280;">If you did not request this booking, please ignore this email.</p>
+    </div>
+  `;
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: `${env.FROM_NAME} <${env.FROM_EMAIL}>`,
+      to: data.email,
+      subject: `Booking confirmed: ${data.date} ${data.time}`,
+      html,
+    }),
+  });
+
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '');
+    return { ok: false, reason: `Resend ${res.status}${detail ? `: ${detail}` : ''}` };
+  }
+
+  return { ok: true };
+}
+
 export const Route = createFileRoute('/api/booking/$action')({
   server: { handlers: {
     GET: async ({ params, request }) => {
       const env = getEnv();
-      if (params.action === 'admin/settings') {
-        const pass = request.headers.get('x-admin-password');
-        if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
-        const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
-        return json({ settings: parseSettingsRow(row) });
+      if (params.action === 'admin-settings') {
+        try {
+          const pass = request.headers.get('x-admin-password');
+          const adminSession = getAdminSession();
+          if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+          await ensureBookingSettingsSchema(env);
+          const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
+          return json({ settings: parseSettingsRow(row) });
+        } catch (err) {
+          return json({ error: `Admin settings GET failed: ${errorMessage(err)}` }, 500);
+        }
       }
       if (params.action === 'availability') {
         const date = new URL(request.url).searchParams.get('date') || new Date().toISOString().slice(0, 10);
+        await ensureBookingSettingsSchema(env);
         const row = await env.DB.prepare('SELECT working_days, blackout_dates, daily_time_blocks, date_time_blocks FROM booking_settings WHERE id=1').first<any>();
         const settings: Settings = parseSettingsRow(row);
         const daySlots = slotsForDate(date, settings);
@@ -98,17 +156,21 @@ export const Route = createFileRoute('/api/booking/$action')({
       if (params.action === 'cancel') {
         const id = new URL(request.url).searchParams.get('id');
         if (!id) return json({ error: 'id required' }, 400);
-        await env.DB.prepare("UPDATE bookings SET status='Cancelled' WHERE booking_id=?").bind(id).run();
-        return json({ message: 'Booking cancelled and slot reopened.' });
+        const row = await env.DB.prepare("SELECT booking_id,name,starts_at,status FROM bookings WHERE booking_id=?").bind(id).first<{ booking_id: string; name: string; starts_at: string; status: string }>();
+        if (!row) return json({ error: 'Booking not found' }, 404);
+        return json({ booking: row });
       }
       return json({ error: 'Not found' }, 404);
     },
     POST: async ({ params, request }) => {
       const env = getEnv();
-      if (params.action === 'admin/settings') {
-        const pass = request.headers.get('x-admin-password');
-        if (pass !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
-        const body = (await request.json()) as Settings;
+      if (params.action === 'admin-settings') {
+        try {
+          const pass = request.headers.get('x-admin-password');
+          const adminSession = getAdminSession();
+          if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+          await ensureBookingSettingsSchema(env);
+          const body = (await request.json()) as Settings;
         const merged: Settings = {
           availabilityMode: body.availabilityMode ?? 'rules',
           workingDays: body.workingDays ?? [1, 2, 3, 4, 5],
@@ -121,6 +183,9 @@ export const Route = createFileRoute('/api/booking/$action')({
         const dateTimeForSave = merged.availabilityMode === 'allowlist' ? (merged.allowedDateTimes ?? []) : merged.dateTimeBlocks;
         await env.DB.prepare("INSERT INTO booking_settings (id,working_days,blackout_dates,daily_time_blocks,date_time_blocks,updated_at) VALUES (1,?,?,?,?,datetime('now')) ON CONFLICT(id) DO UPDATE SET working_days=excluded.working_days, blackout_dates=excluded.blackout_dates, daily_time_blocks=excluded.daily_time_blocks, date_time_blocks=excluded.date_time_blocks, updated_at=datetime('now')").bind(JSON.stringify(merged.workingDays), JSON.stringify(blackoutForSave), JSON.stringify(merged.dailyTimeBlocks), JSON.stringify(dateTimeForSave)).run();
         return json({ ok: true });
+        } catch (err) {
+          return json({ error: `Admin settings POST failed: ${errorMessage(err)}` }, 500);
+        }
       }
       if (params.action === 'create') {
         const body = await request.json() as { date: string; time: string; name: string; email: string; phone?: string; notes?: string };
@@ -133,11 +198,46 @@ export const Route = createFileRoute('/api/booking/$action')({
         await env.DB.prepare("INSERT INTO bookings (booking_id,name,email,phone,notes,starts_at,ends_at,status) VALUES (?,?,?,?,?,?,?,'Confirmed')").bind(bookingId, body.name, body.email, body.phone ?? '', body.notes ?? '', startsAt, endsAt).run();
         const cancelLink = `${new URL(request.url).origin}/cancel?id=${bookingId}`;
         const userMsg = `Hi ${body.name}, your call is confirmed for ${body.date} ${body.time}. Meet link: ${MEET_LINK}. To cancel or reschedule: ${cancelLink}`;
-        const ownerMsg = `New Booking! ${body.name} on ${body.date} ${body.time}. Link to manage: ${new URL(request.url).origin}/admin/availability`;
-        await sendSms(env, body.phone ?? '', userMsg);
-        if (env.OWNER_PHONE_NUMBER) await sendSms(env, env.OWNER_PHONE_NUMBER, ownerMsg);
+        const ownerMsg = [
+          '📅 New Booking',
+          `Name: ${body.name}`,
+          `Email: ${body.email}`,
+          `Phone: ${body.phone || 'N/A'}`,
+          `Date: ${body.date}`,
+          `Time: ${body.time}`,
+          `Notes: ${body.notes || 'N/A'}`,
+          `Manage: ${new URL(request.url).origin}/admin/availability`,
+        ].join('\n');
         await sendTelegram(env, ownerMsg);
-        return json({ bookingId, message: userMsg });
+        const customerEmail = await sendBookingConfirmationEmail(env, {
+          name: body.name,
+          email: body.email,
+          date: body.date,
+          time: body.time,
+          meetLink: MEET_LINK,
+          cancelLink,
+          notes: body.notes,
+        });
+        return json({
+          bookingId,
+          message: `Booked! Confirmation email sent to ${body.email}.`,
+          email: customerEmail,
+        });
+      }
+      if (params.action === 'cancel') {
+        const id = new URL(request.url).searchParams.get('id');
+        if (!id) return json({ error: 'id required' }, 400);
+        await env.DB.prepare("UPDATE bookings SET status='Cancelled' WHERE booking_id=?").bind(id).run();
+        return json({ message: 'Booking cancelled and slot reopened.' });
+      }
+      if (params.action === 'admin-bookings') {
+        const pass = request.headers.get('x-admin-password');
+        const adminSession = getAdminSession();
+        if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+        const rows = await env.DB.prepare("SELECT booking_id,name,email,phone,notes,starts_at,ends_at,status FROM bookings WHERE starts_at >= ? ORDER BY starts_at ASC")
+          .bind(new Date().toISOString())
+          .all();
+        return json({ bookings: rows.results ?? [] });
       }
       return json({ error: 'Not found' }, 404);
     },
