@@ -19,6 +19,7 @@ function BookPage() {
   const [phone, setPhone] = useState('');
   const [notes, setNotes] = useState('');
   const [message, setMessage] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const [bgImage, setBgImage] = useState(PRIMARY_BG_IMAGE);
 
   const isoDate = useMemo(() => (date ? format(date, 'yyyy-MM-dd') : ''), [date]);
@@ -34,13 +35,25 @@ function BookPage() {
 
   async function submit() {
     if (!isoDate || !selected) return setMessage('Please select a date and time slot first.');
-    const res = await fetch('/api/booking/create', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ date: isoDate, time: selected, name, email, phone, notes }),
-    });
-    const data = await res.json();
-    setMessage(data.message || data.error || 'Done');
+    if (!name.trim() || !email.trim()) return setMessage('Please enter your name and email first.');
+    setSubmitting(true);
+    setMessage('Submitting your booking...');
+    try {
+      const res = await fetch('/api/booking/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date: isoDate, time: selected, name, email, phone, notes }),
+      });
+      const data = await res.json();
+      setMessage(data.message || data.error || 'Done');
+      if (res.ok) {
+        setSelected('');
+      }
+    } catch {
+      setMessage('Booking request failed. Please retry.');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -106,8 +119,8 @@ function BookPage() {
                   <p className="text-sm text-muted-foreground">Type: Strategy Call</p>
                 </div>
 
-                <button onClick={submit} disabled={!selected} className="w-full rounded-xl px-4 py-3 text-xl font-extrabold text-white disabled:opacity-50 disabled:cursor-not-allowed" style={{ background: BLUE }}>
-                  CONFIRM BOOKING
+                <button onClick={submit} disabled={!selected || submitting} className="w-full rounded-xl px-4 py-3 text-xl font-extrabold text-white disabled:opacity-50 disabled:cursor-not-allowed" style={{ background: BLUE }}>
+                  {submitting ? 'BOOKING...' : 'CONFIRM BOOKING'}
                 </button>
                 {!!message && <p className="text-sm text-blue-300">{message}</p>}
               </div>

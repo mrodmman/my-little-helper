@@ -80,11 +80,13 @@ function parseSettingsRow(row: any): Settings {
   };
 }
 
-async function sendSms(env: ReturnType<typeof getEnv>, to: string, body: string) {
-  if (!to) return;
+type SmsResult = { ok: boolean; reason?: string };
+
+async function sendSms(env: ReturnType<typeof getEnv>, to: string, body: string): Promise<SmsResult> {
+  if (!to) return { ok: false, reason: 'No phone number provided' };
 
   if (env.CLICKSEND_USERNAME && env.CLICKSEND_API_KEY) {
-    await fetch('https://rest.clicksend.com/v3/sms/send', {
+    const res = await fetch('https://rest.clicksend.com/v3/sms/send', {
       method: 'POST',
       headers: {
         Authorization: `Basic ${btoa(`${env.CLICKSEND_USERNAME}:${env.CLICKSEND_API_KEY}`)}`,
@@ -94,12 +96,23 @@ async function sendSms(env: ReturnType<typeof getEnv>, to: string, body: string)
         messages: [{ source: 'cloudflare-worker', body, to, from: env.CLICKSEND_FROM || 'Kraken' }],
       }),
     });
-    return;
+    if (!res.ok) {
+      const detail = await res.text().catch(() => '');
+      return { ok: false, reason: `ClickSend ${res.status}${detail ? `: ${detail}` : ''}` };
+    }
+    return { ok: true };
   }
 
-  if (!env.TWILIO_ACCOUNT_SID || !env.TWILIO_AUTH_TOKEN || !env.TWILIO_FROM_NUMBER) return;
+  if (!env.TWILIO_ACCOUNT_SID || !env.TWILIO_AUTH_TOKEN || !env.TWILIO_FROM_NUMBER) {
+    return { ok: false, reason: 'No SMS provider configured' };
+  }
   const form = new URLSearchParams({ To: to, From: env.TWILIO_FROM_NUMBER, Body: body });
-  await fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, { method: 'POST', headers: { Authorization: `Basic ${btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`)}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: form });
+  const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, { method: 'POST', headers: { Authorization: `Basic ${btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`)}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: form });
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '');
+    return { ok: false, reason: `Twilio ${res.status}${detail ? `: ${detail}` : ''}` };
+  }
+  return { ok: true };
 }
 
 async function sendTelegram(env: ReturnType<typeof getEnv>, text: string) {
@@ -182,10 +195,16 @@ export const Route = createFileRoute('/api/booking/$action')({
         const cancelLink = `${new URL(request.url).origin}/cancel?id=${bookingId}`;
         const userMsg = `Hi ${body.name}, your call is confirmed for ${body.date} ${body.time}. Meet link: ${MEET_LINK}. To cancel or reschedule: ${cancelLink}`;
         const ownerMsg = `New Booking! ${body.name} on ${body.date} ${body.time}. Link to manage: ${new URL(request.url).origin}/admin/availability`;
-        await sendSms(env, body.phone ?? '', userMsg);
+        const customerSms = await sendSms(env, body.phone ?? '', userMsg);
         if (env.OWNER_PHONE_NUMBER) await sendSms(env, env.OWNER_PHONE_NUMBER, ownerMsg);
         await sendTelegram(env, ownerMsg);
-        return json({ bookingId, message: userMsg });
+        return json({
+          bookingId,
+          message: customerSms.ok
+            ? `Booked! Confirmation sent by text. ${userMsg}`
+            : `Booked! We could not send your text confirmation (${customerSms.reason ?? 'unknown reason'}).`,
+          sms: customerSms,
+        });
       }
       return json({ error: 'Not found' }, 404);
     },
