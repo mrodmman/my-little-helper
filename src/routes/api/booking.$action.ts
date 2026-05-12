@@ -80,53 +80,6 @@ function parseSettingsRow(row: any): Settings {
   };
 }
 
-type SmsResult = { ok: boolean; provider: 'clicksend' | 'twilio' | 'none'; reason?: string; debug?: string };
-
-async function sendSms(env: ReturnType<typeof getEnv>, to: string, body: string): Promise<SmsResult> {
-  if (!to) return { ok: false, provider: 'none', reason: 'No phone number provided' };
-
-  if (env.CLICKSEND_USERNAME && env.CLICKSEND_API_KEY) {
-    const res = await fetch('https://rest.clicksend.com/v3/sms/send', {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${btoa(`${env.CLICKSEND_USERNAME}:${env.CLICKSEND_API_KEY}`)}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        messages: [{ source: 'cloudflare-worker', body, to, from: env.CLICKSEND_FROM || 'Kraken' }],
-      }),
-    });
-    if (!res.ok) {
-      const detail = await res.text().catch(() => '');
-      return { ok: false, provider: 'clicksend', reason: `ClickSend ${res.status}${detail ? `: ${detail}` : ''}` };
-    }
-    const payload = await res.json().catch(() => null) as any;
-    const firstMsg = payload?.data?.messages?.[0];
-    const msgStatus = String(firstMsg?.status ?? '').toUpperCase();
-    const accepted = !msgStatus || ['SUCCESS', 'QUEUED', 'SENT'].includes(msgStatus);
-    if (!accepted) {
-      return {
-        ok: false,
-        provider: 'clicksend',
-        reason: `ClickSend message status ${firstMsg?.status ?? 'unknown'}`,
-        debug: JSON.stringify(firstMsg ?? payload),
-      };
-    }
-    return { ok: true, provider: 'clicksend', debug: msgStatus || 'accepted' };
-  }
-
-  if (!env.TWILIO_ACCOUNT_SID || !env.TWILIO_AUTH_TOKEN || !env.TWILIO_FROM_NUMBER) {
-    return { ok: false, provider: 'none', reason: 'No SMS provider configured' };
-  }
-  const form = new URLSearchParams({ To: to, From: env.TWILIO_FROM_NUMBER, Body: body });
-  const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_ACCOUNT_SID}/Messages.json`, { method: 'POST', headers: { Authorization: `Basic ${btoa(`${env.TWILIO_ACCOUNT_SID}:${env.TWILIO_AUTH_TOKEN}`)}`, 'Content-Type': 'application/x-www-form-urlencoded' }, body: form });
-  if (!res.ok) {
-    const detail = await res.text().catch(() => '');
-    return { ok: false, provider: 'twilio', reason: `Twilio ${res.status}${detail ? `: ${detail}` : ''}` };
-  }
-  return { ok: true, provider: 'twilio' };
-}
-
 async function sendTelegram(env: ReturnType<typeof getEnv>, text: string) {
   if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return;
   await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -203,8 +156,9 @@ export const Route = createFileRoute('/api/booking/$action')({
       if (params.action === 'cancel') {
         const id = new URL(request.url).searchParams.get('id');
         if (!id) return json({ error: 'id required' }, 400);
-        await env.DB.prepare("UPDATE bookings SET status='Cancelled' WHERE booking_id=?").bind(id).run();
-        return json({ message: 'Booking cancelled and slot reopened.' });
+        const row = await env.DB.prepare("SELECT booking_id,name,starts_at,status FROM bookings WHERE booking_id=?").bind(id).first<{ booking_id: string; name: string; starts_at: string; status: string }>();
+        if (!row) return json({ error: 'Booking not found' }, 404);
+        return json({ booking: row });
       }
       return json({ error: 'Not found' }, 404);
     },
@@ -254,8 +208,6 @@ export const Route = createFileRoute('/api/booking/$action')({
           `Notes: ${body.notes || 'N/A'}`,
           `Manage: ${new URL(request.url).origin}/admin/availability`,
         ].join('\n');
-        const customerSms = await sendSms(env, body.phone ?? '', userMsg);
-        if (env.OWNER_PHONE_NUMBER) await sendSms(env, env.OWNER_PHONE_NUMBER, ownerMsg);
         await sendTelegram(env, ownerMsg);
         const customerEmail = await sendBookingConfirmationEmail(env, {
           name: body.name,
@@ -268,12 +220,24 @@ export const Route = createFileRoute('/api/booking/$action')({
         });
         return json({
           bookingId,
-          message: customerSms.ok
-            ? `Booked! Confirmation sent by text. ${userMsg}`
-            : `Booked! We could not send your text confirmation (${customerSms.reason ?? 'unknown reason'}).`,
-          sms: customerSms,
+          message: `Booked! Confirmation email sent to ${body.email}.`,
           email: customerEmail,
         });
+      }
+      if (params.action === 'cancel') {
+        const id = new URL(request.url).searchParams.get('id');
+        if (!id) return json({ error: 'id required' }, 400);
+        await env.DB.prepare("UPDATE bookings SET status='Cancelled' WHERE booking_id=?").bind(id).run();
+        return json({ message: 'Booking cancelled and slot reopened.' });
+      }
+      if (params.action === 'admin-bookings') {
+        const pass = request.headers.get('x-admin-password');
+        const adminSession = getAdminSession();
+        if (pass !== env.ADMIN_SECRET && adminSession !== env.ADMIN_SECRET) return json({ error: 'Unauthorized' }, 401);
+        const rows = await env.DB.prepare("SELECT booking_id,name,email,phone,notes,starts_at,ends_at,status FROM bookings WHERE starts_at >= ? ORDER BY starts_at ASC")
+          .bind(new Date().toISOString())
+          .all();
+        return json({ bookings: rows.results ?? [] });
       }
       return json({ error: 'Not found' }, 404);
     },

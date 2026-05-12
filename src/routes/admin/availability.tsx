@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 
 type Settings = { availabilityMode?: 'rules' | 'allowlist'; workingDays: number[]; blackoutDates: string[]; dailyTimeBlocks: { weekday: number; time: string }[]; dateTimeBlocks: { date: string; time: string }[]; allowedDateTimes?: { date: string; time: string }[] };
+type Booking = { booking_id: string; name: string; email: string; phone?: string; notes?: string; starts_at: string; status: string };
 
 export const Route = createFileRoute('/admin/availability')({ component: AdminAvailability });
 
@@ -14,11 +15,16 @@ function AdminAvailability() {
   const [time, setTime] = useState('09:00');
   const [message, setMessage] = useState('');
   const [saving, setSaving] = useState(false);
+  const [bookings, setBookings] = useState<Booking[]>([]);
 
   useEffect(() => {
     void fetch('/api/booking/admin-settings').then(async (r) => {
       const d = await r.json();
       if (d.settings) setSettings(d.settings);
+    });
+    void fetch('/api/booking/admin-bookings', { method: 'POST' }).then(async (r) => {
+      const d = await r.json();
+      setBookings(d.bookings ?? []);
     });
   }, []);
 
@@ -104,5 +110,20 @@ function AdminAvailability() {
     </div>
     <button onClick={save} disabled={saving} className="rounded-xl bg-primary px-5 py-2 font-semibold disabled:opacity-60 disabled:cursor-not-allowed">{saving ? 'Saving...' : 'Save Availability Rules'}</button>
     {message && <p className={`text-sm ${message.startsWith('Error') ? 'text-red-400' : 'text-primary'}`}>{message}</p>}
+    <div className="glass-card rounded-2xl p-4 space-y-3">
+      <h2 className="font-semibold">Current booked calls</h2>
+      {!bookings.length ? <p className="text-sm text-muted-foreground">No upcoming bookings found.</p> : (
+        <div className="space-y-2">
+          {bookings.map((b) => (
+            <div key={b.booking_id} className="rounded-lg border border-border p-3 text-sm">
+              <p className="font-semibold">{b.name} — {new Date(b.starts_at).toLocaleString()}</p>
+              <p>{b.email} {b.phone ? `• ${b.phone}` : ''}</p>
+              {b.notes ? <p className="text-muted-foreground">Notes: {b.notes}</p> : null}
+              <p className="text-xs text-muted-foreground">Status: {b.status}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   </div>;
 }
