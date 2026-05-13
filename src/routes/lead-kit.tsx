@@ -24,7 +24,7 @@ function LeadKitPage() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("/api/subscribe-biz", {
+      const res = await fetch("/api/subscribe-ai-lead-kit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim(), first_name: name.trim() || undefined }),

@@ -25,6 +25,7 @@ export interface Env {
   CLICKSEND_FROM: string;
   TELEGRAM_BOT_TOKEN: string;
   TELEGRAM_CHAT_ID: string;
+  DRIP_TEST_SECRET: string;
 }
 
 type CloudflareWorkersModule = {

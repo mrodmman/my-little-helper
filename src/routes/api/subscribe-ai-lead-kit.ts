@@ -1,22 +1,19 @@
 /**
- * POST /subscribe
- * Enrolls a new Kraken Vault (jumpstart) drip subscriber.
+ * POST /api/subscribe-ai-lead-kit
+ * Enrolls a business-owner opt-in into the business_ai_lead_kit drip sequence.
  */
 import { createFileRoute } from '@tanstack/react-router';
 import { getEnv } from '@/lib/env';
 import { enrollSubscriber } from '@/lib/drip';
 
-export const Route = createFileRoute('/subscribe')({
+export const Route = createFileRoute('/api/subscribe-ai-lead-kit')({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        console.log('[subscribe] handler reached');
         let env;
         try {
           env = getEnv();
-          console.log('[subscribe] env loaded');
         } catch (e) {
-          console.error('[subscribe] getEnv failed:', e);
           return new Response(JSON.stringify({ error: 'env unavailable', detail: String(e) }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' },
@@ -35,7 +32,6 @@ export const Route = createFileRoute('/subscribe')({
 
         const email = body.email?.trim();
         const firstName = body.first_name?.trim() ?? null;
-        console.log('[subscribe] email:', email, 'firstName:', firstName);
 
         if (!email) {
           return new Response(JSON.stringify({ error: 'email is required' }), {
@@ -45,21 +41,19 @@ export const Route = createFileRoute('/subscribe')({
         }
 
         try {
-          const result = await enrollSubscriber(email, firstName, 'kraken_vault', env);
+          const result = await enrollSubscriber(email, firstName, 'business_ai_lead_kit', env);
           if (result.error) {
-            console.error('[subscribe] enrollSubscriber error:', result.error);
             return new Response(JSON.stringify({ error: result.error }), {
               status: 500,
               headers: { 'Content-Type': 'application/json' },
             });
           }
-          console.log('[subscribe] enrolled, note:', result.note);
           return new Response(JSON.stringify({ success: true, ...(result.note ? { note: result.note } : {}) }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' },
           });
         } catch (e) {
-          console.error('[subscribe] unexpected error:', e);
+          console.error('[subscribe-ai-lead-kit] unexpected error:', e);
           return new Response(JSON.stringify({ error: 'Internal error', detail: String(e) }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' },
