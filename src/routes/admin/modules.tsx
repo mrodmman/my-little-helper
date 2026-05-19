@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import {
   getAllModulesAdmin, updateModule, reorderModules, deleteModule, updateModuleImageKey,
-  exportCourseJson, importCourseJson,
+  exportCourseJson, importCourseJson, importCourseJsonMeta, importLessonsChunk,
   getModuleWithLessons, upsertLesson, deleteLesson, reorderLessons,
 } from "@/rpc/modules";
 import type { DbModule, DbLesson } from "@/rpc/modules";
@@ -34,6 +34,7 @@ function ModulesManager() {
   const [, startTransition] = useTransition();
   const [saving, setSaving] = useState<string | null>(null);
   const [importError, setImportError] = useState("");
+  const [importing, setImporting] = useState(false);
 
   const dragIdx = useRef<number | null>(null);
   const dragOverIdx = useRef<number | null>(null);
@@ -125,10 +126,34 @@ function ModulesManager() {
       try {
         const data = JSON.parse(ev.target?.result as string);
         if (!data.modules || !data.lessons) throw new Error("Invalid format");
-        if (!confirm("This REPLACES all modules, lessons, assets, and module-asset links in D1. Continue?")) return;
+        if (!confirm(`This REPLACES all modules, lessons (${data.lessons.length}), assets, and module-asset links in D1. Continue?`)) return;
+        setImporting(true);
         startTransition(async () => {
-          await importCourseJson({ data }).catch((err) => setImportError(String(err)));
-          router.invalidate();
+          try {
+            // Step 1: clear + insert modules/assets/moduleAssets (small payload)
+            const metaResult = await importCourseJsonMeta({
+              data: {
+                modules: data.modules,
+                assets: data.assets ?? [],
+                moduleAssets: data.moduleAssets ?? [],
+              },
+            });
+            if (!metaResult?.ok) throw new Error(metaResult?.error ?? "Meta import failed");
+
+            // Step 2: insert lessons in chunks of 25 to stay under CPU limits
+            const CHUNK = 25;
+            for (let i = 0; i < data.lessons.length; i += CHUNK) {
+              const chunk = data.lessons.slice(i, i + CHUNK);
+              const res = await importLessonsChunk({ data: chunk });
+              if (!res?.ok) throw new Error(res?.error ?? `Lesson chunk ${i}–${i + CHUNK} failed`);
+            }
+
+            router.invalidate();
+          } catch (err) {
+            setImportError(String(err));
+          } finally {
+            setImporting(false);
+          }
         });
       } catch (err) {
         setImportError(String(err));
@@ -152,9 +177,14 @@ function ModulesManager() {
           >
             Export JSON
           </button>
-          <label className="inline-flex items-center gap-2 rounded-xl border border-border bg-surface/60 hover:bg-surface-elevated px-3 py-2 text-xs font-medium transition-all cursor-pointer">
-            Import JSON (Replaces ALL modules/lessons/assets)
-            <input type="file" accept=".json" onChange={handleImport} className="sr-only" />
+          <label className={cn(
+            "inline-flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition-all",
+            importing
+              ? "border-primary/40 bg-primary/10 text-primary cursor-wait"
+              : "border-border bg-surface/60 hover:bg-surface-elevated cursor-pointer",
+          )}>
+            {importing ? "Importing…" : "Import JSON (Replaces ALL modules/lessons/assets)"}
+            <input type="file" accept=".json" onChange={handleImport} disabled={importing} className="sr-only" />
           </label>
         </div>
       </div>
