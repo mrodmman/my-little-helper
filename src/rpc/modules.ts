@@ -330,7 +330,7 @@ export const exportCourseJson = createServerFn().handler(async () => {
 
 // Step 1 of chunked import: clear all tables then insert modules/assets/moduleAssets.
 // Lessons are imported separately in small chunks to stay under CF Workers CPU limits.
-export const importCourseJsonMeta = createServerFn()
+export const importCourseJsonMeta = createServerFn({ method: 'POST' })
   .inputValidator(
     (data: {
       modules: DbModule[];
@@ -374,7 +374,7 @@ export const importCourseJsonMeta = createServerFn()
   });
 
 // Step 2 of chunked import: insert a slice of lessons (call repeatedly for each chunk).
-export const importLessonsChunk = createServerFn()
+export const importLessonsChunk = createServerFn({ method: 'POST' })
   .inputValidator((lessons: DbLesson[]) => lessons)
   .handler(async ({ data: lessons }) => {
     try {
