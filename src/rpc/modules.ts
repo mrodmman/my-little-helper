@@ -328,11 +328,12 @@ export const exportCourseJson = createServerFn().handler(async () => {
   }
 });
 
-export const importCourseJson = createServerFn()
+// Step 1 of chunked import: clear all tables then insert modules/assets/moduleAssets.
+// Lessons are imported separately in small chunks to stay under CF Workers CPU limits.
+export const importCourseJsonMeta = createServerFn()
   .inputValidator(
     (data: {
       modules: DbModule[];
-      lessons: DbLesson[];
       assets: DbAsset[];
       moduleAssets: DbModuleAsset[];
     }) => data,
@@ -340,24 +341,17 @@ export const importCourseJson = createServerFn()
   .handler(async ({ data }) => {
     try {
       const env = await getEnv();
-      // Clear existing
       await env.DB.batch([
         env.DB.prepare("DELETE FROM module_assets"),
         env.DB.prepare("DELETE FROM lessons"),
         env.DB.prepare("DELETE FROM modules"),
         env.DB.prepare("DELETE FROM assets"),
       ]);
-
       const stmts = [
         ...data.modules.map((m) =>
           env.DB.prepare(
             "INSERT INTO modules (id, idx, title, subtitle, tagline, image_key, icon_name, visible) VALUES (?,?,?,?,?,?,?,?)",
           ).bind(m.id, m.idx, m.title, m.subtitle, m.tagline, m.image_key, m.icon_name, m.visible),
-        ),
-        ...data.lessons.map((l) =>
-          env.DB.prepare(
-            "INSERT INTO lessons (id, module_id, idx, title, content) VALUES (?,?,?,?,?)",
-          ).bind(l.id, l.module_id, l.idx, l.title, l.content),
         ),
         ...data.assets.map((a) =>
           env.DB.prepare(
@@ -370,8 +364,76 @@ export const importCourseJson = createServerFn()
           ).bind(ma.module_id, ma.asset_id, ma.lesson_idx),
         ),
       ];
+      for (let i = 0; i < stmts.length; i += 100) {
+        await env.DB.batch(stmts.slice(i, i + 100));
+      }
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: String(e) };
+    }
+  });
 
-      // D1 batch limit is 100 statements
+// Step 2 of chunked import: insert a slice of lessons (call repeatedly for each chunk).
+export const importLessonsChunk = createServerFn()
+  .inputValidator((lessons: DbLesson[]) => lessons)
+  .handler(async ({ data: lessons }) => {
+    try {
+      const env = await getEnv();
+      const stmts = lessons.map((l) =>
+        env.DB.prepare(
+          "INSERT INTO lessons (module_id, idx, title, content) VALUES (?,?,?,?)",
+        ).bind(l.module_id, l.idx, l.title, l.content),
+      );
+      for (let i = 0; i < stmts.length; i += 100) {
+        await env.DB.batch(stmts.slice(i, i + 100));
+      }
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: String(e) };
+    }
+  });
+
+// Legacy single-call import — kept for API compatibility.
+export const importCourseJson = createServerFn()
+  .inputValidator(
+    (data: {
+      modules: DbModule[];
+      lessons: DbLesson[];
+      assets: DbAsset[];
+      moduleAssets: DbModuleAsset[];
+    }) => data,
+  )
+  .handler(async ({ data }) => {
+    try {
+      const env = await getEnv();
+      await env.DB.batch([
+        env.DB.prepare("DELETE FROM module_assets"),
+        env.DB.prepare("DELETE FROM lessons"),
+        env.DB.prepare("DELETE FROM modules"),
+        env.DB.prepare("DELETE FROM assets"),
+      ]);
+      const stmts = [
+        ...data.modules.map((m) =>
+          env.DB.prepare(
+            "INSERT INTO modules (id, idx, title, subtitle, tagline, image_key, icon_name, visible) VALUES (?,?,?,?,?,?,?,?)",
+          ).bind(m.id, m.idx, m.title, m.subtitle, m.tagline, m.image_key, m.icon_name, m.visible),
+        ),
+        ...data.lessons.map((l) =>
+          env.DB.prepare(
+            "INSERT INTO lessons (module_id, idx, title, content) VALUES (?,?,?,?)",
+          ).bind(l.module_id, l.idx, l.title, l.content),
+        ),
+        ...data.assets.map((a) =>
+          env.DB.prepare(
+            "INSERT INTO assets (id, type, title, description, url, body, filename, size, format, source, duration, tags, image_key) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+          ).bind(a.id, a.type, a.title, a.description, a.url, a.body, a.filename, a.size, a.format, a.source, a.duration, a.tags, a.image_key),
+        ),
+        ...data.moduleAssets.map((ma) =>
+          env.DB.prepare(
+            "INSERT INTO module_assets (module_id, asset_id, lesson_idx) VALUES (?,?,?)",
+          ).bind(ma.module_id, ma.asset_id, ma.lesson_idx),
+        ),
+      ];
       for (let i = 0; i < stmts.length; i += 100) {
         await env.DB.batch(stmts.slice(i, i + 100));
       }
