@@ -40,7 +40,7 @@ export type Section = { title: string; content: string };
 export type Module = {
   id: string;
   index: number;
-  title: string;          // "Module 1a" or "Module 2"
+  title: string;          // "Module 1" or "Module 2"
   subtitle: string;       // "Tools, Stack & Setup"
   icon: LucideIcon;
   image: string;

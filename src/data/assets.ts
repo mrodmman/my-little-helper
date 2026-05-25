@@ -48,8 +48,8 @@ export const ASSETS: Asset[] = [
     type: "video",
     title: "Welcome — how to use The Vault",
     description: "Quick tour of guided mode, Fast Track and asset downloads.",
-    url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    duration: "3:12",
+    url: "[ADD WELCOME VIDEO URL HERE]",
+    duration: "TBD",
     tags: ["onboarding"],
   },
   {
@@ -71,15 +71,6 @@ export const ASSETS: Asset[] = [
     format: "PDF",
     size: "180 KB",
     tags: ["funnel", "templates"],
-  },
-  {
-    id: "link-tool-stack",
-    type: "link",
-    title: "Free tool stack (Notion)",
-    description: "Live list of every free tool referenced in the course.",
-    url: "https://www.notion.so/",
-    source: "Notion",
-    tags: ["tools"],
   },
   {
     id: "file-prompt-module-2-funnel-shell",
@@ -154,3 +145,9 @@ export const getLessonAssets = (moduleId: string, lessonIdx: number): Asset[] =>
   if (!m) return [];
   return getAssets([...(m.module ?? []), ...(m.lessons?.[lessonIdx] ?? [])]);
 };
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
