@@ -1,14 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowRight, CheckCircle2, Zap, AlertCircle, Bell, GitBranch, Globe } from "lucide-react";
+import { ArrowRight, CheckCircle2, Zap, AlertCircle, TrendingUp, Bell, Users, BarChart2 } from "lucide-react";
 
 export const Route = createFileRoute("/lead-kit")({ component: LeadKitPage });
 
 const WHAT_YOU_GET = [
-  { icon: Zap, text: "3 copy-paste AI prompts to build and deploy your site" },
-  { icon: Bell, text: "Telegram alert setup so leads hit your phone instantly" },
-  { icon: GitBranch, text: "GitHub + Cloudflare deployment walkthrough" },
-  { icon: Globe, text: "Step-by-step from zero to live lead system" },
+  { icon: TrendingUp, text: "A non-technical blueprint for high-converting ad pipelines that run without you" },
+  { icon: Users,     text: "Automated lead capture that qualifies and follows up on every enquiry instantly" },
+  { icon: Bell,      text: "Instant SMS alerts so you know the moment a new client raises their hand" },
+  { icon: BarChart2, text: "The exact system used to generate real results for real businesses — hands-off" },
 ];
 
 function LeadKitPage() {
@@ -47,17 +47,19 @@ function LeadKitPage() {
       <section className="relative overflow-hidden px-6 pt-16 pb-20 md:pt-24">
         <div className="mx-auto max-w-6xl">
           <div className="inline-flex items-center gap-2 rounded-md border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-primary">
-            Free Resource · Keyboard Kraken
+            Free Playbook · Keyboard Kraken
           </div>
 
           <div className="mt-6 grid gap-12 md:grid-cols-2 md:items-start">
             <div>
               <h1 className="font-display uppercase text-4xl md:text-5xl font-black tracking-tight leading-[0.95] text-foreground">
-                AI Lead System <span className="text-primary">Starter Kit</span>
+                The Hands-Off{" "}
+                <span className="text-primary">Customer Acquisition Playbook</span>
               </h1>
               <p className="mt-6 text-lg text-muted-foreground max-w-xl leading-relaxed">
-                Build and deploy a real lead capture system that alerts you the moment someone
-                fills out your form. No agency. No developer. Just AI, GitHub, and Cloudflare.
+                A non-technical blueprint showing exactly how we wire together high-converting
+                ad pipelines, automated lead capture, and instant SMS alerts to secure your
+                incoming clients — 100% hands-off for you.
               </p>
 
               <ul className="mt-8 grid gap-3">
@@ -75,10 +77,10 @@ function LeadKitPage() {
             {/* FORM */}
             <div className="rounded-lg border border-border bg-surface p-6 md:p-8 shadow-glow">
               <h2 className="font-display uppercase text-2xl font-black tracking-tight text-foreground">
-                Get Instant Access
+                Send Me the Playbook
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                The full guide hits your inbox in under a minute.
+                The full blueprint hits your inbox in under a minute.
               </p>
 
               {error && (
@@ -114,7 +116,7 @@ function LeadKitPage() {
                   disabled={loading}
                   className="mt-2 inline-flex items-center justify-center gap-2 rounded-md bg-primary text-primary-foreground px-5 py-3.5 text-sm font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition disabled:opacity-60"
                 >
-                  {loading ? "Sending…" : "Send me the starter kit"} <ArrowRight className="h-4 w-4" />
+                  {loading ? "Sending…" : "Send me the free playbook"} <ArrowRight className="h-4 w-4" />
                 </button>
               </form>
 

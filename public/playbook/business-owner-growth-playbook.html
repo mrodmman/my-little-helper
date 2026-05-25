@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Free Growth Playbook — Keyboard Kraken</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #FFFFFF;
+    --bg2:      #F5F2EC;
+    --bg3:      #FFFFFF;
+    --white:    #F7F6F4;
+    --black:    #0A0A0A;
+    --blue:     #1C4FFF;
+    --blue-dk:  #1240D6;
+    --blue-lt:  rgba(28,79,255,0.08);
+    --blue-bd:  rgba(28,79,255,0.2);
+    --text:     #0A0A0A;
+    --muted:    #6B6558;
+    --muted2:   #4A4540;
+    --border:   rgba(10,10,10,0.1);
+    --border2:  rgba(10,10,10,0.18);
+    --l1: #00A878;
+    --l2: #1C4FFF;
+    --l3: #D4860A;
+    --l4: #C0392B;
+    --l5: #2980B9;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* ─── NAV ─── */
+  .nav {
+    border-bottom: 1.5px solid var(--border);
+    padding: 16px 0;
+    background: #FFFFFF;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Anton', sans-serif;
+    font-size: 15px;
+    letter-spacing: .08em;
+    color: var(--black);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .nav-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 72px 0 64px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--blue);
+    background: var(--blue-lt);
+    border: 1.5px solid var(--blue-bd);
+    padding: 5px 14px;
+    border-radius: 40px;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(38px, 7vw, 68px);
+    line-height: 1.0;
+    letter-spacing: .01em;
+    text-transform: uppercase;
+    color: var(--black);
+    margin-bottom: 8px;
+  }
+  .hero h1 .blue { color: var(--blue); }
+  .hero-sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--muted2);
+    max-width: 500px;
+    line-height: 1.75;
+    margin: 20px 0 36px;
+  }
+  .hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--blue);
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .15s;
+  }
+  .hero-btn:hover { background: var(--blue-dk); }
+  .hero-stats {
+    display: flex;
+    gap: 0;
+    margin-top: 48px;
+    border-top: 1.5px solid var(--border);
+    border-bottom: 1.5px solid var(--border);
+  }
+  .hero-stat {
+    flex: 1;
+    padding: 20px 0;
+    text-align: center;
+    border-right: 1.5px solid var(--border);
+  }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat-num {
+    font-family: 'Anton', sans-serif;
+    font-size: 32px;
+    color: var(--black);
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .hero-stat-num .blue { color: var(--blue); }
+  .hero-stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ─── SECTION LABEL ─── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 48px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1.5px;
+    background: var(--border);
+  }
+
+  /* ─── LAYERS ─── */
+  .layers-section { padding: 72px 0; }
+
+  .layer {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 0 24px;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .45s ease, transform .45s ease;
+  }
+  .layer.visible { opacity: 1; transform: translateY(0); }
+
+  .layer-spine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2px;
+  }
+  .layer-num {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    letter-spacing: .04em;
+    border: 2px solid;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .layer-line {
+    flex: 1;
+    width: 2px;
+    min-height: 28px;
+    margin: 10px 0;
+    opacity: 0.25;
+  }
+  .layer:last-child .layer-line { display: none; }
+
+  .layer-body { padding-bottom: 52px; }
+  .layer:last-child .layer-body { padding-bottom: 0; }
+
+  .layer-tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 40px;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .layer-title {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(22px, 4vw, 30px);
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    color: var(--black);
+    line-height: 1.05;
+    margin-bottom: 10px;
+  }
+  .layer-title .blue { color: var(--blue); }
+  .layer-sub {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--muted2);
+    margin-bottom: 20px;
+    line-height: 1.75;
+    max-width: 520px;
+  }
+  .services {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .svc {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    font-size: 13px;
+    color: var(--muted2);
+    font-weight: 400;
+    transition: border-color .15s, color .15s;
+  }
+  .svc:hover { color: var(--black); border-color: var(--border2); }
+  .svc-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  .insight {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-left: 3px solid;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--muted2);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* layer colors */
+  .l1 .layer-num  { color: var(--l1); border-color: var(--l1); background: rgba(0,168,120,.07); }
+  .l1 .layer-line { background: var(--l1); }
+  .l1 .layer-tag  { color: var(--l1); background: rgba(0,168,120,.1); }
+  .l1 .svc-dot    { background: var(--l1); }
+  .l1 .insight    { border-left-color: var(--l1); }
+
+  .l2 .layer-num  { color: var(--blue); border-color: var(--blue); background: var(--blue-lt); }
+  .l2 .layer-line { background: var(--blue); }
+  .l2 .layer-tag  { color: var(--blue); background: var(--blue-lt); }
+  .l2 .svc-dot    { background: var(--blue); }
+  .l2 .insight    { border-left-color: var(--blue); }
+  .l2 .layer-title .hl { color: var(--blue); }
+
+  .l3 .layer-num  { color: var(--l3); border-color: var(--l3); background: rgba(212,134,10,.07); }
+  .l3 .layer-line { background: var(--l3); }
+  .l3 .layer-tag  { color: var(--l3); background: rgba(212,134,10,.1); }
+  .l3 .svc-dot    { background: var(--l3); }
+  .l3 .insight    { border-left-color: var(--l3); }
+
+  .l4 .layer-num  { color: var(--l4); border-color: var(--l4); background: rgba(192,57,43,.07); }
+  .l4 .layer-line { background: var(--l4); }
+  .l4 .layer-tag  { color: var(--l4); background: rgba(192,57,43,.1); }
+  .l4 .svc-dot    { background: var(--l4); }
+  .l4 .insight    { border-left-color: var(--l4); }
+
+  .l5 .layer-num  { color: var(--l5); border-color: var(--l5); background: rgba(41,128,185,.07); }
+  .l5 .layer-line { background: var(--l5); }
+  .l5 .layer-tag  { color: var(--l5); background: rgba(41,128,185,.1); }
+  .l5 .svc-dot    { background: var(--l5); }
+  .l5 .insight    { border-left-color: var(--l5); }
+
+  /* ─── HOW IT CONNECTS ─── */
+  .connects-section {
+    padding: 64px 0;
+    border-top: 1.5px solid var(--border);
+  }
+  .connects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .connect-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: border-color .15s;
+  }
+  .connect-card:hover { border-color: var(--blue); }
+  .connect-num {
+    font-family: 'Anton', sans-serif;
+    font-size: 28px;
+    color: var(--blue);
+    display: block;
+    margin-bottom: 10px;
+    line-height: 1;
+  }
+  .connect-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--black);
+    margin-bottom: 6px;
+  }
+  .connect-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* ─── PAIN POINTS ─── */
+  .pain-section {
+    padding: 64px 0;
+    border-top: 1.5px solid var(--border);
+  }
+  .pain-headline {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(26px, 5vw, 40px);
+    text-transform: uppercase;
+    line-height: 1.05;
+    color: var(--black);
+    margin-bottom: 32px;
+  }
+  .pain-headline .blue { color: var(--blue); }
+  .pain-list {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .pain-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 22px;
+    border-bottom: 1.5px solid var(--border);
+    font-size: 14px;
+    color: var(--muted2);
+    line-height: 1.6;
+  }
+  .pain-item:last-child { border-bottom: none; }
+  .pain-bullet {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--blue);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    padding: 64px 0 80px;
+    border-top: 1.5px solid var(--border);
+  }
+  .cta-inner {
+    background: var(--blue);
+    border-radius: var(--radius);
+    padding: 56px 44px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-inner::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    pointer-events: none;
+  }
+  .cta-inner::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    pointer-events: none;
+  }
+  .cta-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+  }
+  .cta-headline {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(26px, 5vw, 42px);
+    text-transform: uppercase;
+    color: #fff;
+    line-height: 1.05;
+    letter-spacing: .01em;
+    margin-bottom: 18px;
+    position: relative;
+    z-index: 1;
+  }
+  .cta-sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.75);
+    max-width: 440px;
+    margin: 0 auto 36px;
+    line-height: 1.75;
+    position: relative;
+    z-index: 1;
+  }
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    color: var(--blue);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 16px 32px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity .15s, transform .15s;
+    position: relative;
+    z-index: 1;
+  }
+  .cta-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .cta-note {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    margin-top: 16px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: .06em;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    border-top: 1.5px solid var(--border);
+    padding: 24px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .footer-logo {
+    font-family: 'Anton', sans-serif;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--black);
+    text-decoration: none;
+  }
+  .footer-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media(max-width:560px){
+    .layer { grid-template-columns: 52px 1fr; gap: 0 14px; }
+    .hero h1 { font-size: 36px; }
+    .cta-inner { padding: 40px 24px; }
+    .hero-stats { flex-direction: column; }
+    .hero-stat { border-right: none; border-bottom: 1.5px solid var(--border); }
+    .hero-stat:last-child { border-bottom: none; }
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(14px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .hero > * { animation: fadeUp .55s ease both; }
+  .hero .hero-kicker { animation-delay: .05s; }
+  .hero h1           { animation-delay: .15s; }
+  .hero .hero-sub    { animation-delay: .25s; }
+  .hero .hero-btn    { animation-delay: .32s; }
+  .hero .hero-stats  { animation-delay: .4s;  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo">Keyboard Kraken</a>
+    <span class="nav-tag">Free Growth Playbook</span>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-kicker">Your complete growth system</div>
+    <h1>From zero online presence<br>to <span class="blue">automated<br>lead machine</span></h1>
+    <p class="hero-sub">Everything you need to get your business online, attract customers, capture leads, and grow — all connected and running automatically.</p>
+    <a href="#" class="hero-btn">Download the free playbook →</a>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-num"><span class="blue">5</span></span>
+        <span class="hero-stat-label">Growth Layers</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num"><span class="blue">20+</span></span>
+        <span class="hero-stat-label">Done-For-You Services</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-num"><span class="blue">1</span></span>
+        <span class="hero-stat-label">Connected System</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAYERS -->
+  <section class="layers-section">
+    <div class="section-label">The 5-layer blueprint</div>
+
+    <div class="layer l1">
+      <div class="layer-spine">
+        <div class="layer-num">01</div>
+        <div class="layer-line"></div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-tag">Foundation</div>
+        <h2 class="layer-title">Get online —<br>the right way</h2>
+        <p class="layer-sub">Your digital home base. Without a solid foundation, every other piece of marketing is money down the drain.</p>
+        <div class="services">
+          <div class="svc"><span class="svc-dot"></span>Domain setup &amp; DNS configuration</div>
+          <div class="svc"><span class="svc-dot"></span>Landing page &amp; website</div>
+          <div class="svc"><span class="svc-dot"></span>Branded custom email</div>
+          <div class="svc"><span class="svc-dot"></span>Link-in-bio page</div>
+        </div>
+        <div class="insight">Customers Google you before they call. A clean, fast, professional presence builds trust before you say a word.</div>
+      </div>
+    </div>
+
+    <div class="layer l2">
+      <div class="layer-spine">
+        <div class="layer-num">02</div>
+        <div class="layer-line"></div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-tag">Visibility &amp; Traffic</div>
+        <h2 class="layer-title">Get seen —<br><span class="hl">organic &amp; paid</span></h2>
+        <p class="layer-sub">Consistent content builds trust. Targeted ads pour fuel on the fire. Compelling offers turn attention into action.</p>
+        <div class="services">
+          <div class="svc"><span class="svc-dot"></span>Social media profile setup &amp; branding</div>
+          <div class="svc"><span class="svc-dot"></span>Content creation — graphics, captions, reels</div>
+          <div class="svc"><span class="svc-dot"></span>Multi-platform post scheduling &amp; automation</div>
+          <div class="svc"><span class="svc-dot"></span>Content repurposing</div>
+          <div class="svc"><span class="svc-dot"></span>Paid ads — Facebook, Instagram &amp; Google</div>
+          <div class="svc"><span class="svc-dot"></span>Lead magnets &amp; special offers</div>
+          <div class="svc"><span class="svc-dot"></span>Contests, giveaways &amp; viral campaigns</div>
+          <div class="svc"><span class="svc-dot"></span>Seasonal promos &amp; limited-time offers</div>
+        </div>
+        <div class="insight">One piece of content, posted automatically across every platform. Ads hitting the exact customer who needs you right now. An offer that gives them a reason to act today — not someday.</div>
+      </div>
+    </div>
+
+    <div class="layer l3">
+      <div class="layer-spine">
+        <div class="layer-num">03</div>
+        <div class="layer-line"></div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-tag">Lead Capture</div>
+        <h2 class="layer-title">Turn visitors<br>into leads</h2>
+        <p class="layer-sub">People are interested — give them a frictionless way to raise their hand and start a conversation with you.</p>
+        <div class="services">
+          <div class="svc"><span class="svc-dot"></span>Lead capture form setup</div>
+          <div class="svc"><span class="svc-dot"></span>Landing pages with clear CTAs</div>
+          <div class="svc"><span class="svc-dot"></span>Lead magnet delivery automation</div>
+          <div class="svc"><span class="svc-dot"></span>Contact list building &amp; management</div>
+        </div>
+        <div class="insight">Every form, button, and offer collects contact info and kicks off a conversation — automatically, while you sleep.</div>
+      </div>
+    </div>
+
+    <div class="layer l4">
+      <div class="layer-spine">
+        <div class="layer-num">04</div>
+        <div class="layer-line"></div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-tag">Nurture &amp; Follow-Up</div>
+        <h2 class="layer-title">Never miss<br>a hot lead again</h2>
+        <p class="layer-sub">Most businesses lose leads simply because they didn't follow up fast enough. We make sure that never happens to you.</p>
+        <div class="services">
+          <div class="svc"><span class="svc-dot"></span>Instant lead alerts — SMS &amp; email to you</div>
+          <div class="svc"><span class="svc-dot"></span>Automated follow-up sequences</div>
+          <div class="svc"><span class="svc-dot"></span>Client nurture email campaigns</div>
+          <div class="svc"><span class="svc-dot"></span>Timed reminders &amp; re-engagement flows</div>
+        </div>
+        <div class="insight">The moment someone fills out your form, you get notified AND they get an automated reply — so no lead goes cold while you're running your business.</div>
+      </div>
+    </div>
+
+    <div class="layer l5">
+      <div class="layer-spine">
+        <div class="layer-num">05</div>
+        <div class="layer-line"></div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-tag">Automation &amp; Scale</div>
+        <h2 class="layer-title">Work less.<br>Grow more.</h2>
+        <p class="layer-sub">Connect every layer so the whole system runs while you focus on what you do best — running your business.</p>
+        <div class="services">
+          <div class="svc"><span class="svc-dot"></span>No-code workflow automation</div>
+          <div class="svc"><span class="svc-dot"></span>Analytics &amp; performance reporting</div>
+          <div class="svc"><span class="svc-dot"></span>Referral &amp; affiliate program setup</div>
+          <div class="svc"><span class="svc-dot"></span>AI-assisted content creation</div>
+        </div>
+        <div class="insight">Posts schedule themselves, ads optimize automatically, leads get followed up, reports update on their own. A full marketing team at a fraction of the cost.</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- HOW IT CONNECTS -->
+  <section class="connects-section">
+    <div class="section-label">How it all connects</div>
+    <div class="connects-grid">
+      <div class="connect-card">
+        <span class="connect-num">→</span>
+        <div class="connect-title">Foundation sends traffic</div>
+        <div class="connect-desc">Your site and link page give every ad and post a destination that actually converts.</div>
+      </div>
+      <div class="connect-card">
+        <span class="connect-num">⚡</span>
+        <div class="connect-title">Ads amplify organic</div>
+        <div class="connect-desc">Great content + targeted ads + a real offer = reach that would take years to build alone.</div>
+      </div>
+      <div class="connect-card">
+        <span class="connect-num">🎯</span>
+        <div class="connect-title">Offers capture leads</div>
+        <div class="connect-desc">Every special offer or lead magnet automatically fires a follow-up sequence.</div>
+      </div>
+      <div class="connect-card">
+        <span class="connect-num">♾️</span>
+        <div class="connect-title">System runs 24/7</div>
+        <div class="connect-desc">Scheduling, follow-up, reporting — automated, all the time. No babysitting required.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-inner">
+      <p class="cta-kicker">Ready for a custom, done-for-you solution?</p>
+      <h2 class="cta-headline">Most businesses have<br>1 or 2 layers. Let's build all 5.</h2>
+      <p class="cta-sub">Disconnected tools and half-finished setups are leaking leads every single day. Let's map out your complete system — free, no pressure.</p>
+      <a href="#" class="cta-btn">Book a free strategy call →</a>
+      <p class="cta-note">Instant access · 100% free · No spam</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <a href="#" class="footer-logo">Keyboard Kraken</a>
+    <span class="footer-note">© 2025 · All rights reserved</span>
+  </footer>
+
+</div>
+
+<script>
+  const layers = document.querySelectorAll('.layer');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), 60);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  layers.forEach(l => obs.observe(l));
+</script>
+</body>
+</html>
