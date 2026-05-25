@@ -49,6 +49,11 @@ import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminModulesRouteImport } from './routes/admin/modules'
 import { Route as AdminAvailabilityRouteImport } from './routes/admin/availability'
 import { Route as AdminAssetsRouteImport } from './routes/admin/assets'
+import { Route as AdminIntelRouteImport } from './routes/admin/intel'
+import { Route as IntelRouteImport } from './routes/intel'
+import { Route as IntelSlugRouteImport } from './routes/intel.$slug'
+import { Route as StarterVaultRouteImport } from './routes/starter-vault'
+import { Route as StarterVaultSlugRouteImport } from './routes/starter-vault.$slug'
 import { Route as ApiCdnKeyRouteImport } from './routes/api/cdn.$key'
 import { Route as ApiBookingActionRouteImport } from './routes/api/booking.$action'
 import { Route as AdminModulesModuleIdRouteImport } from './routes/admin/modules.$moduleId'
@@ -254,6 +259,31 @@ const AdminAssetsRoute = AdminAssetsRouteImport.update({
   path: '/assets',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminIntelRoute = AdminIntelRouteImport.update({
+  id: '/intel',
+  path: '/intel',
+  getParentRoute: () => AdminRoute,
+} as any)
+const IntelRoute = IntelRouteImport.update({
+  id: '/intel',
+  path: '/intel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntelSlugRoute = IntelSlugRouteImport.update({
+  id: '/intel/$slug',
+  path: '/intel/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StarterVaultRoute = StarterVaultRouteImport.update({
+  id: '/starter-vault',
+  path: '/starter-vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StarterVaultSlugRoute = StarterVaultSlugRouteImport.update({
+  id: '/starter-vault/$slug',
+  path: '/starter-vault/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiCdnKeyRoute = ApiCdnKeyRouteImport.update({
   id: '/api/cdn/$key',
   path: '/api/cdn/$key',
@@ -278,6 +308,10 @@ const ApiBookingAdminSettingsRoute = ApiBookingAdminSettingsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/intel': typeof IntelRoute
+  '/intel/$slug': typeof IntelSlugRoute
+  '/starter-vault': typeof StarterVaultRoute
+  '/starter-vault/$slug': typeof StarterVaultSlugRoute
   '/ai-lead-kit': typeof AiLeadKitRoute
   '/begin': typeof BeginRoute
   '/biz-thank-you': typeof BizThankYouRoute
@@ -301,6 +335,7 @@ export interface FileRoutesByFullPath {
   '/work-with-me': typeof WorkWithMeRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/availability': typeof AdminAvailabilityRoute
+  '/admin/intel': typeof AdminIntelRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
   '/admin/users': typeof AdminUsersRoute
   '/api/checkout': typeof ApiCheckoutRoute
@@ -323,6 +358,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/intel': typeof IntelRoute
+  '/intel/$slug': typeof IntelSlugRoute
+  '/starter-vault': typeof StarterVaultRoute
+  '/starter-vault/$slug': typeof StarterVaultSlugRoute
   '/ai-lead-kit': typeof AiLeadKitRoute
   '/begin': typeof BeginRoute
   '/biz-thank-you': typeof BizThankYouRoute
@@ -346,6 +385,7 @@ export interface FileRoutesByTo {
   '/work-with-me': typeof WorkWithMeRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/availability': typeof AdminAvailabilityRoute
+  '/admin/intel': typeof AdminIntelRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
   '/admin/users': typeof AdminUsersRoute
   '/api/checkout': typeof ApiCheckoutRoute
@@ -370,6 +410,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/intel': typeof IntelRoute
+  '/intel/$slug': typeof IntelSlugRoute
+  '/starter-vault': typeof StarterVaultRoute
+  '/starter-vault/$slug': typeof StarterVaultSlugRoute
   '/ai-lead-kit': typeof AiLeadKitRoute
   '/begin': typeof BeginRoute
   '/biz-thank-you': typeof BizThankYouRoute
@@ -393,6 +437,7 @@ export interface FileRoutesById {
   '/work-with-me': typeof WorkWithMeRoute
   '/admin/assets': typeof AdminAssetsRoute
   '/admin/availability': typeof AdminAvailabilityRoute
+  '/admin/intel': typeof AdminIntelRoute
   '/admin/modules': typeof AdminModulesRouteWithChildren
   '/admin/users': typeof AdminUsersRoute
   '/api/checkout': typeof ApiCheckoutRoute
@@ -454,6 +499,11 @@ export interface FileRouteTypes {
     | '/auth/logout'
     | '/auth/provision'
     | '/auth/register'
+    | '/intel'
+    | '/intel/$slug'
+    | '/starter-vault'
+    | '/starter-vault/$slug'
+    | '/admin/intel'
     | '/module/$moduleId'
     | '/admin/'
     | '/admin/modules/$moduleId'
@@ -499,6 +549,11 @@ export interface FileRouteTypes {
     | '/auth/logout'
     | '/auth/provision'
     | '/auth/register'
+    | '/intel'
+    | '/intel/$slug'
+    | '/starter-vault'
+    | '/starter-vault/$slug'
+    | '/admin/intel'
     | '/module/$moduleId'
     | '/admin'
     | '/admin/modules/$moduleId'
@@ -545,6 +600,11 @@ export interface FileRouteTypes {
     | '/auth/logout'
     | '/auth/provision'
     | '/auth/register'
+    | '/intel'
+    | '/intel/$slug'
+    | '/starter-vault'
+    | '/starter-vault/$slug'
+    | '/admin/intel'
     | '/module/$moduleId'
     | '/admin/'
     | '/admin/modules/$moduleId'
@@ -556,6 +616,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  IntelRoute: typeof IntelRoute
+  IntelSlugRoute: typeof IntelSlugRoute
+  StarterVaultRoute: typeof StarterVaultRoute
+  StarterVaultSlugRoute: typeof StarterVaultSlugRoute
   AiLeadKitRoute: typeof AiLeadKitRoute
   BeginRoute: typeof BeginRoute
   BizThankYouRoute: typeof BizThankYouRoute
@@ -869,11 +933,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAvailabilityRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/intel': {
+      id: '/intel'
+      path: '/intel'
+      fullPath: '/intel'
+      preLoaderRoute: typeof IntelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/intel/$slug': {
+      id: '/intel/$slug'
+      path: '/intel/$slug'
+      fullPath: '/intel/$slug'
+      preLoaderRoute: typeof IntelSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/starter-vault': {
+      id: '/starter-vault'
+      path: '/starter-vault'
+      fullPath: '/starter-vault'
+      preLoaderRoute: typeof StarterVaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/starter-vault/$slug': {
+      id: '/starter-vault/$slug'
+      path: '/starter-vault/$slug'
+      fullPath: '/starter-vault/$slug'
+      preLoaderRoute: typeof StarterVaultSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/assets': {
       id: '/admin/assets'
       path: '/assets'
       fullPath: '/admin/assets'
       preLoaderRoute: typeof AdminAssetsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/intel': {
+      id: '/admin/intel'
+      path: '/intel'
+      fullPath: '/admin/intel'
+      preLoaderRoute: typeof AdminIntelRouteImport
       parentRoute: typeof AdminRoute
     }
     '/api/cdn/$key': {
@@ -922,6 +1021,7 @@ const AdminModulesRouteWithChildren = AdminModulesRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminAssetsRoute: typeof AdminAssetsRoute
   AdminAvailabilityRoute: typeof AdminAvailabilityRoute
+  AdminIntelRoute: typeof AdminIntelRoute
   AdminModulesRoute: typeof AdminModulesRouteWithChildren
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -930,6 +1030,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAssetsRoute: AdminAssetsRoute,
   AdminAvailabilityRoute: AdminAvailabilityRoute,
+  AdminIntelRoute: AdminIntelRoute,
   AdminModulesRoute: AdminModulesRouteWithChildren,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
@@ -940,6 +1041,10 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  IntelRoute: IntelRoute,
+  IntelSlugRoute: IntelSlugRoute,
+  StarterVaultRoute: StarterVaultRoute,
+  StarterVaultSlugRoute: StarterVaultSlugRoute,
   AiLeadKitRoute: AiLeadKitRoute,
   BeginRoute: BeginRoute,
   BizThankYouRoute: BizThankYouRoute,
