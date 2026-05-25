@@ -77,6 +77,20 @@ export type ImportPackage = {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+
+function normalizeSlug(raw: string) {
+  return raw
+    .trim()
+    .toLowerCase()
+    .replace(/%2f/gi, "/")
+    .replace(/[^a-z0-9\s/_-]/g, "")
+    .replace(/[\s_]+/g, "-")
+    .replace(/\/+/, "/")
+    .replace(/\//g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 function genId(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
@@ -107,12 +121,16 @@ export const getArticleBySlug = createServerFn()
   .handler(async ({ data: slug }) => {
     try {
       const env = await getEnv();
-      const row = await env.DB.prepare(
-        "SELECT * FROM intel_articles WHERE slug = ? AND published = 1",
-      )
-        .bind(slug)
-        .first<DbIntelArticle>();
-      return row ?? null;
+      const candidateSlugs = Array.from(new Set([slug, decodeURIComponent(slug), normalizeSlug(slug)]));
+      for (const candidate of candidateSlugs) {
+        const row = await env.DB.prepare(
+          "SELECT * FROM intel_articles WHERE slug = ? AND published = 1",
+        )
+          .bind(candidate)
+          .first<DbIntelArticle>();
+        if (row) return row;
+      }
+      return null;
     } catch {
       return null;
     }
@@ -245,7 +263,7 @@ export const upsertArticle = createServerFn({ method: "POST" })
       )
         .bind(
           id,
-          data.slug,
+          normalizeSlug(data.slug),
           data.title,
           data.excerpt ?? "",
           data.category ?? "",
@@ -306,7 +324,7 @@ export const duplicateArticle = createServerFn({ method: "POST" })
          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       )
         .bind(
-          newId, newSlug, `${src.title} (copy)`, src.excerpt, src.category, src.tags,
+          newId, normalizeSlug(newSlug), `${src.title} (copy)`, src.excerpt, src.category, src.tags,
           src.cover_image_url, src.read_time, null, 0, 0,
           src.related_starter_drop_slug,
           src.fast_route_tool_name, src.fast_route_description,
@@ -402,7 +420,7 @@ export const duplicateStarterDrop = createServerFn({ method: "POST" })
          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       )
         .bind(
-          newId, newSlug, `${src.title} (copy)`, src.excerpt, src.category,
+          newId, normalizeSlug(newSlug), `${src.title} (copy)`, src.excerpt, src.category,
           src.cover_image_url, src.difficulty, src.estimated_build_time, src.tools_used,
           0, src.related_article_slug, src.what_this_builds, src.what_you_get,
           src.build_prompt, src.file_tree, src.setup_steps, src.edit_map,
@@ -457,7 +475,7 @@ export const importIntelPackage = createServerFn({ method: "POST" })
              content_blocks=excluded.content_blocks, updated_at=excluded.updated_at`,
         )
           .bind(
-            id, a.slug, a.title,
+            id, normalizeSlug(a.slug), a.title,
             a.excerpt ?? "", a.category ?? "",
             typeof a.tags === "string" ? a.tags : JSON.stringify(a.tags ?? []),
             a.cover_image_url ?? null, a.read_time ?? "",

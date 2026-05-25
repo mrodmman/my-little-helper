@@ -210,7 +210,7 @@ function ArticlesTab({ articles, onRefresh }: { articles: DbIntelArticle[]; onRe
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
                 <a
-                  href={`/intel/${a.slug}`}
+                  href={`/intel/${encodeURIComponent(a.slug)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-1.5 rounded-lg hover:bg-surface text-muted-foreground hover:text-foreground transition-colors"
