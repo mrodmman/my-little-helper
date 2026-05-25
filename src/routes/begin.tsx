@@ -6,43 +6,18 @@ import { FormEvent, useState } from "react";
 // SWAPPABLE ASSETS — edit only this block to customise the page
 // ══════════════════════════════════════════════════════════════════════════════
 
-const LOGO_URL        = "/api/cdn/Final.Logo.png"; // navbar + hero logo; leave "" for SVG fallback
-const HERO_IMAGE_URL  = "https://i.ibb.co/XhcGS64/file-49.jpg"; // right-side hero image; leave "" for network diagram
-const ABOUT_MEDIA_URL = "/api/cdn/Logo.animate.mp4"; // About Me circle — paste a .gif, .mp4/.webm, or image URL; leave "" for logo fallback
-const VAULT_IMAGE_URL = "https://i.ibb.co/fd8Q6fp8/file-48.jpg"; // Vault section image; leave "" for placeholder
+const LOGO_URL        = "/api/cdn/Final.Logo.png";
+const HERO_IMAGE_URL  = "https://i.ibb.co/XhcGS64/file-49.jpg";
+const ABOUT_MEDIA_URL = "/api/cdn/Logo.animate.mp4";
+const VAULT_IMAGE_URL = "https://i.ibb.co/fd8Q6fp8/file-48.jpg";
 
 // Social links — leave a value empty ("") to hide that icon entirely
 const SOCIAL = {
   twitter:   "https://x.com/keyboardkraken",
   youtube:   "https://youtube.com/@keyboardkraken",
-  instagram: "", // e.g. "https://instagram.com/yourhandle"
-  tiktok:    "", // e.g. "https://tiktok.com/@yourhandle"
+  instagram: "",
+  tiktok:    "",
 };
-
-// Video testimonial cards — paste any YouTube URL or bare video ID into youtubeId
-const VIDEOS: { youtubeId: string; title: string; tag: string; quote: string; attribution: string }[] = [
-  {
-    youtubeId: "https://youtu.be/9hxy2dzk7Ko?si=JdN5H2SZVBqFPpfv",
-    title: "Real Estate Agent",
-    tag: "Results",
-    quote: "Very knowledgeable and concise. Definitely recommend!",
-    attribution: "Real Estate Agent",
-  },
-  {
-    youtubeId: "https://youtu.be/K5IYG4QB9RA?si=Z6kWhPNN96Y01IAH",
-    title: "Micro Blading Client",
-    tag: "Results",
-    quote: "Helped me Build my Business, Super Happy with my results",
-    attribution: "Micro Blading Client",
-  },
-  {
-    youtubeId: "https://youtu.be/mXDCp4C24EA?si=uiKnKRN28zH19nKV",
-    title: "Esthetician Client",
-    tag: "Results",
-    quote: "5 days & 145 leads. Multiple Appointments booked.",
-    attribution: "Esthetician",
-  },
-];
 
 // ══════════════════════════════════════════════════════════════════════════════
 
@@ -57,11 +32,10 @@ function extractYoutubeId(input: string): string {
   return "";
 }
 
-const P = "#1a5cff"; // electric blue
-const V = "#2952cc"; // deep ocean navy
-
-const FG  = "#0d1220";                    // main dark text
-const fg  = (a: number) => `rgba(13,18,32,${a})`; // helper for opacity text
+const P  = "#1a5cff"; // electric blue
+const V  = "#2952cc"; // deep ocean navy
+const FG = "#0d1220"; // main dark text
+const fg = (a: number) => `rgba(13,18,32,${a})`;
 
 const glass: React.CSSProperties = {
   background: "rgba(252,250,246,0.80)",
@@ -71,20 +45,20 @@ const glass: React.CSSProperties = {
   boxShadow: "0 8px 40px rgba(0,0,0,0.08)",
 };
 
-export const Route = createFileRoute("/kraken")({
-  component: KrakenPage,
+export const Route = createFileRoute("/begin")({
+  component: BeginPage,
   head: () => ({
     meta: [
-      { title: "Keyboard Kraken — Done-For-You Business Systems" },
+      { title: "Keyboard Kraken — Build Your First Real Online System" },
       {
         name: "description",
         content:
-          "We build the online infrastructure, marketing systems, and lead automation your business needs to scale—without you touching a line of code.",
+          "A clear, step-by-step roadmap to understand the tech stack, connect the tools, and build digital assets that generate income—even while keeping your day job.",
       },
-      { property: "og:title", content: "Keyboard Kraken — Done-For-You Business Systems" },
+      { property: "og:title", content: "Keyboard Kraken — Build Your First Real Online System" },
       {
         property: "og:description",
-        content: "Scale your business with done-for-you traffic pipelines, marketing assets, and backend automation.",
+        content: "Stop starting and stalling. Get the free 7-Day Jumpstart Guide and build your first online system.",
       },
     ],
   }),
@@ -97,14 +71,14 @@ function LogoMark({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 64 64" className={className} aria-label="Keyboard Kraken">
       <defs>
-        <linearGradient id="kk-g" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="kk-g2" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor={P} />
           <stop offset="100%" stopColor={V} />
         </linearGradient>
       </defs>
       <rect width="64" height="64" rx="14" fill="#edeae4" />
-      <circle cx="32" cy="32" r="26" fill="none" stroke="url(#kk-g)" strokeWidth="2.5" />
-      <path d="M22 44V20h6l4 6 4-6h6v24h-6V30l-4 5-4-5v14z" fill="url(#kk-g)" />
+      <circle cx="32" cy="32" r="26" fill="none" stroke="url(#kk-g2)" strokeWidth="2.5" />
+      <path d="M22 44V20h6l4 6 4-6h6v24h-6V30l-4 5-4-5v14z" fill="url(#kk-g2)" />
       <circle cx="20" cy="42" r="2" fill={P} opacity="0.6" />
       <circle cx="44" cy="42" r="2" fill={V} opacity="0.6" />
     </svg>
@@ -113,7 +87,7 @@ function LogoMark({ className = "" }: { className?: string }) {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-function KrakenPage() {
+function BeginPage() {
   const [contactOpen, setContactOpen] = useState(false);
 
   return (
@@ -122,13 +96,13 @@ function KrakenPage() {
       style={{ background: "#edeae4", color: FG, fontFamily: "'Inter', system-ui, sans-serif" }}
     >
       <div className="relative" style={{ zIndex: 1 }}>
-        <KrakenNav onOpenContact={() => setContactOpen(true)} />
-        <HeroSection onOpenContact={() => setContactOpen(true)} />
-        <ChoosePathSection onOpenContact={() => setContactOpen(true)} />
-        <ProofSection />
+        <BeginNav onOpenContact={() => setContactOpen(true)} />
+        <HeroSection />
+        <ProblemSection />
+        <FreeOfferSection />
         <AboutSection />
         <VaultSection />
-        <FinalCtaSection onOpenContact={() => setContactOpen(true)} />
+        <FinalCtaSection />
       </div>
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </main>
@@ -137,7 +111,7 @@ function KrakenPage() {
 
 // ── NAV ───────────────────────────────────────────────────────────────────────
 
-function KrakenNav({ onOpenContact }: { onOpenContact: () => void }) {
+function BeginNav({ onOpenContact }: { onOpenContact: () => void }) {
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
@@ -147,7 +121,7 @@ function KrakenNav({ onOpenContact }: { onOpenContact: () => void }) {
         borderBottom: "0.5px solid rgba(0,0,0,0.08)",
       }}
     >
-      <Link to="/kraken" className="flex items-center gap-2.5">
+      <Link to="/begin" className="flex items-center gap-2.5">
         <LogoMark className="h-7 w-7" />
         <span className="text-[11px] font-bold uppercase tracking-[0.28em]" style={{ color: fg(0.45) }}>
           Keyboard Kraken
@@ -160,7 +134,14 @@ function KrakenNav({ onOpenContact }: { onOpenContact: () => void }) {
           className="text-[12px] font-semibold uppercase tracking-wider transition hidden sm:block"
           style={{ color: fg(0.40) }}
         >
-          Vault
+          The Vault
+        </Link>
+        <Link
+          to="/funnel"
+          className="text-[12px] font-semibold uppercase tracking-wider transition hidden sm:block"
+          style={{ color: fg(0.40) }}
+        >
+          Free Guide
         </Link>
         <button
           type="button"
@@ -216,9 +197,9 @@ function KrakenNav({ onOpenContact }: { onOpenContact: () => void }) {
 
 // ── 1. HERO ───────────────────────────────────────────────────────────────────
 
-const TRUST_TAGS = ["Traffic Pipelines", "Marketing Systems", "Lead Automation", "Client Acquisition", "Done For You"];
+const TRUST_TAGS = ["Tech Stack", "Digital Assets", "Online Systems", "Side Income", "Step by Step"];
 
-function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
+function HeroSection() {
   return (
     <section
       className="relative min-h-screen flex flex-col justify-center px-6 pt-24 pb-20 overflow-hidden"
@@ -250,29 +231,28 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
             </div>
 
             <h1 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.92]" style={{ color: FG }}>
-              Build the Online Infrastructure{" "}
+              Stop Starting and Stalling.{" "}
               <span style={{ color: P }}>
-                Your Business Needs
+                Build Your First Real
                 <br />
-                to Scale.
+                Online System.
               </span>
             </h1>
 
             <p className="mt-7 text-lg leading-relaxed max-w-lg" style={{ color: fg(0.55) }}>
-              We handle the traffic pipelines, marketing assets, and backend automation. Get a seamless client acquisition system that grows your online presence—without you ever needing to touch a line of code or figure out complex software.
+              A clear, step-by-step roadmap to understand the tech stack, connect the tools, and build digital assets that generate income—even while keeping your day job.
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
               <Link
-                to="/lead-kit"
+                to="/funnel"
                 className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
                 style={{ background: P, color: "#ffffff", boxShadow: `0 0 32px rgba(26,92,255,0.25)` }}
               >
-                Download the Free Growth Playbook <ArrowRight className="h-4 w-4" />
+                Get the Free 7-Day Jumpstart Guide <ArrowRight className="h-4 w-4" />
               </Link>
-              <button
-                type="button"
-                onClick={onOpenContact}
+              <Link
+                to="/offer"
                 className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider transition"
                 style={{
                   border: "1px solid rgba(0,0,0,0.18)",
@@ -280,8 +260,8 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
                   color: fg(0.65),
                 }}
               >
-                Work With Me <ChevronRight className="h-4 w-4" />
-              </button>
+                Explore The Vault <ChevronRight className="h-4 w-4" />
+              </Link>
             </div>
 
             <div className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -308,7 +288,7 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
             {HERO_IMAGE_URL ? (
               <img
                 src={HERO_IMAGE_URL}
-                alt="System overview"
+                alt="Online system overview"
                 className="w-full max-w-md rounded-xl"
                 style={{
                   border: "0.5px solid rgba(0,0,0,0.10)",
@@ -355,23 +335,12 @@ function HeroCommandCenter() {
         style={{ border: `1px solid rgba(41,82,204,0.10)` }}
       />
 
-      <svg
-        className="absolute inset-0 w-full h-full"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-      >
+      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
         {nodes.map((n, i) => {
           const next = nodes[(i + 1) % nodes.length];
           return (
-            <line
-              key={i}
-              x1={`${n.x}%`}
-              y1={`${n.y}%`}
-              x2={`${next.x}%`}
-              y2={`${next.y}%`}
-              stroke="rgba(26,92,255,0.15)"
-              strokeWidth="0.5"
-            />
+            <line key={i} x1={`${n.x}%`} y1={`${n.y}%`} x2={`${next.x}%`} y2={`${next.y}%`}
+              stroke="rgba(26,92,255,0.15)" strokeWidth="0.5" />
           );
         })}
         <line x1="50%" y1="10%" x2="82%" y2="58%" stroke="rgba(41,82,204,0.10)" strokeWidth="0.4" />
@@ -414,9 +383,9 @@ function HeroCommandCenter() {
   );
 }
 
-// ── 3. BOTTLENECKS ────────────────────────────────────────────────────────────
+// ── 2. PROBLEM SECTION ────────────────────────────────────────────────────────
 
-function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
+function ProblemSection() {
   return (
     <section
       className="px-6 py-24"
@@ -425,26 +394,24 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
       <div className="mx-auto max-w-3xl">
         <div className="mb-12 text-center">
           <h2 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.95]">
-            Remove the Bottlenecks{" "}
-            <span style={{ color: P }}>Holding Your Business Back.</span>
+            Break Out of{" "}
+            <span style={{ color: P }}>Tutorial Hell.</span>
           </h2>
         </div>
 
-        {/* Pain-point bullets */}
         <div
-          className="rounded-xl p-8 mb-6"
+          className="rounded-xl p-8"
           style={{
             ...glass,
             background: `linear-gradient(160deg, rgba(26,92,255,0.05), rgba(252,250,246,0.88))`,
             border: `0.5px solid rgba(26,92,255,0.15)`,
           }}
         >
-          <ul className="space-y-5">
+          <ul className="space-y-6">
             {[
-              "You want to grow your presence online, but you don't have time to master social media, ads, and algorithms.",
-              "Your marketing efforts reset every week because your data isn't unified.",
-              "You are losing potential leads because your intake forms and internal software don't talk to each other.",
-              "Every hour your team spends on manual administrative tasks is an hour stolen from closing sales.",
+              "Every online guide assumes you already know the entire technical stack.",
+              "Information overload leaves you stuck in analysis paralysis every weekend.",
+              "You keep trying to start a brand or product but lack a predictable, structured path.",
             ].map((point) => (
               <li key={point} className="flex items-start gap-4 text-base leading-relaxed" style={{ color: fg(0.65) }}>
                 <span className="mt-2 h-1.5 w-1.5 rounded-full shrink-0" style={{ background: P }} />
@@ -453,10 +420,22 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
             ))}
           </ul>
         </div>
+      </div>
+    </section>
+  );
+}
 
-        {/* Lead-magnet card */}
+// ── 3. FREE OFFER ─────────────────────────────────────────────────────────────
+
+function FreeOfferSection() {
+  return (
+    <section
+      className="px-6 py-24"
+      style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}
+    >
+      <div className="mx-auto max-w-3xl">
         <div
-          className="rounded-xl p-8"
+          className="rounded-xl p-8 sm:p-10"
           style={{ background: P, border: "1px solid rgba(255,255,255,0.18)" }}
         >
           <div
@@ -466,30 +445,29 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
             100% Free
           </div>
           <h4 className="font-sans uppercase text-2xl sm:text-3xl font-black tracking-tight leading-[1] text-white mb-4">
-            The Hands-Off Customer Acquisition Playbook
+            Start Here — The Free 7-Day Jumpstart Guide
           </h4>
-          <p className="text-white/80 text-sm leading-relaxed mb-6">
-            A non-technical blueprint showing exactly how we wire together high-converting ad pipelines, automated lead capture, and instant SMS alerts to secure your incoming clients—100% hands-off for you.
+          <p className="text-white/80 text-base leading-relaxed mb-7">
+            One action per day. No fluff — just the first real steps to launch your online system and build momentum fast.
           </p>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Link
-              to="/lead-kit"
-              className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-5 py-3.5 text-sm font-black uppercase tracking-wider transition hover:brightness-95"
+              to="/funnel"
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-6 py-3.5 text-sm font-black uppercase tracking-wider transition hover:brightness-95"
               style={{ color: P }}
             >
-              Get the Free Playbook <ArrowRight className="h-4 w-4" />
+              Get the Free Guide <ArrowRight className="h-4 w-4" />
             </Link>
-            <button
-              type="button"
-              onClick={onOpenContact}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2 text-xs font-bold uppercase tracking-wider transition hover:underline"
+            <Link
+              to="/offer"
+              className="inline-flex items-center justify-center gap-2 rounded-md px-6 py-3.5 text-xs font-bold uppercase tracking-wider transition hover:underline"
               style={{ color: "rgba(255,255,255,0.80)" }}
             >
-              Work With Me <ArrowRight className="h-3.5 w-3.5" />
-            </button>
+              Explore The Vault <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
           <span className="mt-4 block text-[11px] uppercase tracking-wider text-white/55">
-            Instant access · 100% free · No spam
+            Instant access · No spam · No credit card
           </span>
         </div>
       </div>
@@ -497,109 +475,7 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
   );
 }
 
-// ── 5. PROOF ──────────────────────────────────────────────────────────────────
-
-function ProofSection() {
-  return (
-    <section
-      className="px-6 py-24"
-      style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}
-    >
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-3 text-center">
-          <h2 className="font-sans text-2xl sm:text-3xl font-bold" style={{ color: FG }}>
-            Real Results Using This System
-          </h2>
-          <p className="mt-2 text-sm" style={{ color: fg(0.42) }}>
-            Formerly Lead Net Marketing
-          </p>
-        </div>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {VIDEOS.map((v, i) => (
-            <VideoCard key={i} {...v} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function VideoCard({ youtubeId: rawId, title, tag, quote, attribution }: {
-  youtubeId: string;
-  title: string;
-  tag: string;
-  quote: string;
-  attribution: string;
-}) {
-  const videoId = extractYoutubeId(rawId);
-  const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
-  const href = videoId ? `https://www.youtube.com/watch?v=${videoId}` : undefined;
-
-  const videoBlock = (
-    <div className="relative aspect-video flex items-center justify-center overflow-hidden rounded-t-xl group cursor-pointer">
-      {thumbUrl ? (
-        <img src={thumbUrl} alt={title} className="w-full h-full object-cover" />
-      ) : (
-        <div className="w-full h-full flex items-center justify-center" style={{ background: "rgba(230,226,219,0.9)" }}>
-          <Video className="h-8 w-8" style={{ color: fg(0.15) }} />
-        </div>
-      )}
-      <div
-        className="absolute inset-x-0 top-0 h-1/3 pointer-events-none"
-        style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.06) 0%, transparent 100%)" }}
-      />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div
-          className="h-12 w-12 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
-          style={{
-            background: "rgba(26,92,255,0.12)",
-            border: `1.5px solid rgba(26,92,255,0.55)`,
-            boxShadow: `0 0 24px rgba(26,92,255,0.35), inset 0 0 12px rgba(26,92,255,0.08)`,
-          }}
-        >
-          <Play className="h-4 w-4 fill-current ml-0.5" style={{ color: P }} />
-        </div>
-      </div>
-      <div className="absolute top-3 left-3">
-        <span
-          className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm"
-          style={{
-            background: "rgba(237,234,228,0.90)",
-            border: "0.5px solid rgba(0,0,0,0.10)",
-            color: P,
-          }}
-        >
-          {tag}
-        </span>
-      </div>
-    </div>
-  );
-
-  return (
-    <div
-      className="rounded-xl overflow-hidden flex flex-col"
-      style={{ ...glass, background: "rgba(252,250,246,0.88)", border: "0.5px solid rgba(0,0,0,0.10)" }}
-    >
-      {href ? (
-        <a href={href} target="_blank" rel="noopener noreferrer">{videoBlock}</a>
-      ) : videoBlock}
-
-      <div className="p-5 flex flex-col gap-3 flex-1">
-        <svg className="h-5 w-5 shrink-0" viewBox="0 0 20 16" fill="none">
-          <path d="M0 16V9.6C0 4.267 3.2 1.067 9.6 0l1.2 2C8 2.667 6.4 4 6 6h3v10H0Zm10.4 0V9.6C10.4 4.267 13.6 1.067 20 0l1.2 2c-2.8.667-4.4 2-4.8 4h3v10h-9.6Z" fill={V} opacity="0.6"/>
-        </svg>
-        <p className="text-sm leading-relaxed italic" style={{ color: fg(0.65) }}>
-          "{quote}"
-        </p>
-        <p className="text-[11px] font-bold uppercase tracking-wider" style={{ color: fg(0.35) }}>
-          — {attribution}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-// ── 6. ABOUT ME ───────────────────────────────────────────────────────────────
+// ── 4. ABOUT ME ───────────────────────────────────────────────────────────────
 
 function AboutSection() {
   const isVideo = ABOUT_MEDIA_URL && (ABOUT_MEDIA_URL.includes(".mp4") || ABOUT_MEDIA_URL.includes(".webm"));
@@ -648,9 +524,9 @@ function AboutSection() {
           <ul className="mb-7 space-y-1.5 text-sm" style={{ color: fg(0.55) }}>
             {[
               "Sold on Amazon",
-              "Built and sold my own products",
-              "Run ads for real businesses",
+              "Built and sold my own digital products",
               "Built automation systems that actually save time",
+              "Created systems that run while I sleep",
             ].map((item) => (
               <li key={item} className="flex items-center justify-center gap-2">
                 <span className="h-1 w-1 rounded-full shrink-0" style={{ background: P }} />
@@ -669,7 +545,7 @@ function AboutSection() {
   );
 }
 
-// ── 7. THE VAULT ──────────────────────────────────────────────────────────────
+// ── 5. THE VAULT ──────────────────────────────────────────────────────────────
 
 function VaultSection() {
   return (
@@ -695,6 +571,10 @@ function VaultSection() {
             <h2 className="font-sans uppercase text-4xl sm:text-5xl font-black tracking-tight leading-[0.93]" style={{ color: FG }}>
               Inside the Vault.
             </h2>
+            <p className="mt-3 text-sm max-w-sm" style={{ color: fg(0.48) }}>
+              The premium repository of blueprints and workflows—everything you need to build, launch, and monetize.{" "}
+              <span className="font-bold" style={{ color: P }}>$24.99</span>
+            </p>
           </div>
           <Link
             to="/vault"
@@ -711,7 +591,10 @@ function VaultSection() {
               src={VAULT_IMAGE_URL}
               alt="Inside the Vault"
               className="w-full max-w-md rounded-xl"
-              style={{ border: "0.5px solid rgba(0,0,0,0.10)", boxShadow: "0 0 60px -10px rgba(26,92,255,0.18), 0 0 0 1px rgba(0,0,0,0.05)" }}
+              style={{
+                border: "0.5px solid rgba(0,0,0,0.10)",
+                boxShadow: "0 0 60px -10px rgba(26,92,255,0.18), 0 0 0 1px rgba(0,0,0,0.05)",
+              }}
             />
           ) : (
             <div
@@ -729,9 +612,9 @@ function VaultSection() {
   );
 }
 
-// ── 8. FINAL CTA ──────────────────────────────────────────────────────────────
+// ── 6. FINAL CTA ──────────────────────────────────────────────────────────────
 
-function FinalCtaSection({ onOpenContact }: { onOpenContact: () => void }) {
+function FinalCtaSection() {
   return (
     <section
       className="relative px-6 py-36 overflow-hidden"
@@ -755,35 +638,37 @@ function FinalCtaSection({ onOpenContact }: { onOpenContact: () => void }) {
       />
       <div
         className="absolute inset-x-0 bottom-0 h-1/2 pointer-events-none"
-        style={{
-          background: "linear-gradient(0deg, rgba(26,92,255,0.04) 0%, transparent 100%)",
-        }}
+        style={{ background: "linear-gradient(0deg, rgba(26,92,255,0.04) 0%, transparent 100%)" }}
       />
 
       <div className="relative mx-auto max-w-2xl text-center">
         <h2 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.95]" style={{ color: FG }}>
-          Ready for a Custom,{" "}
-          <span style={{ color: P }}>Done-For-You Solution?</span>
+          You wake up early
+          <br />
+          for a job you tolerate.
+          <br />
+          <span style={{ color: P }}>What if you woke up early</span>
+          <br />
+          for a life you actually wanted?
         </h2>
 
         <p
           className="mt-9 max-w-md mx-auto leading-relaxed"
           style={{ color: fg(0.50) }}
         >
-          Let's bridge the gap between your real-world business and the online world.
+          You already deal with schedules, stress, difficult people, and exhausting work every day. Put some of that effort into building systems that belong to you.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <Link
-            to="/book"
+            to="/offer"
             className="inline-flex items-center gap-2 rounded-md px-8 py-4 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
             style={{ background: P, color: "#ffffff", boxShadow: `0 0 32px rgba(26,92,255,0.25)` }}
           >
-            Book a Systems Audit <ArrowRight className="h-4 w-4" />
+            Explore The Vault <ArrowRight className="h-4 w-4" />
           </Link>
-          <button
-            type="button"
-            onClick={onOpenContact}
+          <Link
+            to="/funnel"
             className="inline-flex items-center gap-2 rounded-md px-8 py-4 text-sm font-black uppercase tracking-wider transition"
             style={{
               border: "1px solid rgba(0,0,0,0.18)",
@@ -791,8 +676,8 @@ function FinalCtaSection({ onOpenContact }: { onOpenContact: () => void }) {
               color: fg(0.65),
             }}
           >
-            Apply to Work With Me <ChevronRight className="h-4 w-4" />
-          </button>
+            Get the Free Guide <ChevronRight className="h-4 w-4" />
+          </Link>
         </div>
 
         <p
@@ -806,6 +691,7 @@ function FinalCtaSection({ onOpenContact }: { onOpenContact: () => void }) {
   );
 }
 
+// ── CONTACT MODAL ─────────────────────────────────────────────────────────────
 
 function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [loading, setLoading] = useState(false);
@@ -832,10 +718,7 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
     });
 
     setLoading(false);
-    if (res.ok) {
-      setSent(true);
-      return;
-    }
+    if (res.ok) { setSent(true); return; }
     setError("Could not send right now. Please try again.");
   };
 
@@ -850,10 +733,7 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
             <p className="text-sm leading-relaxed" style={{ color: fg(0.6) }}>
               Thanks for reaching out. I review every message personally and will be in touch within 1–2 business days.
             </p>
-            <button
-              onClick={onClose}
-              className="mt-2 rounded-md bg-blue-600 px-6 py-2 text-sm text-white"
-            >
+            <button onClick={onClose} className="mt-2 rounded-md bg-blue-600 px-6 py-2 text-sm text-white">
               Close
             </button>
           </div>
@@ -868,7 +748,9 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
               {error && <p className="text-sm text-red-500">{error}</p>}
               <div className="flex justify-end gap-2">
                 <button type="button" onClick={onClose} className="rounded-md px-4 py-2 text-sm">Cancel</button>
-                <button type="submit" disabled={loading} className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white">{loading ? "Sending..." : "Send"}</button>
+                <button type="submit" disabled={loading} className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white">
+                  {loading ? "Sending..." : "Send"}
+                </button>
               </div>
             </form>
           </>
