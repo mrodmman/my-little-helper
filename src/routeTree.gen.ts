@@ -27,6 +27,7 @@ import { Route as FunnelRouteImport } from './routes/funnel'
 import { Route as FastTrackRouteImport } from './routes/fast-track'
 import { Route as CancelRouteImport } from './routes/cancel'
 import { Route as BookRouteImport } from './routes/book'
+import { Route as BeginRouteImport } from './routes/begin'
 import { Route as BizThankYouRouteImport } from './routes/biz-thank-you'
 import { Route as AiLeadKitRouteImport } from './routes/ai-lead-kit'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -139,6 +140,11 @@ const CancelRoute = CancelRouteImport.update({
 const BookRoute = BookRouteImport.update({
   id: '/book',
   path: '/book',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BeginRoute = BeginRouteImport.update({
+  id: '/begin',
+  path: '/begin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BizThankYouRoute = BizThankYouRouteImport.update({
@@ -261,6 +267,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/ai-lead-kit': typeof AiLeadKitRoute
+  '/begin': typeof BeginRoute
   '/biz-thank-you': typeof BizThankYouRoute
   '/book': typeof BookRoute
   '/cancel': typeof CancelRoute
@@ -303,6 +310,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ai-lead-kit': typeof AiLeadKitRoute
+  '/begin': typeof BeginRoute
   '/biz-thank-you': typeof BizThankYouRoute
   '/book': typeof BookRoute
   '/cancel': typeof CancelRoute
@@ -347,6 +355,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/ai-lead-kit': typeof AiLeadKitRoute
+  '/begin': typeof BeginRoute
   '/biz-thank-you': typeof BizThankYouRoute
   '/book': typeof BookRoute
   '/cancel': typeof CancelRoute
@@ -392,6 +401,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/ai-lead-kit'
+    | '/begin'
     | '/biz-thank-you'
     | '/book'
     | '/cancel'
@@ -434,6 +444,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/ai-lead-kit'
+    | '/begin'
     | '/biz-thank-you'
     | '/book'
     | '/cancel'
@@ -477,6 +488,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/ai-lead-kit'
+    | '/begin'
     | '/biz-thank-you'
     | '/book'
     | '/cancel'
@@ -521,6 +533,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AiLeadKitRoute: typeof AiLeadKitRoute
+  BeginRoute: typeof BeginRoute
   BizThankYouRoute: typeof BizThankYouRoute
   BookRoute: typeof BookRoute
   CancelRoute: typeof CancelRoute
@@ -681,6 +694,13 @@ declare module '@tanstack/react-router' {
       path: '/book'
       fullPath: '/book'
       preLoaderRoute: typeof BookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/begin': {
+      id: '/begin'
+      path: '/begin'
+      fullPath: '/begin'
+      preLoaderRoute: typeof BeginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/biz-thank-you': {
@@ -881,6 +901,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AiLeadKitRoute: AiLeadKitRoute,
+  BeginRoute: BeginRoute,
   BizThankYouRoute: BizThankYouRoute,
   BookRoute: BookRoute,
   CancelRoute: CancelRoute,
