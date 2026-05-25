@@ -2,23 +2,30 @@
  * Admin dashboard — overview stats and quick links.
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookOpen, Package, Users, TrendingUp, ArrowRight } from "lucide-react";
+import { BookOpen, Package, Users, TrendingUp, ArrowRight, Newspaper, Layers } from "lucide-react";
 import { getAllModulesAdmin, getAllAssets } from "@/rpc/modules";
+import { getAllArticlesAdmin, getAllStarterDropsAdmin } from "@/rpc/intel";
 
 export const Route = createFileRoute("/admin/")({
   component: AdminDashboard,
   loader: async () => {
-    const [modules, assets] = await Promise.all([
+    const [modules, assets, articles, drops] = await Promise.all([
       getAllModulesAdmin().catch(() => []),
       getAllAssets().catch(() => []),
+      getAllArticlesAdmin().catch(() => []),
+      getAllStarterDropsAdmin().catch(() => []),
     ]);
-    const totalLessons = 0; // Queried per-module; skip for dashboard speed
-    return { moduleCount: modules.length, assetCount: assets.length, totalLessons };
+    return {
+      moduleCount: modules.length,
+      assetCount: assets.length,
+      articleCount: articles.length,
+      dropCount: drops.length,
+    };
   },
 });
 
 function AdminDashboard() {
-  const { moduleCount, assetCount } = Route.useLoaderData();
+  const { moduleCount, assetCount, articleCount, dropCount } = Route.useLoaderData();
 
   const cards = [
     {
@@ -34,6 +41,20 @@ function AdminDashboard() {
       icon: Package,
       to: "/admin/assets",
       description: "Videos, prompts, files and links",
+    },
+    {
+      label: "Intel Articles",
+      value: articleCount,
+      icon: Newspaper,
+      to: "/admin/intel",
+      description: "Kraken Intel public articles",
+    },
+    {
+      label: "Starter Drops",
+      value: dropCount,
+      icon: Layers,
+      to: "/admin/intel",
+      description: "Free build kits in the Starter Vault",
     },
     {
       label: "Progress",
@@ -101,6 +122,26 @@ function AdminDashboard() {
             <div>
               <div className="text-sm font-medium">Asset Vault</div>
               <div className="text-xs text-muted-foreground">Videos, prompts, files, links</div>
+            </div>
+          </Link>
+          <Link
+            to="/admin/intel"
+            className="flex items-center gap-3 rounded-xl bg-surface/60 border border-border p-4 hover:border-primary/40 transition-colors"
+          >
+            <Newspaper className="h-5 w-5 text-primary shrink-0" />
+            <div>
+              <div className="text-sm font-medium">Kraken Intel</div>
+              <div className="text-xs text-muted-foreground">Articles, starter drops, import</div>
+            </div>
+          </Link>
+          <Link
+            to="/intel"
+            className="flex items-center gap-3 rounded-xl bg-surface/60 border border-border p-4 hover:border-primary/40 transition-colors"
+          >
+            <Layers className="h-5 w-5 text-primary shrink-0" />
+            <div>
+              <div className="text-sm font-medium">Preview Intel Hub</div>
+              <div className="text-xs text-muted-foreground">Public-facing article hub</div>
             </div>
           </Link>
         </div>
