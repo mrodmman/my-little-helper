@@ -61,17 +61,7 @@ export const ASSETS: Asset[] = [
       "Hey {{name}} — saw your post about {{topic}}. Genuinely curious: what's the biggest bottleneck you're hitting with {{outcome}} right now? No pitch, just nerding out on this stuff.",
     tags: ["dms", "outreach"],
   },
-  {
-    id: "file-funnel-checklist",
-    type: "file",
-    title: "3-page funnel checklist",
-    description: "Every element your landing → offer → thank-you pages need.",
-    url: "/assets/downloads/funnel-checklist.pdf",
-    filename: "funnel-checklist.pdf",
-    format: "PDF",
-    size: "180 KB",
-    tags: ["funnel", "templates"],
-  },
+
   {
     id: "file-prompt-module-2-funnel-shell",
     type: "file",
