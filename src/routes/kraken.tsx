@@ -154,13 +154,6 @@ function KrakenNav({ onOpenContact }: { onOpenContact: () => void }) {
       </Link>
 
       <nav className="flex items-center gap-6">
-        <Link
-          to="/offer"
-          className="text-[12px] font-semibold uppercase tracking-wider transition hidden sm:block"
-          style={{ color: fg(0.40) }}
-        >
-          Vault
-        </Link>
         <button
           type="button"
           onClick={onOpenContact}
