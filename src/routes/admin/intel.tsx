@@ -16,7 +16,7 @@ import {
   upsertStarterDrop, deleteStarterDrop, duplicateStarterDrop,
   importIntelPackage,
 } from "@/rpc/intel";
-import type { DbIntelArticle, DbStarterDrop, ImportPackage } from "@/rpc/intel";
+import type { DbIntelArticle, DbStarterDrop, ImportPackage, ContentBlock } from "@/rpc/intel";
 import { cn } from "@/lib/utils";
 
 // ── Route ────────────────────────────────────────────────────────────────────
@@ -785,16 +785,95 @@ function DropEditor({
 
 // ── Import Tab ────────────────────────────────────────────────────────────────
 
+// ── Image slot detection for Import tab ──────────────────────────────────────
+
+type ImageSlot = {
+  id: string;
+  label: string;
+  description: string;
+  currentUrl: string;
+};
+
+function detectImageSlots(pkg: ImportPackage): ImageSlot[] {
+  const slots: ImageSlot[] = [];
+
+  if (pkg.article) {
+    slots.push({
+      id: "article-cover",
+      label: "Article cover / thumbnail",
+      description: "Shown on the article card grid and at the top of the article page.",
+      currentUrl: pkg.article.cover_image_url ?? "",
+    });
+
+    let blocks: ContentBlock[] = [];
+    try {
+      const raw = pkg.article.content_blocks;
+      blocks = typeof raw === "string" ? JSON.parse(raw) as ContentBlock[] : (raw as ContentBlock[] ?? []);
+    } catch { /* ignore */ }
+
+    blocks.forEach((block, idx) => {
+      if (block.type === "image") {
+        const imgBlock = block as { type: "image"; url: string; alt?: string; caption?: string };
+        slots.push({
+          id: `article-image-${idx}`,
+          label: `Article — image block ${idx + 1}`,
+          description: imgBlock.alt ? `Alt: "${imgBlock.alt}"` : `Block at position ${idx + 1} in content_blocks`,
+          currentUrl: imgBlock.url ?? "",
+        });
+      }
+    });
+  }
+
+  if (pkg.starterDrop) {
+    slots.push({
+      id: "drop-cover",
+      label: "Starter drop cover / thumbnail",
+      description: "Shown on the starter drop card and at the top of the drop page.",
+      currentUrl: pkg.starterDrop.cover_image_url ?? "",
+    });
+  }
+
+  return slots;
+}
+
+function applyImageSlot(pkg: ImportPackage, slotId: string, url: string): ImportPackage {
+  if (slotId === "article-cover") {
+    return { ...pkg, article: { ...pkg.article!, cover_image_url: url } };
+  }
+  if (slotId === "drop-cover") {
+    return { ...pkg, starterDrop: { ...pkg.starterDrop!, cover_image_url: url } };
+  }
+  if (slotId.startsWith("article-image-")) {
+    const idx = parseInt(slotId.replace("article-image-", ""), 10);
+    const raw = pkg.article?.content_blocks;
+    let blocks: ContentBlock[] = [];
+    try {
+      blocks = typeof raw === "string" ? JSON.parse(raw) as ContentBlock[] : (raw as ContentBlock[] ?? []);
+    } catch { /* ignore */ }
+    const newBlocks = blocks.map((b, i) =>
+      i === idx ? { ...b, url } : b,
+    );
+    return { ...pkg, article: { ...pkg.article!, content_blocks: JSON.stringify(newBlocks) } };
+  }
+  return pkg;
+}
+
+// ── Import tab ────────────────────────────────────────────────────────────────
+
 function ImportTab({ onImported }: { onImported: () => void }) {
   const [raw, setRaw] = useState("");
   const [parsed, setParsed] = useState<ImportPackage | null>(null);
+  const [imageSlots, setImageSlots] = useState<ImageSlot[]>([]);
+  const [uploadingSlot, setUploadingSlot] = useState<string | null>(null);
   const [parseError, setParseError] = useState("");
   const [importing, setImporting] = useState(false);
   const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null);
+  const fileRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const handleParse = () => {
     setParseError("");
     setParsed(null);
+    setImageSlots([]);
     setResult(null);
     try {
       const obj = JSON.parse(raw) as ImportPackage;
@@ -803,8 +882,28 @@ function ImportTab({ onImported }: { onImported: () => void }) {
         return;
       }
       setParsed(obj);
+      setImageSlots(detectImageSlots(obj));
     } catch (e) {
       setParseError(`Invalid JSON: ${String(e)}`);
+    }
+  };
+
+  const handleSlotUpload = async (slotId: string, file: File) => {
+    setUploadingSlot(slotId);
+    try {
+      const url = await uploadImageToR2(file);
+      setParsed((prev) => {
+        if (!prev) return prev;
+        const next = applyImageSlot(prev, slotId, url);
+        setImageSlots(detectImageSlots(next));
+        return next;
+      });
+    } catch {
+      alert("Upload failed — check your admin session.");
+    } finally {
+      setUploadingSlot(null);
+      const input = fileRefs.current[slotId];
+      if (input) input.value = "";
     }
   };
 
@@ -817,6 +916,7 @@ function ImportTab({ onImported }: { onImported: () => void }) {
         setResult({ ok: true, message: "Imported successfully!" });
         setRaw("");
         setParsed(null);
+        setImageSlots([]);
         onImported();
       } else {
         setResult({ ok: false, message: res.error ?? "Import failed." });
@@ -826,6 +926,8 @@ function ImportTab({ onImported }: { onImported: () => void }) {
     }
   };
 
+  const reset = () => { setRaw(""); setParsed(null); setImageSlots([]); setParseError(""); setResult(null); };
+
   return (
     <div className="space-y-5 max-w-3xl">
       <div className="glass-card rounded-2xl p-6 space-y-4">
@@ -833,7 +935,7 @@ function ImportTab({ onImported }: { onImported: () => void }) {
           <h2 className="font-bold text-lg">Import Intel Package</h2>
           <p className="text-sm text-muted-foreground mt-1">
             Paste a JSON payload containing an article, a starter drop, or both.
-            If the slug already exists, it will be updated.
+            After validating, upload images for each detected slot before importing.
           </p>
         </div>
 
@@ -850,37 +952,20 @@ function ImportTab({ onImported }: { onImported: () => void }) {
     "excerpt": "Short description...",
     "category": "Build Systems",
     "tags": ["funnel", "free tools"],
-    "coverImageUrl": null,
-    "readTime": "8 min read",
-    "publishedAt": "2026-05-25",
-    "featured": false,
-    "relatedStarterDropSlug": "my-starter-drop",
-    "fastRoute": {
-      "toolName": "Framer",
-      "description": "Fastest no-code route.",
-      "affiliateUrl": "https://framer.com",
-      "buttonText": "Try Framer Free"
-    },
-    "contentBlocks": [
+    "cover_image_url": null,
+    "read_time": "8 min read",
+    "content_blocks": [
       { "type": "heading", "text": "Why You Don't Need Paid Tools" },
+      { "type": "image", "url": "", "alt": "Funnel diagram" },
       { "type": "paragraph", "text": "..." }
     ]
   },
   "starterDrop": {
     "title": "Free Starter Funnel Build Kit",
     "slug": "free-starter-funnel-build-kit",
-    "excerpt": "...",
+    "cover_image_url": null,
     "category": "Funnels",
-    "difficulty": "Beginner",
-    "estimatedBuildTime": "1–2 hours",
-    "toolsUsed": ["Carrd", "ConvertKit"],
-    "whatThisBuilds": ["A landing page", "A thank-you page"],
-    "whatYouGet": ["Build prompt", "File structure"],
-    "buildPrompt": "You are a...",
-    "fileTree": "project/\\n├── index.html",
-    "setupSteps": ["Step 1...", "Step 2..."],
-    "editMap": [{"file":"index.html","description":"Change headline"}],
-    "troubleshooting": [{"problem":"Form not working","solution":"Check API key"}]
+    "difficulty": "Beginner"
   }
 }`}
           </pre>
@@ -893,7 +978,7 @@ function ImportTab({ onImported }: { onImported: () => void }) {
           </label>
           <textarea
             value={raw}
-            onChange={(e) => { setRaw(e.target.value); setParseError(""); setParsed(null); setResult(null); }}
+            onChange={(e) => { setRaw(e.target.value); setParseError(""); setParsed(null); setImageSlots([]); setResult(null); }}
             className={cn(inputCls, "h-48 font-mono text-xs resize-y")}
             placeholder='{ "article": { ... }, "starterDrop": { ... } }'
           />
@@ -907,39 +992,109 @@ function ImportTab({ onImported }: { onImported: () => void }) {
         )}
 
         {result && (
-          <div
-            className={cn(
-              "flex items-start gap-2 text-sm rounded-lg p-3 border",
-              result.ok
-                ? "text-emerald-700 bg-emerald-50 border-emerald-200"
-                : "text-destructive bg-destructive/5 border-destructive/20",
-            )}
-          >
-            {result.ok ? (
-              <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
-            ) : (
-              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
-            )}
+          <div className={cn(
+            "flex items-start gap-2 text-sm rounded-lg p-3 border",
+            result.ok
+              ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+              : "text-destructive bg-destructive/5 border-destructive/20",
+          )}>
+            {result.ok
+              ? <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5" />
+              : <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />}
             {result.message}
           </div>
         )}
 
-        {/* Parsed preview */}
+        {/* Parsed summary */}
         {parsed && !result && (
-          <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 space-y-2">
+          <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 space-y-1.5">
             <div className="text-xs font-bold uppercase tracking-wider text-emerald-700">
-              Valid JSON — ready to import
+              ✓ Valid JSON
             </div>
             {parsed.article && (
               <div className="text-sm text-emerald-800">
-                📄 Article: <strong>{parsed.article.title}</strong> (/{parsed.article.slug})
+                📄 Article: <strong>{parsed.article.title}</strong> · /{parsed.article.slug}
               </div>
             )}
             {parsed.starterDrop && (
               <div className="text-sm text-emerald-800">
-                📦 Starter Drop: <strong>{parsed.starterDrop.title}</strong> (/{parsed.starterDrop.slug})
+                📦 Starter Drop: <strong>{parsed.starterDrop.title}</strong> · /{parsed.starterDrop.slug}
               </div>
             )}
+          </div>
+        )}
+
+        {/* ── Image slots ─────────────────────────────────────────────────── */}
+        {imageSlots.length > 0 && !result && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <div className="h-px flex-1 bg-border" />
+              <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Images ({imageSlots.length})
+              </span>
+              <div className="h-px flex-1 bg-border" />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Upload an image for each slot below. Slots with no image will be left blank — you can add them later via the article editor.
+            </p>
+            <div className="space-y-2">
+              {imageSlots.map((slot) => {
+                const isUploading = uploadingSlot === slot.id;
+                const hasImage = !!slot.currentUrl;
+                return (
+                  <div
+                    key={slot.id}
+                    className="flex items-center gap-3 rounded-xl border border-border bg-surface/60 p-3"
+                  >
+                    {/* Preview or placeholder */}
+                    <div className="shrink-0 h-14 w-14 rounded-lg border border-border bg-surface overflow-hidden flex items-center justify-center">
+                      {hasImage
+                        ? <img src={slot.currentUrl} alt="" className="h-full w-full object-cover" />
+                        : <Upload className="h-5 w-5 text-muted-foreground/40" />
+                      }
+                    </div>
+
+                    {/* Labels */}
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium text-foreground truncate">{slot.label}</div>
+                      <div className="text-xs text-muted-foreground truncate mt-0.5">{slot.description}</div>
+                      {hasImage && (
+                        <div className="text-[10px] text-emerald-600 mt-0.5 truncate">✓ {slot.currentUrl}</div>
+                      )}
+                    </div>
+
+                    {/* Upload button */}
+                    <button
+                      type="button"
+                      disabled={isUploading}
+                      onClick={() => fileRefs.current[slot.id]?.click()}
+                      className={cn(
+                        "shrink-0 inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition-all",
+                        hasImage
+                          ? "border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                          : "border-primary/40 bg-primary/10 text-primary hover:bg-primary/20",
+                        isUploading && "opacity-60 cursor-not-allowed",
+                      )}
+                    >
+                      <Upload className="h-3.5 w-3.5" />
+                      {isUploading ? "Uploading…" : hasImage ? "Replace" : "Upload"}
+                    </button>
+
+                    {/* Hidden file input */}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      ref={(el) => { fileRefs.current[slot.id] = el; }}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) handleSlotUpload(slot.id, file);
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 
@@ -953,7 +1108,7 @@ function ImportTab({ onImported }: { onImported: () => void }) {
             >
               Validate JSON
             </button>
-          ) : (
+          ) : !result ? (
             <button
               onClick={handleImport}
               disabled={importing}
@@ -962,12 +1117,9 @@ function ImportTab({ onImported }: { onImported: () => void }) {
               <Upload className="h-4 w-4" />
               {importing ? "Importing…" : "Import Package"}
             </button>
-          )}
+          ) : null}
           {(parsed || raw) && (
-            <button
-              onClick={() => { setRaw(""); setParsed(null); setParseError(""); setResult(null); }}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
+            <button onClick={reset} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Clear
             </button>
           )}
@@ -978,8 +1130,7 @@ function ImportTab({ onImported }: { onImported: () => void }) {
       <div className="glass-card rounded-2xl p-5 space-y-3">
         <h3 className="font-semibold text-sm">How to generate import packages with Claude</h3>
         <p className="text-sm text-muted-foreground leading-relaxed">
-          Ask Claude to write an article on any topic in the Kraken Intel format.
-          Paste this prompt:
+          Ask Claude to write an article on any topic in the Kraken Intel format. Paste this prompt:
         </p>
         <pre className="bg-surface/60 border border-border rounded-lg p-3 text-xs font-mono text-muted-foreground overflow-x-auto whitespace-pre-wrap">
 {`Write a Kraken Intel article about [TOPIC].
@@ -989,8 +1140,10 @@ Output a valid JSON import package with this exact structure:
 The article should:
 - Teach concepts, systems, and strategies (not gate content)
 - Have a compelling title and excerpt
-- Use contentBlocks with types: heading, subheading, paragraph, bullet_list, numbered_steps, callout, cta_box, divider, comparison_cards
-- Link to the starterDrop via relatedStarterDropSlug
+- Use content_blocks with types: heading, subheading, paragraph, bullet_list,
+  numbered_steps, callout, cta_box, divider, comparison_cards, image
+- For image blocks use: { "type": "image", "url": "", "alt": "description" }
+  (leave url empty — you will upload images after import)
 
 The starterDrop should:
 - Provide a complete build prompt
