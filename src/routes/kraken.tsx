@@ -127,7 +127,6 @@ function KrakenPage() {
         <ChoosePathSection onOpenContact={() => setContactOpen(true)} />
         <ProofSection />
         <AboutSection />
-        <VaultSection />
         <FinalCtaSection onOpenContact={() => setContactOpen(true)} />
       </div>
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
