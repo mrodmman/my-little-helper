@@ -3,7 +3,7 @@
  * Tabs: Articles | Starter Drops | Import Package
  */
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import {
   BookOpen, Package, Upload, Plus, Trash2, Edit2, Copy,
   Eye, EyeOff, Check, X, ExternalLink, ChevronDown, ChevronUp,
@@ -259,6 +259,68 @@ function ArticlesTab({ articles, onRefresh }: { articles: DbIntelArticle[]; onRe
   );
 }
 
+// ── Shared image uploader ─────────────────────────────────────────────────────
+
+async function uploadImageToR2(file: File): Promise<string> {
+  const form = new FormData();
+  form.append("file", file);
+  form.append("prefix", "intel/");
+  const res = await fetch("/api/upload", { method: "POST", body: form });
+  if (!res.ok) throw new Error("Upload failed");
+  const { url } = await res.json() as { url: string; key: string };
+  return url;
+}
+
+function ImageUploadField({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (url: string) => void;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadImageToR2(file);
+      onChange(url);
+    } catch {
+      alert("Upload failed — check your admin session.");
+    } finally {
+      setUploading(false);
+      if (ref.current) ref.current.value = "";
+    }
+  };
+
+  return (
+    <div className="flex gap-2">
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={inputCls + " flex-1"}
+        placeholder="https://... or upload →"
+      />
+      <button
+        type="button"
+        onClick={() => ref.current?.click()}
+        disabled={uploading}
+        className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-surface-elevated disabled:opacity-50 transition-all"
+      >
+        <Upload className="h-3.5 w-3.5" />
+        {uploading ? "Uploading…" : "Upload"}
+      </button>
+      {value && (
+        <img src={value} alt="preview" className="h-10 w-10 rounded-md object-cover border border-border shrink-0" />
+      )}
+      <input ref={ref} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+    </div>
+  );
+}
+
 // ── Article Editor ────────────────────────────────────────────────────────────
 
 function ArticleEditor({
@@ -339,8 +401,8 @@ function ArticleEditor({
         <Field label="Read Time">
           <input value={draft.read_time} onChange={(e) => set("read_time", e.target.value)} className={inputCls} placeholder="5 min read" />
         </Field>
-        <Field label="Cover Image URL">
-          <input value={draft.cover_image_url ?? ""} onChange={(e) => set("cover_image_url", e.target.value)} className={inputCls} placeholder="https://..." />
+        <Field label="Cover Image">
+          <ImageUploadField value={draft.cover_image_url ?? ""} onChange={(url) => set("cover_image_url", url)} />
         </Field>
         <Field label="Published At">
           <input type="datetime-local" value={draft.published_at ?? ""} onChange={(e) => set("published_at", e.target.value)} className={inputCls} />
@@ -651,8 +713,8 @@ function DropEditor({
         <Field label="Est. Build Time">
           <input value={draft.estimated_build_time} onChange={(e) => set("estimated_build_time", e.target.value)} className={inputCls} placeholder="1–2 hours" />
         </Field>
-        <Field label="Cover Image URL">
-          <input value={draft.cover_image_url ?? ""} onChange={(e) => set("cover_image_url", e.target.value)} className={inputCls} placeholder="https://..." />
+        <Field label="Cover Image">
+          <ImageUploadField value={draft.cover_image_url ?? ""} onChange={(url) => set("cover_image_url", url)} />
         </Field>
         <Field label="Tools Used (JSON array)">
           <input value={draft.tools_used} onChange={(e) => set("tools_used", e.target.value)} className={inputCls} placeholder='["Carrd","ConvertKit"]' />
