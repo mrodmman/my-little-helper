@@ -27,8 +27,8 @@ import { Route as FunnelRouteImport } from './routes/funnel'
 import { Route as FastTrackRouteImport } from './routes/fast-track'
 import { Route as CancelRouteImport } from './routes/cancel'
 import { Route as BookRouteImport } from './routes/book'
-import { Route as BeginRouteImport } from './routes/begin'
 import { Route as BizThankYouRouteImport } from './routes/biz-thank-you'
+import { Route as BeginRouteImport } from './routes/begin'
 import { Route as AiLeadKitRouteImport } from './routes/ai-lead-kit'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -39,7 +39,9 @@ import { Route as AuthProvisionRouteImport } from './routes/auth/provision'
 import { Route as AuthLogoutRouteImport } from './routes/auth/logout'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as ApiUploadRouteImport } from './routes/api/upload'
+import { Route as ApiTestAiLeadKitRouteImport } from './routes/api/test-ai-lead-kit'
 import { Route as ApiSubscribeBizRouteImport } from './routes/api/subscribe-biz'
+import { Route as ApiSubscribeAiLeadKitRouteImport } from './routes/api/subscribe-ai-lead-kit'
 import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe-webhook'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as ApiCheckoutRouteImport } from './routes/api/checkout'
@@ -142,14 +144,14 @@ const BookRoute = BookRouteImport.update({
   path: '/book',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BeginRoute = BeginRouteImport.update({
-  id: '/begin',
-  path: '/begin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BizThankYouRoute = BizThankYouRouteImport.update({
   id: '/biz-thank-you',
   path: '/biz-thank-you',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BeginRoute = BeginRouteImport.update({
+  id: '/begin',
+  path: '/begin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AiLeadKitRoute = AiLeadKitRouteImport.update({
@@ -202,9 +204,19 @@ const ApiUploadRoute = ApiUploadRouteImport.update({
   path: '/api/upload',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiTestAiLeadKitRoute = ApiTestAiLeadKitRouteImport.update({
+  id: '/api/test-ai-lead-kit',
+  path: '/api/test-ai-lead-kit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSubscribeBizRoute = ApiSubscribeBizRouteImport.update({
   id: '/api/subscribe-biz',
   path: '/api/subscribe-biz',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSubscribeAiLeadKitRoute = ApiSubscribeAiLeadKitRouteImport.update({
+  id: '/api/subscribe-ai-lead-kit',
+  path: '/api/subscribe-ai-lead-kit',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiStripeWebhookRoute = ApiStripeWebhookRouteImport.update({
@@ -294,7 +306,9 @@ export interface FileRoutesByFullPath {
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/contact': typeof ApiContactRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
+  '/api/subscribe-ai-lead-kit': typeof ApiSubscribeAiLeadKitRoute
   '/api/subscribe-biz': typeof ApiSubscribeBizRoute
+  '/api/test-ai-lead-kit': typeof ApiTestAiLeadKitRoute
   '/api/upload': typeof ApiUploadRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/logout': typeof AuthLogoutRoute
@@ -337,7 +351,9 @@ export interface FileRoutesByTo {
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/contact': typeof ApiContactRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
+  '/api/subscribe-ai-lead-kit': typeof ApiSubscribeAiLeadKitRoute
   '/api/subscribe-biz': typeof ApiSubscribeBizRoute
+  '/api/test-ai-lead-kit': typeof ApiTestAiLeadKitRoute
   '/api/upload': typeof ApiUploadRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/logout': typeof AuthLogoutRoute
@@ -382,7 +398,9 @@ export interface FileRoutesById {
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/contact': typeof ApiContactRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
+  '/api/subscribe-ai-lead-kit': typeof ApiSubscribeAiLeadKitRoute
   '/api/subscribe-biz': typeof ApiSubscribeBizRoute
+  '/api/test-ai-lead-kit': typeof ApiTestAiLeadKitRoute
   '/api/upload': typeof ApiUploadRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/logout': typeof AuthLogoutRoute
@@ -428,7 +446,9 @@ export interface FileRouteTypes {
     | '/api/checkout'
     | '/api/contact'
     | '/api/stripe-webhook'
+    | '/api/subscribe-ai-lead-kit'
     | '/api/subscribe-biz'
+    | '/api/test-ai-lead-kit'
     | '/api/upload'
     | '/auth/login'
     | '/auth/logout'
@@ -471,7 +491,9 @@ export interface FileRouteTypes {
     | '/api/checkout'
     | '/api/contact'
     | '/api/stripe-webhook'
+    | '/api/subscribe-ai-lead-kit'
     | '/api/subscribe-biz'
+    | '/api/test-ai-lead-kit'
     | '/api/upload'
     | '/auth/login'
     | '/auth/logout'
@@ -515,7 +537,9 @@ export interface FileRouteTypes {
     | '/api/checkout'
     | '/api/contact'
     | '/api/stripe-webhook'
+    | '/api/subscribe-ai-lead-kit'
     | '/api/subscribe-biz'
+    | '/api/test-ai-lead-kit'
     | '/api/upload'
     | '/auth/login'
     | '/auth/logout'
@@ -556,7 +580,9 @@ export interface RootRouteChildren {
   ApiCheckoutRoute: typeof ApiCheckoutRoute
   ApiContactRoute: typeof ApiContactRoute
   ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
+  ApiSubscribeAiLeadKitRoute: typeof ApiSubscribeAiLeadKitRoute
   ApiSubscribeBizRoute: typeof ApiSubscribeBizRoute
+  ApiTestAiLeadKitRoute: typeof ApiTestAiLeadKitRoute
   ApiUploadRoute: typeof ApiUploadRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthLogoutRoute: typeof AuthLogoutRoute
@@ -696,18 +722,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/begin': {
-      id: '/begin'
-      path: '/begin'
-      fullPath: '/begin'
-      preLoaderRoute: typeof BeginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/biz-thank-you': {
       id: '/biz-thank-you'
       path: '/biz-thank-you'
       fullPath: '/biz-thank-you'
       preLoaderRoute: typeof BizThankYouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/begin': {
+      id: '/begin'
+      path: '/begin'
+      fullPath: '/begin'
+      preLoaderRoute: typeof BeginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ai-lead-kit': {
@@ -780,11 +806,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiUploadRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/test-ai-lead-kit': {
+      id: '/api/test-ai-lead-kit'
+      path: '/api/test-ai-lead-kit'
+      fullPath: '/api/test-ai-lead-kit'
+      preLoaderRoute: typeof ApiTestAiLeadKitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/subscribe-biz': {
       id: '/api/subscribe-biz'
       path: '/api/subscribe-biz'
       fullPath: '/api/subscribe-biz'
       preLoaderRoute: typeof ApiSubscribeBizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/subscribe-ai-lead-kit': {
+      id: '/api/subscribe-ai-lead-kit'
+      path: '/api/subscribe-ai-lead-kit'
+      fullPath: '/api/subscribe-ai-lead-kit'
+      preLoaderRoute: typeof ApiSubscribeAiLeadKitRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/stripe-webhook': {
@@ -924,7 +964,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiCheckoutRoute: ApiCheckoutRoute,
   ApiContactRoute: ApiContactRoute,
   ApiStripeWebhookRoute: ApiStripeWebhookRoute,
+  ApiSubscribeAiLeadKitRoute: ApiSubscribeAiLeadKitRoute,
   ApiSubscribeBizRoute: ApiSubscribeBizRoute,
+  ApiTestAiLeadKitRoute: ApiTestAiLeadKitRoute,
   ApiUploadRoute: ApiUploadRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthLogoutRoute: AuthLogoutRoute,

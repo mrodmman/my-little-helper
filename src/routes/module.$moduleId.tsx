@@ -111,17 +111,16 @@ function ModulePage() {
       const next = new Set(prev);
       const nowComplete = !next.has(i);
       if (nowComplete) { next.add(i); } else { next.delete(i); }
-      // Optimistically update localStorage
       try { localStorage.setItem(storageKey, JSON.stringify([...next])); } catch { /* noop */ }
-      // Persist to D1
-      startTransition(async () => {
-        if (nowComplete) {
-          await markLessonComplete({ data: { module_id: mod.id, lesson_idx: i } }).catch(() => null);
-        } else {
-          await markLessonIncomplete({ data: { module_id: mod.id, lesson_idx: i } }).catch(() => null);
-        }
-      });
       return next;
+    });
+    // Persist to D1 outside setState callback to avoid side effects during render
+    startTransition(async () => {
+      if (!completed.has(i)) {
+        await markLessonComplete({ data: { module_id: mod.id, lesson_idx: i } }).catch(() => null);
+      } else {
+        await markLessonIncomplete({ data: { module_id: mod.id, lesson_idx: i } }).catch(() => null);
+      }
     });
   };
 
@@ -129,9 +128,7 @@ function ModulePage() {
     setCompleted(new Set());
     setActiveIdx(0);
     try { localStorage.setItem(storageKey, JSON.stringify([])); } catch { /* noop */ }
-    startTransition(async () => {
-      await resetModuleProgress({ data: mod.id }).catch(() => null);
-    });
+    resetModuleProgress({ data: mod.id }).catch(() => null);
   };
 
   const progress = lessons.length ? Math.round((completed.size / lessons.length) * 100) : 0;
@@ -249,7 +246,7 @@ function ModulePage() {
                     <li key={s.title}>
                       <button
                         onClick={() => {
-                          if (progress === 100 && completed.has(i)) toggleComplete(i);
+                          // sidebar click - just navigate
                           setActiveIdx(i);
                         }}
                         className={`w-full text-left flex items-start gap-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
