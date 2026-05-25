@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { CheckCircle2, ArrowRight } from 'lucide-react';
+import { CheckCircle2, ArrowRight, BookOpen, Mail } from 'lucide-react';
 
 export const Route = createFileRoute('/biz-thank-you')({ component: BizThankYouPage });
 
@@ -15,20 +15,38 @@ function BizThankYouPage() {
         </div>
 
         <h1 className="font-display uppercase text-4xl md:text-5xl font-black tracking-tight leading-[1] text-foreground">
-          Your starter kit is <span className="text-primary">on its way.</span>
+          Your playbook is <span className="text-primary">ready now.</span>
         </h1>
 
         <p className="mt-5 text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-          Check your inbox for the link. If you don't see it in a couple minutes, check
-          promotions or spam.
+          Open it below — we're also sending a copy to your inbox so you can come back to it any time.
         </p>
 
-        <div className="mt-10 rounded-lg border border-border bg-surface p-6 text-left">
+        {/* Primary CTA — instant access */}
+        <a
+          href="/playbook/business-owner-growth-playbook.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-8 inline-flex items-center gap-3 rounded-md bg-primary text-primary-foreground px-8 py-4 text-base font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition"
+        >
+          <BookOpen className="h-5 w-5" />
+          Open Your Free Playbook
+          <ArrowRight className="h-5 w-5" />
+        </a>
+
+        {/* Email backup note */}
+        <div className="mt-6 inline-flex items-center gap-2 text-sm text-muted-foreground">
+          <Mail className="h-4 w-4 shrink-0" />
+          <span>Also sent to your inbox — check promotions if you don't see it.</span>
+        </div>
+
+        {/* Work with me upsell */}
+        <div className="mt-12 rounded-lg border border-border bg-surface p-6 text-left">
           <h2 className="font-display uppercase text-xl font-black tracking-tight text-foreground">
             Want it built for you?
           </h2>
           <p className="mt-3 text-muted-foreground leading-relaxed">
-            The starter kit gives you the prompts and workflow. If you'd rather have the full
+            The playbook gives you the blueprint. If you'd rather have the full
             lead system designed, deployed, and connected for your business — that's the Work With Me engagement.
           </p>
           <Link
