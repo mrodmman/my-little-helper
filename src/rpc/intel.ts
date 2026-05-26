@@ -63,9 +63,18 @@ export type ContentBlock =
   | { type: "callout"; text: string; variant?: "info" | "warning" | "tip" | "success" }
   | { type: "bullet_list"; items: string[] }
   | { type: "numbered_steps"; items: string[] }
-  | { type: "comparison_cards"; cards: Array<{ title: string; items: string[]; variant?: "pro" | "con" | "neutral" }> }
+  | {
+      type: "comparison_cards";
+      cards: Array<{ title: string; items: string[]; variant?: "pro" | "con" | "neutral" }>;
+    }
   | { type: "tool_box"; toolName: string; description: string; url?: string }
-  | { type: "cta_box"; headline: string; description: string; buttonText: string; buttonUrl: string }
+  | {
+      type: "cta_box";
+      headline: string;
+      description: string;
+      buttonText: string;
+      buttonUrl: string;
+    }
   | { type: "code_block"; language?: string; code: string }
   | { type: "quote"; text: string; author?: string }
   | { type: "divider" };
@@ -76,6 +85,19 @@ export type ImportPackage = {
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
+
+function normalizeSlug(raw: string) {
+  return raw
+    .trim()
+    .toLowerCase()
+    .replace(/%2f/gi, "/")
+    .replace(/[^a-z0-9\s/_-]/g, "")
+    .replace(/[\s_]+/g, "-")
+    .replace(/\/+/, "/")
+    .replace(/\//g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
 
 function genId(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -92,10 +114,22 @@ export const getPublishedArticles = createServerFn().handler(async () => {
        FROM intel_articles
        WHERE published = 1
        ORDER BY featured DESC, published_at DESC`,
-    ).all<Pick<DbIntelArticle,
-      "id" | "slug" | "title" | "excerpt" | "category" | "tags" |
-      "cover_image_url" | "read_time" | "published_at" | "featured" | "related_starter_drop_slug"
-    >>();
+    ).all<
+      Pick<
+        DbIntelArticle,
+        | "id"
+        | "slug"
+        | "title"
+        | "excerpt"
+        | "category"
+        | "tags"
+        | "cover_image_url"
+        | "read_time"
+        | "published_at"
+        | "featured"
+        | "related_starter_drop_slug"
+      >
+    >();
     return results;
   } catch {
     return [];
@@ -107,12 +141,28 @@ export const getArticleBySlug = createServerFn()
   .handler(async ({ data: slug }) => {
     try {
       const env = await getEnv();
-      const row = await env.DB.prepare(
-        "SELECT * FROM intel_articles WHERE slug = ? AND published = 1",
-      )
-        .bind(slug)
-        .first<DbIntelArticle>();
-      return row ?? null;
+      const decodedSlug = (() => {
+        try {
+          return decodeURIComponent(slug);
+        } catch {
+          return slug;
+        }
+      })();
+      const candidateSlugs = Array.from(new Set([slug, decodedSlug, normalizeSlug(slug)]));
+      for (const candidate of candidateSlugs) {
+        const row = await env.DB.prepare(
+          "SELECT * FROM intel_articles WHERE slug = ? AND published = 1",
+        )
+          .bind(candidate)
+          .first<DbIntelArticle>();
+        if (row) return row;
+      }
+      // Fallback: tolerate historical slug drift (spacing/case/encoding differences)
+      const { results } = await env.DB.prepare(
+        "SELECT * FROM intel_articles WHERE published = 1",
+      ).all<DbIntelArticle>();
+      const wanted = normalizeSlug(decodedSlug);
+      return results.find((row) => normalizeSlug(row.slug) === wanted) ?? null;
     } catch {
       return null;
     }
@@ -128,10 +178,21 @@ export const getPublishedStarterDrops = createServerFn().handler(async () => {
        FROM starter_drops
        WHERE published = 1
        ORDER BY created_at DESC`,
-    ).all<Pick<DbStarterDrop,
-      "id" | "slug" | "title" | "excerpt" | "category" | "cover_image_url" |
-      "difficulty" | "estimated_build_time" | "tools_used" | "related_article_slug"
-    >>();
+    ).all<
+      Pick<
+        DbStarterDrop,
+        | "id"
+        | "slug"
+        | "title"
+        | "excerpt"
+        | "category"
+        | "cover_image_url"
+        | "difficulty"
+        | "estimated_build_time"
+        | "tools_used"
+        | "related_article_slug"
+      >
+    >();
     return results;
   } catch {
     return [];
@@ -176,9 +237,11 @@ export const getArticleByIdAdmin = createServerFn()
   .handler(async ({ data: id }) => {
     try {
       const env = await getEnv();
-      return await env.DB.prepare("SELECT * FROM intel_articles WHERE id = ?")
-        .bind(id)
-        .first<DbIntelArticle>() ?? null;
+      return (
+        (await env.DB.prepare("SELECT * FROM intel_articles WHERE id = ?")
+          .bind(id)
+          .first<DbIntelArticle>()) ?? null
+      );
     } catch {
       return null;
     }
@@ -204,9 +267,11 @@ export const getStarterDropByIdAdmin = createServerFn()
   .handler(async ({ data: id }) => {
     try {
       const env = await getEnv();
-      return await env.DB.prepare("SELECT * FROM starter_drops WHERE id = ?")
-        .bind(id)
-        .first<DbStarterDrop>() ?? null;
+      return (
+        (await env.DB.prepare("SELECT * FROM starter_drops WHERE id = ?")
+          .bind(id)
+          .first<DbStarterDrop>()) ?? null
+      );
     } catch {
       return null;
     }
@@ -215,7 +280,9 @@ export const getStarterDropByIdAdmin = createServerFn()
 // ── Admin write: articles ─────────────────────────────────────────────────────
 
 export const upsertArticle = createServerFn({ method: "POST" })
-  .inputValidator((data: Partial<DbIntelArticle> & { id?: string; slug: string; title: string }) => data)
+  .inputValidator(
+    (data: Partial<DbIntelArticle> & { id?: string; slug: string; title: string }) => data,
+  )
   .handler(async ({ data }) => {
     try {
       const env = await getEnv();
@@ -245,7 +312,7 @@ export const upsertArticle = createServerFn({ method: "POST" })
       )
         .bind(
           id,
-          data.slug,
+          normalizeSlug(data.slug),
           data.title,
           data.excerpt ?? "",
           data.category ?? "",
@@ -306,12 +373,25 @@ export const duplicateArticle = createServerFn({ method: "POST" })
          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       )
         .bind(
-          newId, newSlug, `${src.title} (copy)`, src.excerpt, src.category, src.tags,
-          src.cover_image_url, src.read_time, null, 0, 0,
+          newId,
+          normalizeSlug(newSlug),
+          `${src.title} (copy)`,
+          src.excerpt,
+          src.category,
+          src.tags,
+          src.cover_image_url,
+          src.read_time,
+          null,
+          0,
+          0,
           src.related_starter_drop_slug,
-          src.fast_route_tool_name, src.fast_route_description,
-          src.fast_route_affiliate_url, src.fast_route_button_text,
-          src.content_blocks, now, now,
+          src.fast_route_tool_name,
+          src.fast_route_description,
+          src.fast_route_affiliate_url,
+          src.fast_route_button_text,
+          src.content_blocks,
+          now,
+          now,
         )
         .run();
       return { ok: true, id: newId };
@@ -323,7 +403,9 @@ export const duplicateArticle = createServerFn({ method: "POST" })
 // ── Admin write: starter drops ────────────────────────────────────────────────
 
 export const upsertStarterDrop = createServerFn({ method: "POST" })
-  .inputValidator((data: Partial<DbStarterDrop> & { id?: string; slug: string; title: string }) => data)
+  .inputValidator(
+    (data: Partial<DbStarterDrop> & { id?: string; slug: string; title: string }) => data,
+  )
   .handler(async ({ data }) => {
     try {
       const env = await getEnv();
@@ -350,16 +432,27 @@ export const upsertStarterDrop = createServerFn({ method: "POST" })
            updated_at=excluded.updated_at`,
       )
         .bind(
-          id, data.slug, data.title,
-          data.excerpt ?? "", data.category ?? "",
-          data.cover_image_url ?? null, data.difficulty ?? "Beginner",
-          data.estimated_build_time ?? "", data.tools_used ?? "[]",
-          data.published ?? 0, data.related_article_slug ?? null,
-          data.what_this_builds ?? "[]", data.what_you_get ?? "[]",
-          data.build_prompt ?? "", data.file_tree ?? "",
-          data.setup_steps ?? "[]", data.edit_map ?? "[]",
-          data.troubleshooting ?? "[]", data.upgrade_note ?? null,
-          now, now,
+          id,
+          data.slug,
+          data.title,
+          data.excerpt ?? "",
+          data.category ?? "",
+          data.cover_image_url ?? null,
+          data.difficulty ?? "Beginner",
+          data.estimated_build_time ?? "",
+          data.tools_used ?? "[]",
+          data.published ?? 0,
+          data.related_article_slug ?? null,
+          data.what_this_builds ?? "[]",
+          data.what_you_get ?? "[]",
+          data.build_prompt ?? "",
+          data.file_tree ?? "",
+          data.setup_steps ?? "[]",
+          data.edit_map ?? "[]",
+          data.troubleshooting ?? "[]",
+          data.upgrade_note ?? null,
+          now,
+          now,
         )
         .run();
       return { ok: true, id };
@@ -402,11 +495,27 @@ export const duplicateStarterDrop = createServerFn({ method: "POST" })
          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       )
         .bind(
-          newId, newSlug, `${src.title} (copy)`, src.excerpt, src.category,
-          src.cover_image_url, src.difficulty, src.estimated_build_time, src.tools_used,
-          0, src.related_article_slug, src.what_this_builds, src.what_you_get,
-          src.build_prompt, src.file_tree, src.setup_steps, src.edit_map,
-          src.troubleshooting, src.upgrade_note, now, now,
+          newId,
+          normalizeSlug(newSlug),
+          `${src.title} (copy)`,
+          src.excerpt,
+          src.category,
+          src.cover_image_url,
+          src.difficulty,
+          src.estimated_build_time,
+          src.tools_used,
+          0,
+          src.related_article_slug,
+          src.what_this_builds,
+          src.what_you_get,
+          src.build_prompt,
+          src.file_tree,
+          src.setup_steps,
+          src.edit_map,
+          src.troubleshooting,
+          src.upgrade_note,
+          now,
+          now,
         )
         .run();
       return { ok: true, id: newId };
@@ -427,9 +536,7 @@ export const importIntelPackage = createServerFn({ method: "POST" })
       if (pkg.article) {
         const a = pkg.article;
         // Check if slug exists
-        const existing = await env.DB.prepare(
-          "SELECT id FROM intel_articles WHERE slug = ?",
-        )
+        const existing = await env.DB.prepare("SELECT id FROM intel_articles WHERE slug = ?")
           .bind(a.slug)
           .first<{ id: string }>();
         const id = existing?.id || genId("article");
@@ -457,16 +564,27 @@ export const importIntelPackage = createServerFn({ method: "POST" })
              content_blocks=excluded.content_blocks, updated_at=excluded.updated_at`,
         )
           .bind(
-            id, a.slug, a.title,
-            a.excerpt ?? "", a.category ?? "",
+            id,
+            normalizeSlug(a.slug),
+            a.title,
+            a.excerpt ?? "",
+            a.category ?? "",
             typeof a.tags === "string" ? a.tags : JSON.stringify(a.tags ?? []),
-            a.cover_image_url ?? null, a.read_time ?? "",
-            a.published_at ?? new Date().toISOString(), a.featured ?? 0, a.published ?? 1,
+            a.cover_image_url ?? null,
+            a.read_time ?? "",
+            a.published_at ?? new Date().toISOString(),
+            a.featured ?? 0,
+            a.published ?? 1,
             a.related_starter_drop_slug ?? null,
-            a.fast_route_tool_name ?? null, a.fast_route_description ?? null,
-            a.fast_route_affiliate_url ?? null, a.fast_route_button_text ?? null,
-            typeof a.content_blocks === "string" ? a.content_blocks : JSON.stringify(a.content_blocks ?? []),
-            now, now,
+            a.fast_route_tool_name ?? null,
+            a.fast_route_description ?? null,
+            a.fast_route_affiliate_url ?? null,
+            a.fast_route_button_text ?? null,
+            typeof a.content_blocks === "string"
+              ? a.content_blocks
+              : JSON.stringify(a.content_blocks ?? []),
+            now,
+            now,
           )
           .run();
         results.articles = id;
@@ -474,9 +592,7 @@ export const importIntelPackage = createServerFn({ method: "POST" })
 
       if (pkg.starterDrop) {
         const d = pkg.starterDrop;
-        const existing = await env.DB.prepare(
-          "SELECT id FROM starter_drops WHERE slug = ?",
-        )
+        const existing = await env.DB.prepare("SELECT id FROM starter_drops WHERE slug = ?")
           .bind(d.slug)
           .first<{ id: string }>();
         const id = existing?.id || genId("drop");
@@ -502,19 +618,33 @@ export const importIntelPackage = createServerFn({ method: "POST" })
              updated_at=excluded.updated_at`,
         )
           .bind(
-            id, d.slug, d.title,
-            d.excerpt ?? "", d.category ?? "",
-            d.cover_image_url ?? null, d.difficulty ?? "Beginner",
+            id,
+            d.slug,
+            d.title,
+            d.excerpt ?? "",
+            d.category ?? "",
+            d.cover_image_url ?? null,
+            d.difficulty ?? "Beginner",
             d.estimated_build_time ?? "",
             typeof d.tools_used === "string" ? d.tools_used : JSON.stringify(d.tools_used ?? []),
-            d.published ?? 1, d.related_article_slug ?? null,
-            typeof d.what_this_builds === "string" ? d.what_this_builds : JSON.stringify(d.what_this_builds ?? []),
-            typeof d.what_you_get === "string" ? d.what_you_get : JSON.stringify(d.what_you_get ?? []),
-            d.build_prompt ?? "", d.file_tree ?? "",
+            d.published ?? 1,
+            d.related_article_slug ?? null,
+            typeof d.what_this_builds === "string"
+              ? d.what_this_builds
+              : JSON.stringify(d.what_this_builds ?? []),
+            typeof d.what_you_get === "string"
+              ? d.what_you_get
+              : JSON.stringify(d.what_you_get ?? []),
+            d.build_prompt ?? "",
+            d.file_tree ?? "",
             typeof d.setup_steps === "string" ? d.setup_steps : JSON.stringify(d.setup_steps ?? []),
             typeof d.edit_map === "string" ? d.edit_map : JSON.stringify(d.edit_map ?? []),
-            typeof d.troubleshooting === "string" ? d.troubleshooting : JSON.stringify(d.troubleshooting ?? []),
-            d.upgrade_note ?? null, now, now,
+            typeof d.troubleshooting === "string"
+              ? d.troubleshooting
+              : JSON.stringify(d.troubleshooting ?? []),
+            d.upgrade_note ?? null,
+            now,
+            now,
           )
           .run();
         results.drops = id;
