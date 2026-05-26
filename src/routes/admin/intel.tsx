@@ -881,6 +881,28 @@ function ImportTab({ onImported }: { onImported: () => void }) {
         setParseError('JSON must have at least "article" or "starterDrop" key.');
         return;
       }
+      // ── Normalize array fields to JSON strings before RPC transport ──────────
+      // The ImportPackage TS types declare content_blocks and tags as `string`,
+      // but imported JSON has them as arrays. Stringify them here so they survive
+      // serialization to the server function unchanged.
+      if (obj.article) {
+        const a = obj.article as Record<string, unknown>;
+        if (Array.isArray(a.content_blocks)) {
+          a.content_blocks = JSON.stringify(a.content_blocks);
+        }
+        if (Array.isArray(a.tags)) {
+          a.tags = JSON.stringify(a.tags);
+        }
+      }
+      if (obj.starterDrop) {
+        const d = obj.starterDrop as Record<string, unknown>;
+        for (const key of ["tools_used", "what_this_builds", "what_you_get", "setup_steps", "edit_map", "troubleshooting"]) {
+          if (Array.isArray(d[key])) {
+            d[key] = JSON.stringify(d[key]);
+          }
+        }
+      }
+      // ────────────────────────────────────────────────────────────────────────
       setParsed(obj);
       setImageSlots(detectImageSlots(obj));
     } catch (e) {
