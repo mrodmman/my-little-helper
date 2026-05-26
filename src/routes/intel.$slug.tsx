@@ -24,7 +24,14 @@ export const Route = createFileRoute("/intel/$slug")({
       getArticleBySlug({ data: params.slug }),
       getPublishedArticles().catch(() => []),
     ]);
+    
+    // Debug log for troubleshooting
+    if (!article) {
+      console.error(`[Intel] Article not found for slug: "${params.slug}"`);
+    }
+    
     if (!article) throw notFound({ routeId: rootRouteId });
+    
     const related = allArticles
       .filter((a) => a.slug !== article.slug && a.category === article.category)
       .slice(0, 3);
