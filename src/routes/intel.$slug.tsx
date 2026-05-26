@@ -58,6 +58,16 @@ export const Route = createFileRoute("/intel/$slug")({
   ),
 });
 
+
+function isRenderableImageUrl(url?: string | null) {
+  if (!url) return false;
+  const trimmed = url.trim();
+  if (!trimmed) return false;
+  if (trimmed.startsWith("REPLACE_WITH_")) return false;
+  if (trimmed.includes("{{") || trimmed.includes("}}")) return false;
+  return true;
+}
+
 function ArticlePage() {
   const { article, related } = Route.useLoaderData();
 
@@ -126,12 +136,12 @@ function ArticlePage() {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0D1220] leading-tight max-w-3xl mb-4">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight max-w-3xl mb-4">
             {article.title}
           </h1>
 
           {/* Excerpt */}
-          <p className="text-[#556070] text-lg leading-relaxed max-w-2xl mb-5">{article.excerpt}</p>
+          <p className="text-[#8899BB] text-lg leading-relaxed max-w-2xl mb-5">{article.excerpt}</p>
 
           {/* Tags */}
           {tags.length > 0 && (
@@ -150,7 +160,7 @@ function ArticlePage() {
       </div>
 
       {/* ── Hero Image (if exists) ── */}
-      {article.cover_image_url && (
+      {isRenderableImageUrl(article.cover_image_url) && (
         <div className="max-w-6xl mx-auto px-4 sm:px-6 -mt-0 pb-0">
           <div className="rounded-2xl overflow-hidden border border-[#C8C3BA]/40 shadow-md">
             <img
