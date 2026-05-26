@@ -87,23 +87,18 @@ function ArticlePage() {
       {/* ── Article Header ── */}
       <div
         style={{
-          background:
-            "linear-gradient(180deg, #F4F6FA 0%, #EEF2F7 100%)",
-          borderBottom: "1px solid rgba(200,195,186,0.4)",
+          background: "#0D1220",
+          borderBottom: "1px solid rgba(200,195,186,0.1)",
         }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-1.5 text-sm text-[#888] mb-6">
-            <Link to="/" className="hover:text-[#2563FF] transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="h-3.5 w-3.5" />
-            <Link to="/intel" className="hover:text-[#2563FF] transition-colors">
+          <nav className="flex items-center gap-1.5 text-sm text-[#8899BB] mb-6">
+            <Link to="/intel" className="hover:text-white transition-colors">
               Intel
             </Link>
             <ChevronRight className="h-3.5 w-3.5" />
-            <span className="text-[#556070] line-clamp-1">{article.title}</span>
+            <span className="text-[#CBD5E0] line-clamp-1">{article.title}</span>
           </nav>
 
           {/* Category + meta */}
