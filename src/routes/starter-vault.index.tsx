@@ -44,14 +44,14 @@ function StarterVaultHub() {
         className="relative overflow-hidden"
         style={{
           background:
-            "linear-gradient(135deg, #0D1220 0%, #0f2244 60%, #112b66 100%)",
+            "linear-gradient(135deg, #04070F 0%, #09152D 55%, #0D2554 100%)",
         }}
       >
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse at 10% 60%, rgba(37,99,255,0.15) 0%, transparent 55%), radial-gradient(ellipse at 90% 10%, rgba(37,99,255,0.08) 0%, transparent 50%)",
+              "radial-gradient(ellipse at 10% 60%, rgba(37,99,255,0.24) 0%, transparent 55%), radial-gradient(ellipse at 90% 10%, rgba(37,99,255,0.14) 0%, transparent 50%)",
           }}
         />
 
@@ -66,7 +66,7 @@ function StarterVaultHub() {
           </div>
 
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-[#2563FF]/20 border border-[#2563FF]/30 text-[#7BA7FF] px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
+            <div className="inline-flex items-center gap-2 bg-[#2563FF]/16 border border-[#2563FF]/45 text-[#A8C4FF] px-3 py-1 rounded-md text-xs font-semibold uppercase tracking-wider mb-6">
               <Package className="h-3 w-3" />
               Free Build Kits
             </div>
@@ -91,14 +91,14 @@ function StarterVaultHub() {
             <div className="flex flex-wrap gap-3">
               <a
                 href="#drops"
-                className="inline-flex items-center gap-2 bg-[#2563FF] text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#1D50D9] transition-colors"
+                className="inline-flex items-center gap-2 bg-[#2563FF] text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#1D50D9] transition-colors shadow-[0_0_0_1px_rgba(37,99,255,0.35)]"
               >
                 Browse Build Kits
                 <ArrowRight className="h-4 w-4" />
               </a>
               <Link
                 to="/intel"
-                className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-white/15 transition-colors"
+                className="inline-flex items-center gap-2 bg-transparent border border-[#2563FF]/80 text-[#A8C4FF] px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#2563FF]/10 transition-colors"
               >
                 <BookOpen className="h-4 w-4" />
                 Kraken Intel Articles
