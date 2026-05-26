@@ -55,10 +55,7 @@ function IntelHub() {
       {/* ── Hero ── */}
       <div
         className="relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, #0D1220 0%, #1a2744 60%, #1a3a80 100%)",
-        }}
+        style={{ background: "#0D1220" }}
       >
         {/* Ambient glow */}
         <div
@@ -72,11 +69,7 @@ function IntelHub() {
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-[#8899BB] text-sm mb-8">
-            <Link to="/" className="hover:text-white transition-colors">
-              Home
-            </Link>
-            <span>/</span>
-            <span className="text-white">Intel</span>
+            <span className="text-white font-medium">Intel</span>
           </div>
 
           <div className="max-w-3xl">
@@ -235,3 +228,9 @@ function IntelHub() {
     </div>
   );
 }
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
+/home/engine/.bashrc: line 1: syntax error near unexpected token `('
+/home/engine/.bashrc: line 1: `. /etc/profile.d/workload-containment.shn# ~/.bashrc: executed by bash(1) for non-login shells.'
