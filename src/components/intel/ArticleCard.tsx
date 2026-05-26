@@ -1,7 +1,6 @@
 /**
  * ArticleCard — used in the Kraken Intel hub grid.
  */
-import { Link } from "@tanstack/react-router";
 import { Clock, ArrowRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -29,13 +28,16 @@ export function ArticleCard({
   large = false,
 }: ArticleCardProps) {
   const date = publishedAt
-    ? new Date(publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+    ? new Date(publishedAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
     : null;
 
   return (
-    <Link
-      to="/intel/$slug"
-      params={{ slug }}
+    <a
+      href={`/intel/${encodeURIComponent(slug)}`}
       className={cn(
         "group flex flex-col rounded-2xl bg-white border border-[#C8C3BA]/50 overflow-hidden",
         "shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300",
@@ -90,9 +92,7 @@ export function ArticleCard({
         </h3>
 
         {/* Excerpt */}
-        <p className="text-[#556070] text-sm leading-relaxed flex-1 line-clamp-3 mb-4">
-          {excerpt}
-        </p>
+        <p className="text-[#556070] text-sm leading-relaxed flex-1 line-clamp-3 mb-4">{excerpt}</p>
 
         {/* Footer */}
         <div className="flex items-center justify-between mt-auto">
@@ -111,6 +111,6 @@ export function ArticleCard({
           </span>
         </div>
       </div>
-    </Link>
+    </a>
   );
 }
