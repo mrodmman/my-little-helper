@@ -135,6 +135,13 @@ function ArticlesTab({ articles, onRefresh }: { articles: DbIntelArticle[]; onRe
     });
   };
 
+  const handleEdit = (a: DbIntelArticle) => {
+    startTransition(async () => {
+      const full = await getArticleByIdAdmin({ data: a.id }).catch(() => null);
+      setEditing(full ?? a);
+    });
+  };
+
   const handleTogglePublish = (a: DbIntelArticle) => {
     startTransition(async () => {
       await upsertArticle({ data: { ...a, published: a.published ? 0 : 1 } }).catch(console.error);
@@ -237,7 +244,7 @@ function ArticlesTab({ articles, onRefresh }: { articles: DbIntelArticle[]; onRe
                   <Copy className="h-3.5 w-3.5" />
                 </button>
                 <button
-                  onClick={() => setEditing(a)}
+                  onClick={() => handleEdit(a)}
                   className="p-1.5 rounded-lg hover:bg-surface text-muted-foreground hover:text-foreground transition-colors"
                   title="Edit"
                 >
@@ -317,6 +324,99 @@ function ImageUploadField({
         <img src={value} alt="preview" className="h-10 w-10 rounded-md object-cover border border-border shrink-0" />
       )}
       <input ref={ref} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+    </div>
+  );
+}
+
+function isImageFieldKey(key: string) {
+  const normalized = key.toLowerCase();
+  return (
+    normalized === "url" ||
+    normalized === "image" ||
+    normalized === "image_url" ||
+    normalized === "cover_image_url" ||
+    normalized.endsWith("_image") ||
+    normalized.endsWith("_image_url")
+  );
+}
+
+function isProbablyImageValue(value: unknown) {
+  if (typeof value !== "string") return false;
+  const trimmed = value.trim().toLowerCase();
+  if (!trimmed) return true;
+  return (
+    trimmed.startsWith("http://") ||
+    trimmed.startsWith("https://") ||
+    trimmed.startsWith("/") ||
+    /\.(png|jpe?g|gif|webp|svg|avif)(\?.*)?$/.test(trimmed)
+  );
+}
+
+function ContentBlocksImageManager({
+  rawJson,
+  onChange,
+}: {
+  rawJson: string;
+  onChange: (nextJson: string) => void;
+}) {
+  let parseError = "";
+  let blocks: Array<Record<string, unknown>> = [];
+  try {
+    const parsed = JSON.parse(rawJson || "[]") as unknown;
+    if (Array.isArray(parsed)) {
+      blocks = parsed.map((item) => (item && typeof item === "object" ? { ...item as Record<string, unknown> } : {}));
+    } else {
+      parseError = "Content blocks JSON must be an array.";
+    }
+  } catch {
+    parseError = "Invalid JSON. Fix JSON first to manage image fields.";
+  }
+
+  const updateField = (blockIndex: number, key: string, nextValue: string) => {
+    const nextBlocks = blocks.map((b, i) => (i === blockIndex ? { ...b, [key]: nextValue } : b));
+    onChange(JSON.stringify(nextBlocks, null, 2));
+  };
+
+  if (parseError) {
+    return (
+      <div className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3">
+        {parseError}
+      </div>
+    );
+  }
+
+  const candidates = blocks.flatMap((block, blockIndex) =>
+    Object.entries(block)
+      .filter(([key, value]) => isImageFieldKey(key) && isProbablyImageValue(value))
+      .map(([key, value]) => ({
+        blockIndex,
+        blockType: String(block.type ?? "unknown"),
+        key,
+        value: typeof value === "string" ? value : "",
+      })),
+  );
+
+  if (candidates.length === 0) {
+    return (
+      <div className="text-xs text-muted-foreground bg-surface/50 rounded-lg p-3 border border-border">
+        No image fields detected in JSON blocks yet.
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {candidates.map((item) => (
+        <div key={`${item.blockIndex}:${item.key}`} className="rounded-lg border border-border bg-surface/30 p-3 space-y-2">
+          <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+            Block #{item.blockIndex + 1} ({item.blockType}) · {item.key}
+          </div>
+          <ImageUploadField
+            value={item.value}
+            onChange={(url) => updateField(item.blockIndex, item.key, url)}
+          />
+        </div>
+      ))}
     </div>
   );
 }
@@ -459,6 +559,15 @@ function ArticleEditor({
             placeholder='[{"type":"paragraph","text":"..."}]'
           />
         )}
+        <div className="pt-1">
+          <div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+            Image Fields in JSON Blocks
+          </div>
+          <ContentBlocksImageManager
+            rawJson={draft.content_blocks}
+            onChange={(nextJson) => set("content_blocks", nextJson)}
+          />
+        </div>
         {!jsonMode && (
           <div className="text-xs text-muted-foreground bg-surface/50 rounded-lg p-3 border border-border">
             {(() => {
