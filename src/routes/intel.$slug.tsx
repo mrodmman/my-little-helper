@@ -1,7 +1,7 @@
 /**
  * /intel/:slug — Individual Kraken Intel article page.
  */
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, rootRouteId } from "@tanstack/react-router";
 import { Clock, ChevronRight, BookOpen } from "lucide-react";
 import { getArticleBySlug, getPublishedArticles } from "@/rpc/intel";
 import type { ContentBlock } from "@/rpc/intel";
@@ -24,15 +24,18 @@ export const Route = createFileRoute("/intel/$slug")({
       getArticleBySlug({ data: params.slug }),
       getPublishedArticles().catch(() => []),
     ]);
-    if (!article) throw notFound();
-    const related = allArticles.filter(
-      (a) => a.slug !== article.slug && a.category === article.category,
-    ).slice(0, 3);
+    if (!article) throw notFound({ routeId: rootRouteId });
+    const related = allArticles
+      .filter((a) => a.slug !== article.slug && a.category === article.category)
+      .slice(0, 3);
     return { article, related };
   },
   component: ArticlePage,
   notFoundComponent: () => (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: "#F4F6FA" }}>
+    <div
+      className="min-h-screen flex items-center justify-center"
+      style={{ background: "#F4F6FA" }}
+    >
       <div className="text-center">
         <div className="text-6xl font-black text-[#C8C3BA] mb-4">404</div>
         <h1 className="text-2xl font-bold text-[#0D1220] mb-2">Article not found</h1>
@@ -87,8 +90,7 @@ function ArticlePage() {
       {/* ── Article Header ── */}
       <div
         style={{
-          background:
-            "linear-gradient(180deg, #F4F6FA 0%, #EEF2F7 100%)",
+          background: "linear-gradient(180deg, #F4F6FA 0%, #EEF2F7 100%)",
           borderBottom: "1px solid rgba(200,195,186,0.4)",
         }}
       >
@@ -111,9 +113,7 @@ function ArticlePage() {
             <span className="inline-flex items-center bg-[#2563FF]/8 text-[#2563FF] text-xs font-bold px-3 py-1 rounded-full border border-[#2563FF]/15 uppercase tracking-wide">
               {article.category}
             </span>
-            {publishDate && (
-              <span className="text-xs text-[#888]">{publishDate}</span>
-            )}
+            {publishDate && <span className="text-xs text-[#888]">{publishDate}</span>}
             {article.read_time && (
               <span className="flex items-center gap-1 text-xs text-[#888]">
                 <Clock className="h-3 w-3" />
@@ -128,9 +128,7 @@ function ArticlePage() {
           </h1>
 
           {/* Excerpt */}
-          <p className="text-[#556070] text-lg leading-relaxed max-w-2xl mb-5">
-            {article.excerpt}
-          </p>
+          <p className="text-[#556070] text-lg leading-relaxed max-w-2xl mb-5">{article.excerpt}</p>
 
           {/* Tags */}
           {tags.length > 0 && (
@@ -258,10 +256,7 @@ function ArticlePage() {
             <div className="flex items-center gap-3 mb-6">
               <h2 className="text-xl font-bold text-[#0D1220]">Related Articles</h2>
               <div className="h-px flex-1 bg-[#C8C3BA]/40" />
-              <Link
-                to="/intel"
-                className="text-sm text-[#2563FF] font-medium hover:underline"
-              >
+              <Link to="/intel" className="text-sm text-[#2563FF] font-medium hover:underline">
                 See all
               </Link>
             </div>

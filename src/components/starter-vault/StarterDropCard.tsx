@@ -1,8 +1,8 @@
 /**
  * StarterDropCard — used in the Starter Vault hub grid.
  */
-import { Link } from "@tanstack/react-router";
-import { Clock, Wrench, ArrowRight, ChevronRight } from "lucide-react";
+import { useNavigate } from "@tanstack/react-router";
+import { Clock, Wrench, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface StarterDropCardProps {
@@ -33,19 +33,24 @@ export function StarterDropCard({
   estimatedBuildTime,
   toolsUsed,
 }: StarterDropCardProps) {
-  const tools: string[] = Array.isArray(toolsUsed)
-    ? toolsUsed
-    : typeof toolsUsed === "string"
-      ? (JSON.parse(toolsUsed || "[]") as string[])
-      : [];
+  const navigate = useNavigate();
+  const tools: string[] = (() => {
+    if (Array.isArray(toolsUsed)) return toolsUsed;
+    if (typeof toolsUsed !== "string") return [];
+    try {
+      return JSON.parse(toolsUsed || "[]") as string[];
+    } catch {
+      return [];
+    }
+  })();
 
   const diffColor = DIFFICULTY_COLORS[difficulty] ?? "bg-gray-50 text-gray-600 border-gray-200";
 
   return (
-    <Link
-      to="/starter-vault/$slug"
-      params={{ slug }}
-      className="group flex flex-col rounded-2xl bg-white border border-[#C8C3BA]/50 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+    <button
+      type="button"
+      onClick={() => navigate({ to: "/starter-vault/$slug", params: { slug } })}
+      className="group flex w-full text-left flex-col rounded-2xl bg-white border border-[#C8C3BA]/50 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     >
       {/* Cover */}
       <div className="relative aspect-video bg-gradient-to-br from-[#EEF2F7] to-[#E8EDF5] overflow-hidden">
@@ -77,7 +82,9 @@ export function StarterDropCard({
       <div className="flex flex-col flex-1 p-5">
         {/* Difficulty + time */}
         <div className="flex items-center gap-2 mb-3 flex-wrap">
-          <span className={cn("text-[11px] font-semibold px-2 py-0.5 rounded-full border", diffColor)}>
+          <span
+            className={cn("text-[11px] font-semibold px-2 py-0.5 rounded-full border", diffColor)}
+          >
             {difficulty}
           </span>
           {estimatedBuildTime && (
@@ -94,9 +101,7 @@ export function StarterDropCard({
         </h3>
 
         {/* Excerpt */}
-        <p className="text-[#556070] text-sm leading-relaxed flex-1 line-clamp-3 mb-4">
-          {excerpt}
-        </p>
+        <p className="text-[#556070] text-sm leading-relaxed flex-1 line-clamp-3 mb-4">{excerpt}</p>
 
         {/* Tools */}
         {tools.length > 0 && (
@@ -125,6 +130,6 @@ export function StarterDropCard({
           </span>
         </div>
       </div>
-    </Link>
+    </button>
   );
 }
