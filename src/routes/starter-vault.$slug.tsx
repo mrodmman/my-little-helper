@@ -95,8 +95,8 @@ function StarterDropPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-sm text-[#888] mb-6 flex-wrap">
-            <Link to="/" className="hover:text-[#2563FF] transition-colors">
-              Home
+            <Link to="/intel" className="hover:text-[#2563FF] transition-colors">
+              Articles
             </Link>
             <ChevronRight className="h-3.5 w-3.5 shrink-0" />
             <Link
@@ -374,10 +374,10 @@ function StarterDropPage() {
               {drop.upgrade_note}
             </p>
             <Link
-              to="/vault"
+              to="/subscribe"
               className="inline-flex items-center gap-2 bg-[#2563FF] text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-[#1D50D9] transition-colors"
             >
-              Explore Premium Vault
+              Get Premium Access
               <ChevronRight className="h-3.5 w-3.5" />
             </Link>
           </div>

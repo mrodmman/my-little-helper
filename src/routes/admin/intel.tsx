@@ -135,6 +135,13 @@ function ArticlesTab({ articles, onRefresh }: { articles: DbIntelArticle[]; onRe
     });
   };
 
+  const handleEdit = (a: DbIntelArticle) => {
+    startTransition(async () => {
+      const full = await getArticleByIdAdmin({ data: a.id }).catch(() => null);
+      setEditing(full ?? a);
+    });
+  };
+
   const handleTogglePublish = (a: DbIntelArticle) => {
     startTransition(async () => {
       await upsertArticle({ data: { ...a, published: a.published ? 0 : 1 } }).catch(console.error);
@@ -237,7 +244,7 @@ function ArticlesTab({ articles, onRefresh }: { articles: DbIntelArticle[]; onRe
                   <Copy className="h-3.5 w-3.5" />
                 </button>
                 <button
-                  onClick={() => setEditing(a)}
+                  onClick={() => handleEdit(a)}
                   className="p-1.5 rounded-lg hover:bg-surface text-muted-foreground hover:text-foreground transition-colors"
                   title="Edit"
                 >

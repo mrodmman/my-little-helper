@@ -58,8 +58,8 @@ function StarterVaultHub() {
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-[#8899BB] text-sm mb-8">
-            <Link to="/" className="hover:text-white transition-colors">
-              Home
+            <Link to="/intel" className="hover:text-white transition-colors">
+              Intel Articles
             </Link>
             <span>/</span>
             <span className="text-white">Starter Vault</span>

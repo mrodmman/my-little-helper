@@ -212,11 +212,10 @@ function ArticlePage() {
                   Want the full step-by-step build kit? Grab the free Starter Vault version.
                 </p>
                 <Link
-                  to="/starter-vault/$slug"
-                  params={{ slug: article.related_starter_drop_slug }}
+                  to="/starter-vault"
                   className="flex items-center justify-center gap-2 w-full bg-[#2563FF] text-white text-sm font-semibold px-3 py-2 rounded-lg hover:bg-[#1D50D9] transition-colors"
                 >
-                  Get the Free Build Kit
+                  Browse Free Build Kits
                 </Link>
               </div>
             )}
@@ -244,11 +243,10 @@ function ArticlePage() {
                 Want the full step-by-step build kit? Grab the free Starter Vault version.
               </p>
               <Link
-                to="/starter-vault/$slug"
-                params={{ slug: article.related_starter_drop_slug }}
+                to="/starter-vault"
                 className="flex items-center justify-center gap-2 w-full bg-[#2563FF] text-white text-sm font-semibold px-4 py-3 rounded-xl hover:bg-[#1D50D9] transition-colors"
               >
-                Get the Free Build Kit
+                Browse Free Build Kits
               </Link>
             </div>
           )}
