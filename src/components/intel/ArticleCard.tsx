@@ -3,7 +3,7 @@
  */
 import { Clock, ArrowRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 
 interface ArticleCardProps {
   title: string;
@@ -28,6 +28,7 @@ export function ArticleCard({
   featured,
   large = false,
 }: ArticleCardProps) {
+  const navigate = useNavigate();
   const date = publishedAt
     ? new Date(publishedAt).toLocaleDateString("en-US", {
         month: "short",
@@ -36,10 +37,19 @@ export function ArticleCard({
       })
     : null;
 
+  const handleClick = () => {
+    console.log("🔗 Navigating to article:", slug);
+    navigate({ 
+      to: "/intel/$slug", 
+      params: { slug },
+      replace: false 
+    }).catch(err => console.error("Navigation error:", err));
+  };
+
   return (
-    <Link
-      to="/intel/$slug"
-      params={{ slug }}
+    <button
+      type="button"
+      onClick={handleClick}
       className={cn(
         "group flex w-full text-left flex-col rounded-2xl bg-white border border-[#C8C3BA]/50 overflow-hidden",
         "shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300",
@@ -113,6 +123,6 @@ export function ArticleCard({
           </span>
         </div>
       </div>
-    </Link>
+    </button>
   );
 }
