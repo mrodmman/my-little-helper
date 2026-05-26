@@ -1,7 +1,7 @@
 /**
  * /intel/:slug — Individual Kraken Intel article page.
  */
-import { createFileRoute, Link, notFound, rootRouteId } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Clock, ChevronRight, BookOpen } from "lucide-react";
 import { getArticleBySlug, getPublishedArticles } from "@/rpc/intel";
 import type { ContentBlock } from "@/rpc/intel";
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/intel/$slug")({
       console.error(`[Intel] Article not found for slug: "${params.slug}"`);
     }
     
-    if (!article) throw notFound({ routeId: rootRouteId });
+    if (!article) throw notFound();
     
     const related = allArticles
       .filter((a) => a.slug !== article.slug && a.category === article.category)
