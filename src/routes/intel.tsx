@@ -163,6 +163,7 @@ function IntelHub() {
                   coverImageUrl={a.cover_image_url}
                   readTime={a.read_time}
                   publishedAt={a.published_at}
+                  externalUrl={a.external_url}
                   featured
                   large
                 />
@@ -207,6 +208,7 @@ function IntelHub() {
                   coverImageUrl={a.cover_image_url}
                   readTime={a.read_time}
                   publishedAt={a.published_at}
+                  externalUrl={a.external_url}
                   featured={!!a.featured}
                 />
               ))}

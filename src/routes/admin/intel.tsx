@@ -363,6 +363,7 @@ function ArticleEditor({
     fast_route_description: article?.fast_route_description ?? "",
     fast_route_affiliate_url: article?.fast_route_affiliate_url ?? "",
     fast_route_button_text: article?.fast_route_button_text ?? "",
+    external_url: article?.external_url ?? "",
     content_blocks: article?.content_blocks ?? "[]",
   });
 
@@ -386,6 +387,7 @@ function ArticleEditor({
         fast_route_description: draft.fast_route_description || null,
         fast_route_affiliate_url: draft.fast_route_affiliate_url || null,
         fast_route_button_text: draft.fast_route_button_text || null,
+        external_url: draft.external_url || null,
         published_at: draft.published_at || null,
       } as Partial<DbIntelArticle> & { slug: string; title: string });
     } finally {
@@ -426,6 +428,10 @@ function ArticleEditor({
         </Field>
         <Field label="Related Starter Drop Slug">
           <input value={draft.related_starter_drop_slug ?? ""} onChange={(e) => set("related_starter_drop_slug", e.target.value)} className={inputCls} placeholder="free-starter-funnel-build-kit" />
+        </Field>
+        <Field label="External URL (optional)">
+          <input value={draft.external_url ?? ""} onChange={(e) => set("external_url", e.target.value)} className={inputCls} placeholder="/guides/my-guide.html or https://..." />
+          <p className="text-[10px] text-muted-foreground mt-1">When set, the article card links directly here instead of opening /intel/$slug.</p>
         </Field>
       </div>
 

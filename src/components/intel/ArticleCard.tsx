@@ -1,5 +1,7 @@
 /**
  * ArticleCard — used in the Kraken Intel hub grid.
+ * If externalUrl is set the card is a plain <a> linking directly there (opens in same tab).
+ * Otherwise it routes to /intel/$slug via TanStack Router.
  */
 import { Link } from "@tanstack/react-router";
 import { Clock, ArrowRight, Star } from "lucide-react";
@@ -15,33 +17,32 @@ interface ArticleCardProps {
   publishedAt?: string | null;
   featured?: boolean;
   large?: boolean;
+  externalUrl?: string | null;
 }
 
-export function ArticleCard({
+const cardCls = (large: boolean) =>
+  cn(
+    "group flex flex-col rounded-2xl bg-white border border-[#C8C3BA]/50 overflow-hidden",
+    "shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300",
+    large && "sm:flex-row",
+  );
+
+function CardInner({
   title,
-  slug,
   excerpt,
   category,
   coverImageUrl,
   readTime,
   publishedAt,
   featured,
-  large = false,
-}: ArticleCardProps) {
+  large,
+}: Omit<ArticleCardProps, "slug" | "externalUrl">) {
   const date = publishedAt
     ? new Date(publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
     : null;
 
   return (
-    <Link
-      to="/intel/$slug"
-      params={{ slug }}
-      className={cn(
-        "group flex flex-col rounded-2xl bg-white border border-[#C8C3BA]/50 overflow-hidden",
-        "shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300",
-        large && "sm:flex-row",
-      )}
-    >
+    <>
       {/* Cover Image */}
       <div
         className={cn(
@@ -111,6 +112,50 @@ export function ArticleCard({
           </span>
         </div>
       </div>
+    </>
+  );
+}
+
+export function ArticleCard({
+  title,
+  slug,
+  excerpt,
+  category,
+  coverImageUrl,
+  readTime,
+  publishedAt,
+  featured,
+  large = false,
+  externalUrl,
+}: ArticleCardProps) {
+  const inner = (
+    <CardInner
+      title={title}
+      excerpt={excerpt}
+      category={category}
+      coverImageUrl={coverImageUrl}
+      readTime={readTime}
+      publishedAt={publishedAt}
+      featured={featured}
+      large={large}
+    />
+  );
+
+  if (externalUrl) {
+    return (
+      <a href={externalUrl} className={cardCls(large)}>
+        {inner}
+      </a>
+    );
+  }
+
+  return (
+    <Link
+      to="/intel/$slug"
+      params={{ slug }}
+      className={cardCls(large)}
+    >
+      {inner}
     </Link>
   );
 }
