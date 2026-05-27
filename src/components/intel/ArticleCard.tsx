@@ -1,5 +1,7 @@
 /**
  * ArticleCard — used in the Kraken Intel hub grid.
+ * If externalUrl is set the card is a plain <a> linking directly there (opens in same tab).
+ * Otherwise it routes to /intel/$slug via TanStack Router.
  */
 import { Clock, ArrowRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -15,20 +17,26 @@ interface ArticleCardProps {
   publishedAt?: string | null;
   featured?: boolean;
   large?: boolean;
+  externalUrl?: string | null;
 }
 
-export function ArticleCard({
+const cardCls = (large: boolean) =>
+  cn(
+    "group flex flex-col rounded-2xl bg-white border border-[#C8C3BA]/50 overflow-hidden",
+    "shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300",
+    large && "sm:flex-row",
+  );
+
+function CardInner({
   title,
-  slug,
   excerpt,
   category,
   coverImageUrl,
   readTime,
   publishedAt,
   featured,
-  large = false,
-}: ArticleCardProps) {
-  const navigate = useNavigate();
+  large,
+}: Omit<ArticleCardProps, "slug" | "externalUrl">) {
   const date = publishedAt
     ? new Date(publishedAt).toLocaleDateString("en-US", {
         month: "short",
@@ -47,15 +55,7 @@ export function ArticleCard({
   };
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      className={cn(
-        "group flex w-full text-left flex-col rounded-2xl bg-white border border-[#C8C3BA]/50 overflow-hidden",
-        "shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300",
-        large && "sm:flex-row",
-      )}
-    >
+    <>
       {/* Cover Image */}
       <div
         className={cn(
@@ -123,6 +123,50 @@ export function ArticleCard({
           </span>
         </div>
       </div>
-    </button>
+    </>
+  );
+}
+
+export function ArticleCard({
+  title,
+  slug,
+  excerpt,
+  category,
+  coverImageUrl,
+  readTime,
+  publishedAt,
+  featured,
+  large = false,
+  externalUrl,
+}: ArticleCardProps) {
+  const inner = (
+    <CardInner
+      title={title}
+      excerpt={excerpt}
+      category={category}
+      coverImageUrl={coverImageUrl}
+      readTime={readTime}
+      publishedAt={publishedAt}
+      featured={featured}
+      large={large}
+    />
+  );
+
+  if (externalUrl) {
+    return (
+      <a href={externalUrl} className={cardCls(large)}>
+        {inner}
+      </a>
+    );
+  }
+
+  return (
+    <Link
+      to="/intel/$slug"
+      params={{ slug }}
+      className={cardCls(large)}
+    >
+      {inner}
+    </Link>
   );
 }

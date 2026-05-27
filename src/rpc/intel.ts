@@ -26,6 +26,7 @@ export type DbIntelArticle = {
   fast_route_description: string | null;
   fast_route_affiliate_url: string | null;
   fast_route_button_text: string | null;
+  external_url: string | null; // when set, card links here instead of /intel/$slug
   content_blocks: string; // JSON array string
   created_at: string;
   updated_at: string;
@@ -110,26 +111,14 @@ export const getPublishedArticles = createServerFn().handler(async () => {
     const env = await getEnv();
     const { results } = await env.DB.prepare(
       `SELECT id, slug, title, excerpt, category, tags, cover_image_url,
-              read_time, published_at, featured, related_starter_drop_slug
+              read_time, published_at, featured, related_starter_drop_slug, external_url
        FROM intel_articles
        WHERE published = 1
        ORDER BY featured DESC, published_at DESC`,
-    ).all<
-      Pick<
-        DbIntelArticle,
-        | "id"
-        | "slug"
-        | "title"
-        | "excerpt"
-        | "category"
-        | "tags"
-        | "cover_image_url"
-        | "read_time"
-        | "published_at"
-        | "featured"
-        | "related_starter_drop_slug"
-      >
-    >();
+    ).all<Pick<DbIntelArticle,
+      "id" | "slug" | "title" | "excerpt" | "category" | "tags" |
+      "cover_image_url" | "read_time" | "published_at" | "featured" | "related_starter_drop_slug" | "external_url"
+    >>();
     return results;
   } catch {
     return [];
@@ -223,7 +212,7 @@ export const getAllArticlesAdmin = createServerFn().handler(async () => {
     const { results } = await env.DB.prepare(
       `SELECT id, slug, title, excerpt, category, tags, cover_image_url,
               read_time, published_at, featured, published,
-              related_starter_drop_slug
+              related_starter_drop_slug, external_url
        FROM intel_articles ORDER BY created_at DESC`,
     ).all<DbIntelArticle>();
     return results;
@@ -295,8 +284,8 @@ export const upsertArticle = createServerFn({ method: "POST" })
             related_starter_drop_slug,
             fast_route_tool_name, fast_route_description,
             fast_route_affiliate_url, fast_route_button_text,
-            content_blocks, created_at, updated_at)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            external_url, content_blocks, created_at, updated_at)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
          ON CONFLICT(id) DO UPDATE SET
            slug=excluded.slug, title=excluded.title, excerpt=excluded.excerpt,
            category=excluded.category, tags=excluded.tags,
@@ -308,6 +297,7 @@ export const upsertArticle = createServerFn({ method: "POST" })
            fast_route_description=excluded.fast_route_description,
            fast_route_affiliate_url=excluded.fast_route_affiliate_url,
            fast_route_button_text=excluded.fast_route_button_text,
+           external_url=excluded.external_url,
            content_blocks=excluded.content_blocks, updated_at=excluded.updated_at`,
       )
         .bind(
@@ -327,6 +317,7 @@ export const upsertArticle = createServerFn({ method: "POST" })
           data.fast_route_description ?? null,
           data.fast_route_affiliate_url ?? null,
           data.fast_route_button_text ?? null,
+          data.external_url ?? null,
           data.content_blocks ?? "[]",
           now,
           now,
@@ -369,8 +360,8 @@ export const duplicateArticle = createServerFn({ method: "POST" })
             related_starter_drop_slug,
             fast_route_tool_name, fast_route_description,
             fast_route_affiliate_url, fast_route_button_text,
-            content_blocks, created_at, updated_at)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+            external_url, content_blocks, created_at, updated_at)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       )
         .bind(
           newId,
@@ -385,13 +376,10 @@ export const duplicateArticle = createServerFn({ method: "POST" })
           0,
           0,
           src.related_starter_drop_slug,
-          src.fast_route_tool_name,
-          src.fast_route_description,
-          src.fast_route_affiliate_url,
-          src.fast_route_button_text,
-          src.content_blocks,
-          now,
-          now,
+          src.fast_route_tool_name, src.fast_route_description,
+          src.fast_route_affiliate_url, src.fast_route_button_text,
+          src.external_url ?? null,
+          src.content_blocks, now, now,
         )
         .run();
       return { ok: true, id: newId };
@@ -548,8 +536,8 @@ export const importIntelPackage = createServerFn({ method: "POST" })
               related_starter_drop_slug,
               fast_route_tool_name, fast_route_description,
               fast_route_affiliate_url, fast_route_button_text,
-              content_blocks, created_at, updated_at)
-           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+              external_url, content_blocks, created_at, updated_at)
+           VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
            ON CONFLICT(id) DO UPDATE SET
              slug=excluded.slug, title=excluded.title, excerpt=excluded.excerpt,
              category=excluded.category, tags=excluded.tags,
@@ -561,6 +549,7 @@ export const importIntelPackage = createServerFn({ method: "POST" })
              fast_route_description=excluded.fast_route_description,
              fast_route_affiliate_url=excluded.fast_route_affiliate_url,
              fast_route_button_text=excluded.fast_route_button_text,
+             external_url=excluded.external_url,
              content_blocks=excluded.content_blocks, updated_at=excluded.updated_at`,
         )
           .bind(
@@ -576,15 +565,11 @@ export const importIntelPackage = createServerFn({ method: "POST" })
             a.featured ?? 0,
             a.published ?? 1,
             a.related_starter_drop_slug ?? null,
-            a.fast_route_tool_name ?? null,
-            a.fast_route_description ?? null,
-            a.fast_route_affiliate_url ?? null,
-            a.fast_route_button_text ?? null,
-            typeof a.content_blocks === "string"
-              ? a.content_blocks
-              : JSON.stringify(a.content_blocks ?? []),
-            now,
-            now,
+            a.fast_route_tool_name ?? null, a.fast_route_description ?? null,
+            a.fast_route_affiliate_url ?? null, a.fast_route_button_text ?? null,
+            a.external_url ?? null,
+            typeof a.content_blocks === "string" ? a.content_blocks : JSON.stringify(a.content_blocks ?? []),
+            now, now,
           )
           .run();
         results.articles = id;
