@@ -35,7 +35,11 @@ export const Route = createFileRoute("/intel/$slug")({
     const related = allArticles
       .filter((a) => a.slug !== article.slug && a.category === article.category)
       .slice(0, 3);
-    return { article, related };
+
+    const articleIndex = allArticles.findIndex((a) => a.slug === article.slug);
+    const nextArticle = articleIndex >= 0 ? allArticles[articleIndex + 1] ?? null : null;
+
+    return { article, related, nextArticle };
   },
   component: ArticlePage,
   notFoundComponent: () => (
@@ -69,7 +73,7 @@ function isRenderableImageUrl(url?: string | null) {
 }
 
 function ArticlePage() {
-  const { article, related } = Route.useLoaderData();
+  const { article, related, nextArticle } = Route.useLoaderData();
 
   const tags: string[] = (() => {
     try {
@@ -136,8 +140,9 @@ function ArticlePage() {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight max-w-3xl mb-4">
-            {article.title}
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight uppercase tracking-tight max-w-4xl mb-4">
+            <span className="text-[#14B8FF]">{article.title.split(" ").slice(0, Math.ceil(article.title.split(" ").length / 2)).join(" ")}</span>{" "}
+            <span className="text-[#FFD400]">{article.title.split(" ").slice(Math.ceil(article.title.split(" ").length / 2)).join(" ")}</span>
           </h1>
 
           {/* Excerpt */}
@@ -260,6 +265,33 @@ function ArticlePage() {
             />
           )}
         </div>
+
+
+
+        {/* ── Article Navigation ── */}
+        <section className="mt-12">
+          <div className="rounded-2xl border border-[#C8C3BA]/50 bg-white p-4 sm:p-5 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+            <Link
+              to="/intel"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#2563FF]/40 text-[#2563FF] px-4 py-2.5 text-sm font-semibold hover:bg-[#2563FF]/5 transition-colors"
+            >
+              Back to Articles
+            </Link>
+            {nextArticle ? (
+              <a
+                href={nextArticle.external_url || `/intel/${nextArticle.slug}`}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#2563FF] text-white px-4 py-2.5 text-sm font-semibold hover:bg-[#1D50D9] transition-colors"
+              >
+                Read Next Article
+                <ChevronRight className="h-4 w-4" />
+              </a>
+            ) : (
+              <span className="inline-flex items-center justify-center rounded-xl border border-[#C8C3BA]/60 text-[#888] px-4 py-2.5 text-sm font-semibold">
+                You’re at the last article
+              </span>
+            )}
+          </div>
+        </section>
 
         {/* ── Related Articles ── */}
         {related.length > 0 && (
