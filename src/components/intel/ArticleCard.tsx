@@ -8,6 +8,27 @@ import { Clock, ArrowRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
 
+function normalizeImageUrl(rawUrl?: string | null) {
+  if (!rawUrl) return "";
+  const trimmed = rawUrl.trim();
+  if (!trimmed) return "";
+  if (!trimmed.startsWith("/api/cdn/")) return trimmed;
+
+  const prefix = "/api/cdn/";
+  const tail = trimmed.slice(prefix.length);
+  let decoded = tail;
+  for (let i = 0; i < 3; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+  return `${prefix}${encodeURIComponent(decoded)}`;
+}
+
 interface ArticleCardProps {
   href: string;
   title: string;
@@ -31,6 +52,8 @@ export function ArticleCard({
   featured,
   large = false,
 }: ArticleCardProps) {
+  const normalizedCoverImageUrl = normalizeImageUrl(coverImageUrl);
+
   const date = publishedAt
     ? new Date(publishedAt).toLocaleDateString("en-US", {
         month: "short",
@@ -55,9 +78,9 @@ export function ArticleCard({
           large ? "sm:w-2/5 aspect-video sm:aspect-auto" : "aspect-video",
         )}
       >
-        {coverImageUrl ? (
+        {normalizedCoverImageUrl ? (
           <img
-            src={coverImageUrl}
+            src={normalizedCoverImageUrl}
             alt={title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
