@@ -8,10 +8,16 @@ import { Info, Lightbulb, AlertTriangle, CheckCircle2, ExternalLink, ChevronRigh
 import { CopyButton } from "@/components/ui/CopyButton";
 import type { ContentBlock } from "@/rpc/intel";
 import { cn } from "@/lib/utils";
+function isPlaceholderImageUrl(value: string) {
+  const upper = value.toUpperCase();
+  return upper.startsWith("REPLACE_WITH_") || upper.includes("_URL");
+}
+
 function normalizeImageUrl(rawUrl?: string | null) {
   if (!rawUrl) return "";
   const trimmed = rawUrl.trim();
   if (!trimmed) return "";
+  if (isPlaceholderImageUrl(trimmed)) return "";
   if (!trimmed.startsWith("/api/cdn/")) return trimmed;
 
   const prefix = "/api/cdn/";

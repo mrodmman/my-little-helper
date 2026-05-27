@@ -8,10 +8,16 @@ import { Clock, ArrowRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "@tanstack/react-router";
 
+function isPlaceholderImageUrl(value: string) {
+  const upper = value.toUpperCase();
+  return upper.startsWith("REPLACE_WITH_") || upper.includes("_URL");
+}
+
 function normalizeImageUrl(rawUrl?: string | null) {
   if (!rawUrl) return "";
   const trimmed = rawUrl.trim();
   if (!trimmed) return "";
+  if (isPlaceholderImageUrl(trimmed)) return "";
   if (!trimmed.startsWith("/api/cdn/")) return trimmed;
 
   const prefix = "/api/cdn/";
