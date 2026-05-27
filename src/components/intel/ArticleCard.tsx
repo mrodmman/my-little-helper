@@ -6,6 +6,7 @@
  */
 import { Clock, ArrowRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "@tanstack/react-router";
 
 interface ArticleCardProps {
   href: string;
