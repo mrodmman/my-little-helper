@@ -3,9 +3,9 @@
  * If externalUrl is set the card is a plain <a> linking directly there (opens in same tab).
  * Otherwise it routes to /intel/$slug via TanStack Router.
  */
-import { Link } from "@tanstack/react-router";
 import { Clock, ArrowRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "@tanstack/react-router";
 
 interface ArticleCardProps {
   title: string;
@@ -38,8 +38,21 @@ function CardInner({
   large,
 }: Omit<ArticleCardProps, "slug" | "externalUrl">) {
   const date = publishedAt
-    ? new Date(publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+    ? new Date(publishedAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
     : null;
+
+  const handleClick = () => {
+    console.log("🔗 Navigating to article:", slug);
+    navigate({ 
+      to: "/intel/$slug", 
+      params: { slug },
+      replace: false 
+    }).catch(err => console.error("Navigation error:", err));
+  };
 
   return (
     <>
@@ -91,9 +104,7 @@ function CardInner({
         </h3>
 
         {/* Excerpt */}
-        <p className="text-[#556070] text-sm leading-relaxed flex-1 line-clamp-3 mb-4">
-          {excerpt}
-        </p>
+        <p className="text-[#556070] text-sm leading-relaxed flex-1 line-clamp-3 mb-4">{excerpt}</p>
 
         {/* Footer */}
         <div className="flex items-center justify-between mt-auto">

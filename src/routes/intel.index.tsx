@@ -1,7 +1,30 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+/**
+ * /intel — Kraken Intel article hub.
+ * Public editorial layer for Keyboard Kraken.
+ */
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { BookOpen, Layers, ArrowRight, Search } from "lucide-react";
+import { getPublishedArticles } from "@/rpc/intel";
+import { ArticleCard } from "@/components/intel/ArticleCard";
+import { CategoryChips } from "@/components/intel/CategoryChips";
 
-export const Route = createFileRoute("/intel")({
-  component: () => <Outlet />,
+export const Route = createFileRoute("/intel/")({
+  head: () => ({
+    meta: [
+      { title: "Kraken Intel — Build Smarter Systems" },
+      {
+        name: "description",
+        content:
+          "Build smarter systems. Find better tools. Own more of your online infrastructure.",
+      },
+    ],
+  }),
+  loader: async () => {
+    const articles = await getPublishedArticles().catch(() => []);
+    return { articles };
+  },
+  component: IntelHub,
 });
 
 function IntelHub() {
@@ -32,32 +55,25 @@ function IntelHub() {
       {/* ── Hero ── */}
       <div
         className="relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, #0D1220 0%, #1a2744 60%, #1a3a80 100%)",
-        }}
+        style={{ background: "#04070F" }}
       >
         {/* Ambient glow */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse at 20% 50%, rgba(37,99,255,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(37,99,255,0.10) 0%, transparent 50%)",
+              "radial-gradient(ellipse at 20% 50%, rgba(37,99,255,0.24) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(37,99,255,0.14) 0%, transparent 50%)",
           }}
         />
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 text-[#8899BB] text-sm mb-8">
-            <Link to="/" className="hover:text-white transition-colors">
-              Home
-            </Link>
-            <span>/</span>
-            <span className="text-white">Intel</span>
+            <span className="text-white font-medium">Intel</span>
           </div>
 
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-[#2563FF]/20 border border-[#2563FF]/30 text-[#7BA7FF] px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
+            <div className="inline-flex items-center gap-2 bg-[#2563FF]/16 border border-[#2563FF]/45 text-[#A8C4FF] px-3 py-1 rounded-md text-xs font-semibold uppercase tracking-wider mb-6">
               <BookOpen className="h-3 w-3" />
               Kraken Intel
             </div>
@@ -82,14 +98,14 @@ function IntelHub() {
             <div className="flex flex-wrap gap-3">
               <a
                 href="#articles"
-                className="inline-flex items-center gap-2 bg-[#2563FF] text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#1D50D9] transition-colors"
+                className="inline-flex items-center gap-2 bg-[#2563FF] text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#1D50D9] transition-colors shadow-[0_0_0_1px_rgba(37,99,255,0.35)]"
               >
                 Browse Articles
                 <ArrowRight className="h-4 w-4" />
               </a>
               <Link
                 to="/starter-vault"
-                className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-white/15 transition-colors"
+                className="inline-flex items-center gap-2 bg-transparent border border-[#2563FF]/80 text-[#A8C4FF] px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#2563FF]/10 transition-colors"
               >
                 <Layers className="h-4 w-4" />
                 Explore Starter Vault
@@ -140,7 +156,6 @@ function IntelHub() {
                   coverImageUrl={a.cover_image_url}
                   readTime={a.read_time}
                   publishedAt={a.published_at}
-                  externalUrl={a.external_url}
                   featured
                   large
                 />
@@ -185,7 +200,6 @@ function IntelHub() {
                   coverImageUrl={a.cover_image_url}
                   readTime={a.read_time}
                   publishedAt={a.published_at}
-                  externalUrl={a.external_url}
                   featured={!!a.featured}
                 />
               ))}

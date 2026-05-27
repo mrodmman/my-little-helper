@@ -16,6 +16,7 @@ import { Route as UnsubscribedRouteImport } from './routes/unsubscribed'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as ThankYouRouteImport } from './routes/thank-you'
 import { Route as SubscribeRouteImport } from './routes/subscribe'
+import { Route as StarterVaultRouteImport } from './routes/starter-vault'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OfferRouteImport } from './routes/offer'
@@ -23,6 +24,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeadKitRouteImport } from './routes/lead-kit'
 import { Route as KrakenRouteImport } from './routes/kraken'
 import { Route as JumpstartRouteImport } from './routes/jumpstart'
+import { Route as IntelRouteImport } from './routes/intel'
 import { Route as FunnelRouteImport } from './routes/funnel'
 import { Route as FastTrackRouteImport } from './routes/fast-track'
 import { Route as CancelRouteImport } from './routes/cancel'
@@ -32,8 +34,12 @@ import { Route as BeginRouteImport } from './routes/begin'
 import { Route as AiLeadKitRouteImport } from './routes/ai-lead-kit'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as StarterVaultIndexRouteImport } from './routes/starter-vault.index'
+import { Route as IntelIndexRouteImport } from './routes/intel.index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as StarterVaultSlugRouteImport } from './routes/starter-vault.$slug'
 import { Route as ModuleModuleIdRouteImport } from './routes/module.$moduleId'
+import { Route as IntelSlugRouteImport } from './routes/intel.$slug'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthProvisionRouteImport } from './routes/auth/provision'
 import { Route as AuthLogoutRouteImport } from './routes/auth/logout'
@@ -47,13 +53,9 @@ import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as ApiCheckoutRouteImport } from './routes/api/checkout'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminModulesRouteImport } from './routes/admin/modules'
+import { Route as AdminIntelRouteImport } from './routes/admin/intel'
 import { Route as AdminAvailabilityRouteImport } from './routes/admin/availability'
 import { Route as AdminAssetsRouteImport } from './routes/admin/assets'
-import { Route as AdminIntelRouteImport } from './routes/admin/intel'
-import { Route as IntelRouteImport } from './routes/intel'
-import { Route as IntelSlugRouteImport } from './routes/intel.$slug'
-import { Route as StarterVaultRouteImport } from './routes/starter-vault'
-import { Route as StarterVaultSlugRouteImport } from './routes/starter-vault.$slug'
 import { Route as ApiCdnKeyRouteImport } from './routes/api/cdn.$key'
 import { Route as ApiBookingActionRouteImport } from './routes/api/booking.$action'
 import { Route as AdminModulesModuleIdRouteImport } from './routes/admin/modules.$moduleId'
@@ -94,6 +96,11 @@ const SubscribeRoute = SubscribeRouteImport.update({
   path: '/subscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StarterVaultRoute = StarterVaultRouteImport.update({
+  id: '/starter-vault',
+  path: '/starter-vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -127,6 +134,11 @@ const KrakenRoute = KrakenRouteImport.update({
 const JumpstartRoute = JumpstartRouteImport.update({
   id: '/jumpstart',
   path: '/jumpstart',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntelRoute = IntelRouteImport.update({
+  id: '/intel',
+  path: '/intel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FunnelRoute = FunnelRouteImport.update({
@@ -174,15 +186,35 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StarterVaultIndexRoute = StarterVaultIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StarterVaultRoute,
+} as any)
+const IntelIndexRoute = IntelIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => IntelRoute,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const StarterVaultSlugRoute = StarterVaultSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => StarterVaultRoute,
+} as any)
 const ModuleModuleIdRoute = ModuleModuleIdRouteImport.update({
   id: '/module/$moduleId',
   path: '/module/$moduleId',
   getParentRoute: () => rootRouteImport,
+} as any)
+const IntelSlugRoute = IntelSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => IntelRoute,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/auth/register',
@@ -249,6 +281,11 @@ const AdminModulesRoute = AdminModulesRouteImport.update({
   path: '/modules',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminIntelRoute = AdminIntelRouteImport.update({
+  id: '/intel',
+  path: '/intel',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAvailabilityRoute = AdminAvailabilityRouteImport.update({
   id: '/availability',
   path: '/availability',
@@ -258,31 +295,6 @@ const AdminAssetsRoute = AdminAssetsRouteImport.update({
   id: '/assets',
   path: '/assets',
   getParentRoute: () => AdminRoute,
-} as any)
-const AdminIntelRoute = AdminIntelRouteImport.update({
-  id: '/intel',
-  path: '/intel',
-  getParentRoute: () => AdminRoute,
-} as any)
-const IntelRoute = IntelRouteImport.update({
-  id: '/intel',
-  path: '/intel',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IntelSlugRoute = IntelSlugRouteImport.update({
-  id: '/intel/$slug',
-  path: '/intel/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StarterVaultRoute = StarterVaultRouteImport.update({
-  id: '/starter-vault',
-  path: '/starter-vault',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StarterVaultSlugRoute = StarterVaultSlugRouteImport.update({
-  id: '/starter-vault/$slug',
-  path: '/starter-vault/$slug',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCdnKeyRoute = ApiCdnKeyRouteImport.update({
   id: '/api/cdn/$key',
@@ -308,10 +320,6 @@ const ApiBookingAdminSettingsRoute = ApiBookingAdminSettingsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/intel': typeof IntelRoute
-  '/intel/$slug': typeof IntelSlugRoute
-  '/starter-vault': typeof StarterVaultRoute
-  '/starter-vault/$slug': typeof StarterVaultSlugRoute
   '/ai-lead-kit': typeof AiLeadKitRoute
   '/begin': typeof BeginRoute
   '/biz-thank-you': typeof BizThankYouRoute
@@ -319,6 +327,7 @@ export interface FileRoutesByFullPath {
   '/cancel': typeof CancelRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
+  '/intel': typeof IntelRouteWithChildren
   '/jumpstart': typeof JumpstartRoute
   '/kraken': typeof KrakenRoute
   '/lead-kit': typeof LeadKitRoute
@@ -326,6 +335,7 @@ export interface FileRoutesByFullPath {
   '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/starter-vault': typeof StarterVaultRouteWithChildren
   '/subscribe': typeof SubscribeRoute
   '/thank-you': typeof ThankYouRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -349,8 +359,12 @@ export interface FileRoutesByFullPath {
   '/auth/logout': typeof AuthLogoutRoute
   '/auth/provision': typeof AuthProvisionRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/intel/$slug': typeof IntelSlugRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
+  '/starter-vault/$slug': typeof StarterVaultSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/intel/': typeof IntelIndexRoute
+  '/starter-vault/': typeof StarterVaultIndexRoute
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
   '/api/booking/$action': typeof ApiBookingActionRoute
   '/api/cdn/$key': typeof ApiCdnKeyRoute
@@ -358,10 +372,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/intel': typeof IntelRoute
-  '/intel/$slug': typeof IntelSlugRoute
-  '/starter-vault': typeof StarterVaultRoute
-  '/starter-vault/$slug': typeof StarterVaultSlugRoute
   '/ai-lead-kit': typeof AiLeadKitRoute
   '/begin': typeof BeginRoute
   '/biz-thank-you': typeof BizThankYouRoute
@@ -399,8 +409,12 @@ export interface FileRoutesByTo {
   '/auth/logout': typeof AuthLogoutRoute
   '/auth/provision': typeof AuthProvisionRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/intel/$slug': typeof IntelSlugRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
+  '/starter-vault/$slug': typeof StarterVaultSlugRoute
   '/admin': typeof AdminIndexRoute
+  '/intel': typeof IntelIndexRoute
+  '/starter-vault': typeof StarterVaultIndexRoute
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
   '/api/booking/$action': typeof ApiBookingActionRoute
   '/api/cdn/$key': typeof ApiCdnKeyRoute
@@ -410,10 +424,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/intel': typeof IntelRoute
-  '/intel/$slug': typeof IntelSlugRoute
-  '/starter-vault': typeof StarterVaultRoute
-  '/starter-vault/$slug': typeof StarterVaultSlugRoute
   '/ai-lead-kit': typeof AiLeadKitRoute
   '/begin': typeof BeginRoute
   '/biz-thank-you': typeof BizThankYouRoute
@@ -421,6 +431,7 @@ export interface FileRoutesById {
   '/cancel': typeof CancelRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
+  '/intel': typeof IntelRouteWithChildren
   '/jumpstart': typeof JumpstartRoute
   '/kraken': typeof KrakenRoute
   '/lead-kit': typeof LeadKitRoute
@@ -428,6 +439,7 @@ export interface FileRoutesById {
   '/offer': typeof OfferRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/starter-vault': typeof StarterVaultRouteWithChildren
   '/subscribe': typeof SubscribeRoute
   '/thank-you': typeof ThankYouRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -451,8 +463,12 @@ export interface FileRoutesById {
   '/auth/logout': typeof AuthLogoutRoute
   '/auth/provision': typeof AuthProvisionRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/intel/$slug': typeof IntelSlugRoute
   '/module/$moduleId': typeof ModuleModuleIdRoute
+  '/starter-vault/$slug': typeof StarterVaultSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/intel/': typeof IntelIndexRoute
+  '/starter-vault/': typeof StarterVaultIndexRoute
   '/admin/modules/$moduleId': typeof AdminModulesModuleIdRoute
   '/api/booking/$action': typeof ApiBookingActionRoute
   '/api/cdn/$key': typeof ApiCdnKeyRoute
@@ -470,6 +486,7 @@ export interface FileRouteTypes {
     | '/cancel'
     | '/fast-track'
     | '/funnel'
+    | '/intel'
     | '/jumpstart'
     | '/kraken'
     | '/lead-kit'
@@ -477,6 +494,7 @@ export interface FileRouteTypes {
     | '/offer'
     | '/profile'
     | '/register'
+    | '/starter-vault'
     | '/subscribe'
     | '/thank-you'
     | '/unsubscribe'
@@ -486,6 +504,7 @@ export interface FileRouteTypes {
     | '/work-with-me'
     | '/admin/assets'
     | '/admin/availability'
+    | '/admin/intel'
     | '/admin/modules'
     | '/admin/users'
     | '/api/checkout'
@@ -499,13 +518,12 @@ export interface FileRouteTypes {
     | '/auth/logout'
     | '/auth/provision'
     | '/auth/register'
-    | '/intel'
     | '/intel/$slug'
-    | '/starter-vault'
-    | '/starter-vault/$slug'
-    | '/admin/intel'
     | '/module/$moduleId'
+    | '/starter-vault/$slug'
     | '/admin/'
+    | '/intel/'
+    | '/starter-vault/'
     | '/admin/modules/$moduleId'
     | '/api/booking/$action'
     | '/api/cdn/$key'
@@ -536,6 +554,7 @@ export interface FileRouteTypes {
     | '/work-with-me'
     | '/admin/assets'
     | '/admin/availability'
+    | '/admin/intel'
     | '/admin/modules'
     | '/admin/users'
     | '/api/checkout'
@@ -549,13 +568,12 @@ export interface FileRouteTypes {
     | '/auth/logout'
     | '/auth/provision'
     | '/auth/register'
-    | '/intel'
     | '/intel/$slug'
-    | '/starter-vault'
-    | '/starter-vault/$slug'
-    | '/admin/intel'
     | '/module/$moduleId'
+    | '/starter-vault/$slug'
     | '/admin'
+    | '/intel'
+    | '/starter-vault'
     | '/admin/modules/$moduleId'
     | '/api/booking/$action'
     | '/api/cdn/$key'
@@ -571,6 +589,7 @@ export interface FileRouteTypes {
     | '/cancel'
     | '/fast-track'
     | '/funnel'
+    | '/intel'
     | '/jumpstart'
     | '/kraken'
     | '/lead-kit'
@@ -578,6 +597,7 @@ export interface FileRouteTypes {
     | '/offer'
     | '/profile'
     | '/register'
+    | '/starter-vault'
     | '/subscribe'
     | '/thank-you'
     | '/unsubscribe'
@@ -587,6 +607,7 @@ export interface FileRouteTypes {
     | '/work-with-me'
     | '/admin/assets'
     | '/admin/availability'
+    | '/admin/intel'
     | '/admin/modules'
     | '/admin/users'
     | '/api/checkout'
@@ -600,13 +621,12 @@ export interface FileRouteTypes {
     | '/auth/logout'
     | '/auth/provision'
     | '/auth/register'
-    | '/intel'
     | '/intel/$slug'
-    | '/starter-vault'
-    | '/starter-vault/$slug'
-    | '/admin/intel'
     | '/module/$moduleId'
+    | '/starter-vault/$slug'
     | '/admin/'
+    | '/intel/'
+    | '/starter-vault/'
     | '/admin/modules/$moduleId'
     | '/api/booking/$action'
     | '/api/cdn/$key'
@@ -616,10 +636,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  IntelRoute: typeof IntelRoute
-  IntelSlugRoute: typeof IntelSlugRoute
-  StarterVaultRoute: typeof StarterVaultRoute
-  StarterVaultSlugRoute: typeof StarterVaultSlugRoute
   AiLeadKitRoute: typeof AiLeadKitRoute
   BeginRoute: typeof BeginRoute
   BizThankYouRoute: typeof BizThankYouRoute
@@ -627,6 +643,7 @@ export interface RootRouteChildren {
   CancelRoute: typeof CancelRoute
   FastTrackRoute: typeof FastTrackRoute
   FunnelRoute: typeof FunnelRoute
+  IntelRoute: typeof IntelRouteWithChildren
   JumpstartRoute: typeof JumpstartRoute
   KrakenRoute: typeof KrakenRoute
   LeadKitRoute: typeof LeadKitRoute
@@ -634,6 +651,7 @@ export interface RootRouteChildren {
   OfferRoute: typeof OfferRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
+  StarterVaultRoute: typeof StarterVaultRouteWithChildren
   SubscribeRoute: typeof SubscribeRoute
   ThankYouRoute: typeof ThankYouRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
@@ -709,6 +727,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/starter-vault': {
+      id: '/starter-vault'
+      path: '/starter-vault'
+      fullPath: '/starter-vault'
+      preLoaderRoute: typeof StarterVaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -756,6 +781,13 @@ declare module '@tanstack/react-router' {
       path: '/jumpstart'
       fullPath: '/jumpstart'
       preLoaderRoute: typeof JumpstartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/intel': {
+      id: '/intel'
+      path: '/intel'
+      fullPath: '/intel'
+      preLoaderRoute: typeof IntelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/funnel': {
@@ -821,6 +853,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/starter-vault/': {
+      id: '/starter-vault/'
+      path: '/'
+      fullPath: '/starter-vault/'
+      preLoaderRoute: typeof StarterVaultIndexRouteImport
+      parentRoute: typeof StarterVaultRoute
+    }
+    '/intel/': {
+      id: '/intel/'
+      path: '/'
+      fullPath: '/intel/'
+      preLoaderRoute: typeof IntelIndexRouteImport
+      parentRoute: typeof IntelRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -828,12 +874,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/starter-vault/$slug': {
+      id: '/starter-vault/$slug'
+      path: '/$slug'
+      fullPath: '/starter-vault/$slug'
+      preLoaderRoute: typeof StarterVaultSlugRouteImport
+      parentRoute: typeof StarterVaultRoute
+    }
     '/module/$moduleId': {
       id: '/module/$moduleId'
       path: '/module/$moduleId'
       fullPath: '/module/$moduleId'
       preLoaderRoute: typeof ModuleModuleIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/intel/$slug': {
+      id: '/intel/$slug'
+      path: '/$slug'
+      fullPath: '/intel/$slug'
+      preLoaderRoute: typeof IntelSlugRouteImport
+      parentRoute: typeof IntelRoute
     }
     '/auth/register': {
       id: '/auth/register'
@@ -926,6 +986,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminModulesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/intel': {
+      id: '/admin/intel'
+      path: '/intel'
+      fullPath: '/admin/intel'
+      preLoaderRoute: typeof AdminIntelRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/availability': {
       id: '/admin/availability'
       path: '/availability'
@@ -933,46 +1000,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAvailabilityRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/intel': {
-      id: '/intel'
-      path: '/intel'
-      fullPath: '/intel'
-      preLoaderRoute: typeof IntelRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/intel/$slug': {
-      id: '/intel/$slug'
-      path: '/intel/$slug'
-      fullPath: '/intel/$slug'
-      preLoaderRoute: typeof IntelSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/starter-vault': {
-      id: '/starter-vault'
-      path: '/starter-vault'
-      fullPath: '/starter-vault'
-      preLoaderRoute: typeof StarterVaultRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/starter-vault/$slug': {
-      id: '/starter-vault/$slug'
-      path: '/starter-vault/$slug'
-      fullPath: '/starter-vault/$slug'
-      preLoaderRoute: typeof StarterVaultSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/assets': {
       id: '/admin/assets'
       path: '/assets'
       fullPath: '/admin/assets'
       preLoaderRoute: typeof AdminAssetsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/intel': {
-      id: '/admin/intel'
-      path: '/intel'
-      fullPath: '/admin/intel'
-      preLoaderRoute: typeof AdminIntelRouteImport
       parentRoute: typeof AdminRoute
     }
     '/api/cdn/$key': {
@@ -1038,13 +1070,35 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface IntelRouteChildren {
+  IntelSlugRoute: typeof IntelSlugRoute
+  IntelIndexRoute: typeof IntelIndexRoute
+}
+
+const IntelRouteChildren: IntelRouteChildren = {
+  IntelSlugRoute: IntelSlugRoute,
+  IntelIndexRoute: IntelIndexRoute,
+}
+
+const IntelRouteWithChildren = IntelRoute._addFileChildren(IntelRouteChildren)
+
+interface StarterVaultRouteChildren {
+  StarterVaultSlugRoute: typeof StarterVaultSlugRoute
+  StarterVaultIndexRoute: typeof StarterVaultIndexRoute
+}
+
+const StarterVaultRouteChildren: StarterVaultRouteChildren = {
+  StarterVaultSlugRoute: StarterVaultSlugRoute,
+  StarterVaultIndexRoute: StarterVaultIndexRoute,
+}
+
+const StarterVaultRouteWithChildren = StarterVaultRoute._addFileChildren(
+  StarterVaultRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  IntelRoute: IntelRoute,
-  IntelSlugRoute: IntelSlugRoute,
-  StarterVaultRoute: StarterVaultRoute,
-  StarterVaultSlugRoute: StarterVaultSlugRoute,
   AiLeadKitRoute: AiLeadKitRoute,
   BeginRoute: BeginRoute,
   BizThankYouRoute: BizThankYouRoute,
@@ -1052,6 +1106,7 @@ const rootRouteChildren: RootRouteChildren = {
   CancelRoute: CancelRoute,
   FastTrackRoute: FastTrackRoute,
   FunnelRoute: FunnelRoute,
+  IntelRoute: IntelRouteWithChildren,
   JumpstartRoute: JumpstartRoute,
   KrakenRoute: KrakenRoute,
   LeadKitRoute: LeadKitRoute,
@@ -1059,6 +1114,7 @@ const rootRouteChildren: RootRouteChildren = {
   OfferRoute: OfferRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
+  StarterVaultRoute: StarterVaultRouteWithChildren,
   SubscribeRoute: SubscribeRoute,
   ThankYouRoute: ThankYouRoute,
   UnsubscribeRoute: UnsubscribeRoute,
