@@ -118,6 +118,7 @@ function IntelAdmin() {
 function ArticlesTab({ articles, onRefresh }: { articles: DbIntelArticle[]; onRefresh: () => void }) {
   const [editing, setEditing] = useState<DbIntelArticle | null>(null);
   const [creating, setCreating] = useState(false);
+  const [loadingEditId, setLoadingEditId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
   const handleDelete = (a: DbIntelArticle) => {
@@ -237,11 +238,24 @@ function ArticlesTab({ articles, onRefresh }: { articles: DbIntelArticle[]; onRe
                   <Copy className="h-3.5 w-3.5" />
                 </button>
                 <button
-                  onClick={() => setEditing(a)}
-                  className="p-1.5 rounded-lg hover:bg-surface text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={async () => {
+                    setLoadingEditId(a.id);
+                    try {
+                      const full = await getArticleByIdAdmin({ data: a.id });
+                      setEditing(full ?? a);
+                    } catch {
+                      setEditing(a);
+                    } finally {
+                      setLoadingEditId(null);
+                    }
+                  }}
+                  disabled={loadingEditId === a.id}
+                  className="p-1.5 rounded-lg hover:bg-surface text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
                   title="Edit"
                 >
-                  <Edit2 className="h-3.5 w-3.5" />
+                  {loadingEditId === a.id
+                    ? <span className="h-3.5 w-3.5 inline-block animate-spin border-2 border-current border-t-transparent rounded-full" />
+                    : <Edit2 className="h-3.5 w-3.5" />}
                 </button>
                 <button
                   onClick={() => handleDelete(a)}
