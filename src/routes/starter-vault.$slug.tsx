@@ -77,9 +77,9 @@ function StarterDropPage() {
   const tools = parseJson<string[]>(drop.tools_used, []);
   const whatThisBuilds = parseJson<string[]>(drop.what_this_builds, []);
   const whatYouGet = parseJson<string[]>(drop.what_you_get, []);
-  const setupSteps = parseJson<string[]>(drop.setup_steps, []);
-  const editMap = parseJson<Array<{ file: string; description: string }>>(drop.edit_map, []);
-  const troubleshooting = parseJson<Array<{ problem: string; solution: string }>>(drop.troubleshooting, []);
+  const setupSteps = parseJson<Array<string | { step?: unknown; title?: unknown; description?: unknown }>>(drop.setup_steps, []);
+  const editMap = parseJson<Array<{ file?: unknown; description?: unknown; notes?: unknown; what_to_change?: unknown }>>(drop.edit_map, []);
+  const troubleshooting = parseJson<Array<{ problem?: unknown; solution?: unknown; fix?: unknown }>>(drop.troubleshooting, []);
 
   const toggleSection = (id: string) => setExpandedSection((prev) => (prev === id ? null : id));
 
@@ -95,8 +95,8 @@ function StarterDropPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-sm text-[#888] mb-6 flex-wrap">
-            <Link to="/" className="hover:text-[#2563FF] transition-colors">
-              Home
+            <Link to="/intel" className="hover:text-[#2563FF] transition-colors">
+              Articles
             </Link>
             <ChevronRight className="h-3.5 w-3.5 shrink-0" />
             <Link
@@ -269,14 +269,25 @@ function StarterDropPage() {
             onToggle={() => toggleSection("setup")}
           >
             <ol className="space-y-3">
-              {setupSteps.map((step, i) => (
-                <li key={i} className="flex items-start gap-3 p-3 rounded-lg bg-[#F4F6FA] border border-[#C8C3BA]/40">
-                  <span className="shrink-0 w-6 h-6 rounded-full bg-[#2563FF] text-white text-xs font-bold flex items-center justify-center mt-0.5">
-                    {i + 1}
-                  </span>
-                  <span className="text-[#2D3748] text-sm leading-relaxed">{step}</span>
-                </li>
-              ))}
+              {setupSteps.map((step, i) => {
+                const title = typeof step === "object" && step !== null
+                  ? String(step.title ?? "").trim()
+                  : "";
+                const description = typeof step === "object" && step !== null
+                  ? String(step.description ?? "").trim()
+                  : String(step ?? "").trim();
+                return (
+                  <li key={i} className="flex items-start gap-3 p-3 rounded-lg bg-[#F4F6FA] border border-[#C8C3BA]/40">
+                    <span className="shrink-0 w-6 h-6 rounded-full bg-[#2563FF] text-white text-xs font-bold flex items-center justify-center mt-0.5">
+                      {typeof step === "object" && step !== null && typeof step.step === "number" ? step.step : i + 1}
+                    </span>
+                    <div className="text-sm leading-relaxed">
+                      {title && <div className="text-[#0D1220] font-semibold mb-0.5">{title}</div>}
+                      {description && <div className="text-[#2D3748]">{description}</div>}
+                    </div>
+                  </li>
+                );
+              })}
             </ol>
           </CollapsibleSection>
         )}
@@ -291,24 +302,32 @@ function StarterDropPage() {
             onToggle={() => toggleSection("editmap")}
           >
             <div className="space-y-3">
-              {editMap.map((item, i) => (
-                <div
-                  key={i}
-                  className="rounded-lg bg-white border border-[#C8C3BA]/50 p-4"
-                >
-                  <div className="flex items-start gap-2 mb-1.5">
-                    <span className="shrink-0 mt-0.5 text-[10px] font-bold uppercase tracking-wide bg-[#2563FF]/8 text-[#2563FF] px-2 py-0.5 rounded border border-[#2563FF]/15 font-mono">
-                      file
-                    </span>
-                    <code className="text-sm font-mono text-[#0D1220] font-semibold">
-                      {item.file}
-                    </code>
+              {editMap.map((item, i) => {
+                const file = String(item.file ?? "").trim();
+                const description = String(item.description ?? item.notes ?? "").trim();
+                const whatToChange = String(item.what_to_change ?? "").trim();
+                return (
+                  <div
+                    key={i}
+                    className="rounded-lg bg-white border border-[#C8C3BA]/50 p-4"
+                  >
+                    <div className="flex items-start gap-2 mb-1.5">
+                      <span className="shrink-0 mt-0.5 text-[10px] font-bold uppercase tracking-wide bg-[#2563FF]/8 text-[#2563FF] px-2 py-0.5 rounded border border-[#2563FF]/15 font-mono">
+                        file
+                      </span>
+                      <code className="text-sm font-mono text-[#0D1220] font-semibold">
+                        {file || "(not provided)"}
+                      </code>
+                    </div>
+                    {whatToChange && (
+                      <p className="text-[#0D1220] text-sm font-medium pl-2 mb-1">{whatToChange}</p>
+                    )}
+                    <p className="text-[#556070] text-sm leading-relaxed pl-2">
+                      {description}
+                    </p>
                   </div>
-                  <p className="text-[#556070] text-sm leading-relaxed pl-2">
-                    {item.description}
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </CollapsibleSection>
         )}
@@ -323,20 +342,24 @@ function StarterDropPage() {
             onToggle={() => toggleSection("troubleshooting")}
           >
             <div className="space-y-4">
-              {troubleshooting.map((item, i) => (
-                <div
-                  key={i}
-                  className="rounded-xl border border-amber-200 bg-amber-50 p-4"
-                >
-                  <div className="font-semibold text-amber-900 text-sm mb-1.5 flex items-start gap-2">
-                    <span className="text-amber-500 shrink-0">⚠</span>
-                    {item.problem}
+              {troubleshooting.map((item, i) => {
+                const problem = String(item.problem ?? "").trim();
+                const solution = String(item.solution ?? item.fix ?? "").trim();
+                return (
+                  <div
+                    key={i}
+                    className="rounded-xl border border-amber-200 bg-amber-50 p-4"
+                  >
+                    <div className="font-semibold text-amber-900 text-sm mb-1.5 flex items-start gap-2">
+                      <span className="text-amber-500 shrink-0">⚠</span>
+                      {problem || "Issue"}
+                    </div>
+                    <p className="text-amber-800 text-sm leading-relaxed pl-5">
+                      {solution}
+                    </p>
                   </div>
-                  <p className="text-amber-800 text-sm leading-relaxed pl-5">
-                    {item.solution}
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </CollapsibleSection>
         )}
@@ -351,10 +374,10 @@ function StarterDropPage() {
               {drop.upgrade_note}
             </p>
             <Link
-              to="/vault"
+              to="/subscribe"
               className="inline-flex items-center gap-2 bg-[#2563FF] text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-[#1D50D9] transition-colors"
             >
-              Explore Premium Vault
+              Get Premium Access
               <ChevronRight className="h-3.5 w-3.5" />
             </Link>
           </div>

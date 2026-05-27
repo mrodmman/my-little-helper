@@ -24,15 +24,25 @@ export const Route = createFileRoute("/intel/$slug")({
       getArticleBySlug({ data: params.slug }),
       getPublishedArticles().catch(() => []),
     ]);
+    
+    // Debug log for troubleshooting
+    if (!article) {
+      console.error(`[Intel] Article not found for slug: "${params.slug}"`);
+    }
+    
     if (!article) throw notFound();
-    const related = allArticles.filter(
-      (a) => a.slug !== article.slug && a.category === article.category,
-    ).slice(0, 3);
+    
+    const related = allArticles
+      .filter((a) => a.slug !== article.slug && a.category === article.category)
+      .slice(0, 3);
     return { article, related };
   },
   component: ArticlePage,
   notFoundComponent: () => (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: "#F4F6FA" }}>
+    <div
+      className="min-h-screen flex items-center justify-center"
+      style={{ background: "#F4F6FA" }}
+    >
       <div className="text-center">
         <div className="text-6xl font-black text-[#C8C3BA] mb-4">404</div>
         <h1 className="text-2xl font-bold text-[#0D1220] mb-2">Article not found</h1>
@@ -47,6 +57,16 @@ export const Route = createFileRoute("/intel/$slug")({
     </div>
   ),
 });
+
+
+function isRenderableImageUrl(url?: string | null) {
+  if (!url) return false;
+  const trimmed = url.trim();
+  if (!trimmed) return false;
+  if (trimmed.startsWith("REPLACE_WITH_")) return false;
+  if (trimmed.includes("{{") || trimmed.includes("}}")) return false;
+  return true;
+}
 
 function ArticlePage() {
   const { article, related } = Route.useLoaderData();
@@ -87,23 +107,18 @@ function ArticlePage() {
       {/* ── Article Header ── */}
       <div
         style={{
-          background:
-            "linear-gradient(180deg, #F4F6FA 0%, #EEF2F7 100%)",
-          borderBottom: "1px solid rgba(200,195,186,0.4)",
+          background: "#0D1220",
+          borderBottom: "1px solid rgba(200,195,186,0.1)",
         }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-1.5 text-sm text-[#888] mb-6">
-            <Link to="/" className="hover:text-[#2563FF] transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="h-3.5 w-3.5" />
-            <Link to="/intel" className="hover:text-[#2563FF] transition-colors">
+          <nav className="flex items-center gap-1.5 text-sm text-[#8899BB] mb-6">
+            <Link to="/intel" className="hover:text-white transition-colors">
               Intel
             </Link>
             <ChevronRight className="h-3.5 w-3.5" />
-            <span className="text-[#556070] line-clamp-1">{article.title}</span>
+            <span className="text-[#CBD5E0] line-clamp-1">{article.title}</span>
           </nav>
 
           {/* Category + meta */}
@@ -111,9 +126,7 @@ function ArticlePage() {
             <span className="inline-flex items-center bg-[#2563FF]/8 text-[#2563FF] text-xs font-bold px-3 py-1 rounded-full border border-[#2563FF]/15 uppercase tracking-wide">
               {article.category}
             </span>
-            {publishDate && (
-              <span className="text-xs text-[#888]">{publishDate}</span>
-            )}
+            {publishDate && <span className="text-xs text-[#888]">{publishDate}</span>}
             {article.read_time && (
               <span className="flex items-center gap-1 text-xs text-[#888]">
                 <Clock className="h-3 w-3" />
@@ -123,14 +136,12 @@ function ArticlePage() {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0D1220] leading-tight max-w-3xl mb-4">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight max-w-3xl mb-4">
             {article.title}
           </h1>
 
           {/* Excerpt */}
-          <p className="text-[#556070] text-lg leading-relaxed max-w-2xl mb-5">
-            {article.excerpt}
-          </p>
+          <p className="text-[#8899BB] text-lg leading-relaxed max-w-2xl mb-5">{article.excerpt}</p>
 
           {/* Tags */}
           {tags.length > 0 && (
@@ -149,7 +160,7 @@ function ArticlePage() {
       </div>
 
       {/* ── Hero Image (if exists) ── */}
-      {article.cover_image_url && (
+      {isRenderableImageUrl(article.cover_image_url) && (
         <div className="max-w-6xl mx-auto px-4 sm:px-6 -mt-0 pb-0">
           <div className="rounded-2xl overflow-hidden border border-[#C8C3BA]/40 shadow-md">
             <img
@@ -201,11 +212,10 @@ function ArticlePage() {
                   Want the full step-by-step build kit? Grab the free Starter Vault version.
                 </p>
                 <Link
-                  to="/starter-vault/$slug"
-                  params={{ slug: article.related_starter_drop_slug }}
+                  to="/starter-vault"
                   className="flex items-center justify-center gap-2 w-full bg-[#2563FF] text-white text-sm font-semibold px-3 py-2 rounded-lg hover:bg-[#1D50D9] transition-colors"
                 >
-                  Get the Free Build Kit
+                  Browse Free Build Kits
                 </Link>
               </div>
             )}
@@ -233,11 +243,10 @@ function ArticlePage() {
                 Want the full step-by-step build kit? Grab the free Starter Vault version.
               </p>
               <Link
-                to="/starter-vault/$slug"
-                params={{ slug: article.related_starter_drop_slug }}
+                to="/starter-vault"
                 className="flex items-center justify-center gap-2 w-full bg-[#2563FF] text-white text-sm font-semibold px-4 py-3 rounded-xl hover:bg-[#1D50D9] transition-colors"
               >
-                Get the Free Build Kit
+                Browse Free Build Kits
               </Link>
             </div>
           )}
@@ -258,10 +267,7 @@ function ArticlePage() {
             <div className="flex items-center gap-3 mb-6">
               <h2 className="text-xl font-bold text-[#0D1220]">Related Articles</h2>
               <div className="h-px flex-1 bg-[#C8C3BA]/40" />
-              <Link
-                to="/intel"
-                className="text-sm text-[#2563FF] font-medium hover:underline"
-              >
+              <Link to="/intel" className="text-sm text-[#2563FF] font-medium hover:underline">
                 See all
               </Link>
             </div>
