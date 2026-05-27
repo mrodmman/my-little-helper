@@ -296,6 +296,31 @@ const AdminAssetsRoute = AdminAssetsRouteImport.update({
   path: '/assets',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminIntelRoute = AdminIntelRouteImport.update({
+  id: '/intel',
+  path: '/intel',
+  getParentRoute: () => AdminRoute,
+} as any)
+const IntelRoute = IntelRouteImport.update({
+  id: '/intel',
+  path: '/intel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntelSlugRoute = IntelSlugRouteImport.update({
+  id: '/intel/$slug',
+  path: '$slug',
+  getParentRoute: () => IntelRoute,
+} as any)
+const StarterVaultRoute = StarterVaultRouteImport.update({
+  id: '/starter-vault',
+  path: '/starter-vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StarterVaultSlugRoute = StarterVaultSlugRouteImport.update({
+  id: '/starter-vault/$slug',
+  path: '/starter-vault/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiCdnKeyRoute = ApiCdnKeyRouteImport.update({
   id: '/api/cdn/$key',
   path: '/api/cdn/$key',
@@ -633,9 +658,16 @@ export interface FileRouteTypes {
     | '/api/booking/admin/settings'
   fileRoutesById: FileRoutesById
 }
+export interface IntelRouteChildren {
+  IntelSlugRoute: typeof IntelSlugRoute
+}
+
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  IntelRoute: typeof IntelRouteWithChildren
+  StarterVaultRoute: typeof StarterVaultRoute
+  StarterVaultSlugRoute: typeof StarterVaultSlugRoute
   AiLeadKitRoute: typeof AiLeadKitRoute
   BeginRoute: typeof BeginRoute
   BizThankYouRoute: typeof BizThankYouRoute
@@ -1070,35 +1102,17 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
-interface IntelRouteChildren {
-  IntelSlugRoute: typeof IntelSlugRoute
-  IntelIndexRoute: typeof IntelIndexRoute
-}
-
-const IntelRouteChildren: IntelRouteChildren = {
+const intelRouteChildren: IntelRouteChildren = {
   IntelSlugRoute: IntelSlugRoute,
-  IntelIndexRoute: IntelIndexRoute,
 }
-
-const IntelRouteWithChildren = IntelRoute._addFileChildren(IntelRouteChildren)
-
-interface StarterVaultRouteChildren {
-  StarterVaultSlugRoute: typeof StarterVaultSlugRoute
-  StarterVaultIndexRoute: typeof StarterVaultIndexRoute
-}
-
-const StarterVaultRouteChildren: StarterVaultRouteChildren = {
-  StarterVaultSlugRoute: StarterVaultSlugRoute,
-  StarterVaultIndexRoute: StarterVaultIndexRoute,
-}
-
-const StarterVaultRouteWithChildren = StarterVaultRoute._addFileChildren(
-  StarterVaultRouteChildren,
-)
+const IntelRouteWithChildren = IntelRoute._addFileChildren(intelRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  IntelRoute: IntelRouteWithChildren,
+  StarterVaultRoute: StarterVaultRoute,
+  StarterVaultSlugRoute: StarterVaultSlugRoute,
   AiLeadKitRoute: AiLeadKitRoute,
   BeginRoute: BeginRoute,
   BizThankYouRoute: BizThankYouRoute,
