@@ -23,6 +23,21 @@ function ThankYouPage() {
           promotions or spam.
         </p>
 
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <a
+            href="/jumpstart-guide.html"
+            className="inline-flex items-center gap-2 rounded-md bg-primary text-primary-foreground px-5 py-3 text-sm font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition"
+          >
+            Open the 7-Day Guide <ArrowRight className="h-4 w-4" />
+          </a>
+          <Link
+            to="/begin"
+            className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-5 py-3 text-sm font-black uppercase tracking-wider hover:bg-surface-elevated transition"
+          >
+            Back to Start
+          </Link>
+        </div>
+
         <div className="mt-10 rounded-lg border border-border bg-surface p-6 text-left">
           <h2 className="font-display uppercase text-xl font-black tracking-tight text-foreground">
             Next step: The Kraken Vault

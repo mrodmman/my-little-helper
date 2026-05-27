@@ -5,7 +5,7 @@
  */
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
-import { BookOpen, Layers, ArrowRight, Search } from "lucide-react";
+import { Layers, Search, Wrench, Cog, DollarSign } from "lucide-react";
 import { getPublishedArticles } from "@/rpc/intel";
 import { ArticleCard } from "@/components/intel/ArticleCard";
 import { CategoryChips } from "@/components/intel/CategoryChips";
@@ -59,64 +59,30 @@ function IntelHub() {
   return (
     <div className="min-h-screen" style={{ background: "#F4F6FA" }}>
       {/* ── Hero ── */}
-      <div
-        className="relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, #0D1220 0%, #1a2744 60%, #1a3a80 100%)",
-        }}
-      >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse at 20% 50%, rgba(37,99,255,0.18) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(37,99,255,0.10) 0%, transparent 50%)",
-          }}
-        />
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
-          <div className="flex items-center gap-2 text-[#8899BB] text-sm mb-8">
-            <Link to="/" className="hover:text-white transition-colors">
-              Home
-            </Link>
-            <span>/</span>
-            <span className="text-white">Intel</span>
-          </div>
-
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-[#2563FF]/20 border border-[#2563FF]/30 text-[#7BA7FF] px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-6">
-              <BookOpen className="h-3 w-3" />
-              Kraken Intel
+      <div className="relative overflow-hidden" style={{ background: "#02050C" }}>
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+          <div className="max-w-4xl">
+            <div className="inline-flex items-center rounded-full bg-[#14B8FF] text-[#031122] px-4 py-1.5 text-sm font-bold mb-6">
+              Online Marketing Growth
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-5">
-              Build smarter{" "}
-              <span
-                className="text-transparent bg-clip-text"
-                style={{ backgroundImage: "linear-gradient(135deg, #2563FF, #60A5FA)" }}
-              >
-                systems.
-              </span>
+            <h1 className="font-hero-display text-6xl sm:text-7xl lg:text-8xl uppercase leading-[0.9] mb-6">
+              <span className="block text-[#14B8FF]">Reduce subscriptions.</span>
+              <span className="block text-[#FFD400]">Increase control.</span>
             </h1>
 
-            <p className="text-[#8899BB] text-lg sm:text-xl leading-relaxed mb-8 max-w-2xl">
-              Find better tools. Own more of your online infrastructure.
-              Tactical articles for independent operators and system builders.
-            </p>
+            <ul className="space-y-2.5 text-[#E6EEF9] text-xl sm:text-2xl mb-9 font-hero-sans">
+              <li className="flex items-center gap-3"><Wrench className="h-6 w-6 text-[#14B8FF]" /> <span>Find smarter tools</span></li>
+              <li className="flex items-center gap-3"><Cog className="h-6 w-6 text-[#14B8FF]" /> <span>Build online systems you actually own</span></li>
+              <li className="flex items-center gap-3"><DollarSign className="h-6 w-6 text-[#14B8FF]" /> <span>Grow your Business</span></li>
+            </ul>
 
             <div className="flex flex-wrap gap-3">
-              <a
-                href="#articles"
-                className="inline-flex items-center gap-2 bg-[#2563FF] text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#1D50D9] transition-colors"
-              >
+              <a href="#articles" className="inline-flex items-center justify-center rounded-xl bg-[#14B8FF] text-[#031122] px-6 py-3 font-bold text-base hover:brightness-95 transition">
                 Browse Articles
-                <ArrowRight className="h-4 w-4" />
               </a>
-              <Link
-                to="/starter-vault"
-                className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-white/15 transition-colors"
-              >
-                <Layers className="h-4 w-4" />
-                Explore Starter Vault
+              <Link to="/starter-vault" className="inline-flex items-center justify-center rounded-xl border-2 border-[#14B8FF] text-[#14B8FF] px-6 py-3 font-bold text-base hover:bg-[#14B8FF]/10 transition">
+                Full Builds
               </Link>
             </div>
           </div>

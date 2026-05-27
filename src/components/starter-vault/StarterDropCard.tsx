@@ -44,6 +44,8 @@ export function StarterDropCard({
     }
   })();
 
+  const normalizedCoverImageUrl = normalizeImageUrl(coverImageUrl);
+
   const diffColor = DIFFICULTY_COLORS[difficulty] ?? "bg-gray-50 text-gray-600 border-gray-200";
 
   return (
@@ -54,9 +56,9 @@ export function StarterDropCard({
     >
       {/* Cover */}
       <div className="relative aspect-video bg-gradient-to-br from-[#EEF2F7] to-[#E8EDF5] overflow-hidden">
-        {coverImageUrl ? (
+        {normalizedCoverImageUrl ? (
           <img
-            src={coverImageUrl}
+            src={normalizedCoverImageUrl}
             alt={title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />

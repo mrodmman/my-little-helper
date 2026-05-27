@@ -88,37 +88,37 @@ function StarterDropPage() {
       {/* ── Header ── */}
       <div
         style={{
-          background: "linear-gradient(180deg, #F4F6FA 0%, #EEF2F7 100%)",
-          borderBottom: "1px solid rgba(200,195,186,0.4)",
+          background: "#0D1220",
+          borderBottom: "1px solid rgba(200,195,186,0.1)",
         }}
       >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
           {/* Breadcrumb */}
-          <nav className="flex items-center gap-1.5 text-sm text-[#888] mb-6 flex-wrap">
-            <Link to="/intel" className="hover:text-[#2563FF] transition-colors">
+          <nav className="flex items-center gap-1.5 text-sm text-[#8899BB] mb-6 flex-wrap">
+            <Link to="/intel" className="hover:text-white transition-colors">
               Articles
             </Link>
             <ChevronRight className="h-3.5 w-3.5 shrink-0" />
             <Link
               to="/starter-vault"
-              className="hover:text-[#2563FF] transition-colors"
+              className="hover:text-white transition-colors"
             >
               Starter Vault
             </Link>
             <ChevronRight className="h-3.5 w-3.5 shrink-0" />
-            <span className="text-[#556070] line-clamp-1">{drop.title}</span>
+            <span className="text-[#CBD5E0] line-clamp-1">{drop.title}</span>
           </nav>
 
           {/* Meta chips */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            <span className="inline-flex items-center bg-[#2563FF]/8 text-[#2563FF] text-xs font-bold px-3 py-1 rounded-full border border-[#2563FF]/15 uppercase tracking-wide">
+            <span className="inline-flex items-center bg-[#2563FF]/12 text-[#60A5FA] text-xs font-bold px-3 py-1 rounded-full border border-[#2563FF]/30 uppercase tracking-wide">
               {drop.category}
             </span>
             <span className="inline-flex items-center bg-emerald-50 text-emerald-700 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-emerald-200">
               {drop.difficulty}
             </span>
             {drop.estimated_build_time && (
-              <span className="flex items-center gap-1 text-xs text-[#888]">
+              <span className="flex items-center gap-1 text-xs text-[#8899BB]">
                 <Clock className="h-3 w-3" />
                 {drop.estimated_build_time}
               </span>
@@ -126,11 +126,12 @@ function StarterDropPage() {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0D1220] leading-tight max-w-3xl mb-3">
-            {drop.title}
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-hero-display leading-[0.92] uppercase max-w-4xl mb-3">
+            <span className="text-[#14B8FF]">{drop.title.split(" ").slice(0, Math.ceil(drop.title.split(" ").length / 2)).join(" ")}</span>{" "}
+            <span className="text-[#FFD400]">{drop.title.split(" ").slice(Math.ceil(drop.title.split(" ").length / 2)).join(" ")}</span>
           </h1>
 
-          <p className="text-[#556070] text-lg leading-relaxed max-w-2xl mb-5">
+          <p className="font-hero-sans text-[#8899BB] text-lg leading-relaxed max-w-2xl mb-5">
             {drop.excerpt}
           </p>
 
