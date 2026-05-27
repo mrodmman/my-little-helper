@@ -4,7 +4,7 @@
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Package, BookOpen, ArrowRight, Layers } from "lucide-react";
+import { ArrowRight, Layers, Package } from "lucide-react";
 import { getPublishedStarterDrops } from "@/rpc/intel";
 import { StarterDropCard } from "@/components/starter-vault/StarterDropCard";
 import { CategoryChips } from "@/components/intel/CategoryChips";
@@ -40,86 +40,32 @@ function StarterVaultHub() {
   return (
     <div className="min-h-screen" style={{ background: "#F4F6FA" }}>
       {/* ── Hero ── */}
-      <div
-        className="relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, #04070F 0%, #09152D 55%, #0D2554 100%)",
-        }}
-      >
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(ellipse at 10% 60%, rgba(37,99,255,0.24) 0%, transparent 55%), radial-gradient(ellipse at 90% 10%, rgba(37,99,255,0.14) 0%, transparent 50%)",
-          }}
-        />
-
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 sm:py-28">
-          {/* Breadcrumb */}
-          <div className="flex items-center gap-2 text-[#8899BB] text-sm mb-8">
-            <Link to="/intel" className="hover:text-white transition-colors">
-              Intel Articles
-            </Link>
-            <span>/</span>
-            <span className="text-white">Starter Vault</span>
-          </div>
-
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 bg-[#2563FF]/16 border border-[#2563FF]/45 text-[#A8C4FF] px-3 py-1 rounded-md text-xs font-semibold uppercase tracking-wider mb-6">
-              <Package className="h-3 w-3" />
+      <div className="relative overflow-hidden" style={{ background: "#02050C" }}>
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+          <div className="max-w-4xl">
+            <div className="inline-flex items-center rounded-full bg-[#14B8FF] text-[#031122] px-4 py-1.5 text-sm font-bold mb-6">
               Free Build Kits
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-5">
-              Starter{" "}
-              <span
-                className="text-transparent bg-clip-text"
-                style={{
-                  backgroundImage: "linear-gradient(135deg, #2563FF, #60A5FA)",
-                }}
-              >
-                Vault
-              </span>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black uppercase leading-[0.95] tracking-tight mb-6">
+              <span className="block text-[#14B8FF]">Starter vault.</span>
+              <span className="block text-[#FFD400]">Build faster.</span>
             </h1>
 
-            <p className="text-[#8899BB] text-lg sm:text-xl leading-relaxed mb-8 max-w-2xl">
-              Free build kits, prompts, templates, workflows, and starter
-              systems. Pick a project. Get the kit. Build it today.
-            </p>
+            <ul className="space-y-2.5 text-[#E6EEF9] text-xl sm:text-2xl mb-9">
+              <li>📦 Grab ready-to-use kits</li>
+              <li>⚙️ Follow exact setup + edit maps</li>
+              <li>🚀 Ship your system in hours</li>
+            </ul>
 
             <div className="flex flex-wrap gap-3">
-              <a
-                href="#drops"
-                className="inline-flex items-center gap-2 bg-[#2563FF] text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#1D50D9] transition-colors shadow-[0_0_0_1px_rgba(37,99,255,0.35)]"
-              >
+              <a href="#drops" className="inline-flex items-center justify-center rounded-xl bg-[#14B8FF] text-[#031122] px-6 py-3 font-bold text-base hover:brightness-95 transition">
                 Browse Build Kits
-                <ArrowRight className="h-4 w-4" />
               </a>
-              <Link
-                to="/intel"
-                className="inline-flex items-center gap-2 bg-transparent border border-[#2563FF]/80 text-[#A8C4FF] px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#2563FF]/10 transition-colors"
-              >
-                <BookOpen className="h-4 w-4" />
+              <Link to="/intel" className="inline-flex items-center justify-center rounded-xl border-2 border-[#14B8FF] text-[#14B8FF] px-6 py-3 font-bold text-base hover:bg-[#14B8FF]/10 transition">
                 Kraken Intel Articles
               </Link>
             </div>
-          </div>
-
-          {/* Stats strip */}
-          <div className="mt-12 grid grid-cols-3 gap-4 max-w-md">
-            {[
-              { label: "Free kits", value: drops.length.toString() },
-              { label: "Always free", value: "100%" },
-              { label: "Build time", value: "1–4h" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-2xl font-black text-white">{stat.value}</div>
-                <div className="text-[11px] text-[#8899BB] uppercase tracking-wide mt-0.5">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>
