@@ -4,7 +4,7 @@
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowRight, Layers, Package } from "lucide-react";
+import { ArrowRight, Layers, Package, PackageOpen, FolderTree, Rocket } from "lucide-react";
 import { getPublishedStarterDrops } from "@/rpc/intel";
 import { StarterDropCard } from "@/components/starter-vault/StarterDropCard";
 import { CategoryChips } from "@/components/intel/CategoryChips";
@@ -47,15 +47,15 @@ function StarterVaultHub() {
               Free Build Kits
             </div>
 
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black uppercase leading-[0.95] tracking-tight mb-6">
+            <h1 className="font-hero-display text-6xl sm:text-7xl lg:text-8xl uppercase leading-[0.9] mb-6">
               <span className="block text-[#14B8FF]">Starter vault.</span>
               <span className="block text-[#FFD400]">Build faster.</span>
             </h1>
 
-            <ul className="space-y-2.5 text-[#E6EEF9] text-xl sm:text-2xl mb-9">
-              <li>📦 Grab ready-to-use kits</li>
-              <li>⚙️ Follow exact setup + edit maps</li>
-              <li>🚀 Ship your system in hours</li>
+            <ul className="space-y-2.5 text-[#E6EEF9] text-xl sm:text-2xl mb-9 font-hero-sans">
+              <li className="flex items-center gap-3"><PackageOpen className="h-6 w-6 text-[#14B8FF]" /> <span>Grab ready-to-use kits</span></li>
+              <li className="flex items-center gap-3"><FolderTree className="h-6 w-6 text-[#14B8FF]" /> <span>Follow exact setup + edit maps</span></li>
+              <li className="flex items-center gap-3"><Rocket className="h-6 w-6 text-[#14B8FF]" /> <span>Ship your system in hours</span></li>
             </ul>
 
             <div className="flex flex-wrap gap-3">

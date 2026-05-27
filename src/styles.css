@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=League+Gothic&display=swap");
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -35,7 +36,7 @@
   --color-glow: var(--glow);
 
   --font-sans: "Inter", system-ui, sans-serif;
-  --font-display: "Arial Black", "Helvetica Neue", Impact, system-ui, sans-serif;
+  --font-display: "League Gothic", "Arial Narrow", Impact, sans-serif;
 }
 
 :root {
@@ -140,4 +141,9 @@
   }
   .bg-gradient-primary { background: var(--gradient-primary); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
+}
+
+@layer utilities {
+  .font-hero-display { font-family: var(--font-display); letter-spacing: 0.01em; }
+  .font-hero-sans { font-family: var(--font-sans); }
 }

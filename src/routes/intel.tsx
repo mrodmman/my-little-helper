@@ -5,7 +5,7 @@
  */
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
-import { Layers, Search } from "lucide-react";
+import { Layers, Search, Wrench, Cog, DollarSign } from "lucide-react";
 import { getPublishedArticles } from "@/rpc/intel";
 import { ArticleCard } from "@/components/intel/ArticleCard";
 import { CategoryChips } from "@/components/intel/CategoryChips";
@@ -66,15 +66,15 @@ function IntelHub() {
               Online Marketing Growth
             </div>
 
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black uppercase leading-[0.95] tracking-tight mb-6">
+            <h1 className="font-hero-display text-6xl sm:text-7xl lg:text-8xl uppercase leading-[0.9] mb-6">
               <span className="block text-[#14B8FF]">Reduce subscriptions.</span>
               <span className="block text-[#FFD400]">Increase control.</span>
             </h1>
 
-            <ul className="space-y-2.5 text-[#E6EEF9] text-xl sm:text-2xl mb-9">
-              <li>🛠️ Find smarter tools</li>
-              <li>⚙️ Build online systems you actually own</li>
-              <li>💲 Grow your Business</li>
+            <ul className="space-y-2.5 text-[#E6EEF9] text-xl sm:text-2xl mb-9 font-hero-sans">
+              <li className="flex items-center gap-3"><Wrench className="h-6 w-6 text-[#14B8FF]" /> <span>Find smarter tools</span></li>
+              <li className="flex items-center gap-3"><Cog className="h-6 w-6 text-[#14B8FF]" /> <span>Build online systems you actually own</span></li>
+              <li className="flex items-center gap-3"><DollarSign className="h-6 w-6 text-[#14B8FF]" /> <span>Grow your Business</span></li>
             </ul>
 
             <div className="flex flex-wrap gap-3">

@@ -126,12 +126,12 @@ function StarterDropPage() {
           </div>
 
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight uppercase tracking-tight max-w-4xl mb-3">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-hero-display leading-[0.92] uppercase max-w-4xl mb-3">
             <span className="text-[#14B8FF]">{drop.title.split(" ").slice(0, Math.ceil(drop.title.split(" ").length / 2)).join(" ")}</span>{" "}
             <span className="text-[#FFD400]">{drop.title.split(" ").slice(Math.ceil(drop.title.split(" ").length / 2)).join(" ")}</span>
           </h1>
 
-          <p className="text-[#8899BB] text-lg leading-relaxed max-w-2xl mb-5">
+          <p className="font-hero-sans text-[#8899BB] text-lg leading-relaxed max-w-2xl mb-5">
             {drop.excerpt}
           </p>
 
