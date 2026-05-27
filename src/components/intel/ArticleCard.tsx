@@ -1,15 +1,15 @@
 /**
  * ArticleCard — used in the Kraken Intel hub grid.
- * If externalUrl is set the card is a plain <a> linking directly there.
- * Otherwise it routes to /intel/$slug via TanStack Router.
+ * Accepts a plain `href` string so this component has no dependency on
+ * @tanstack/react-router (avoids chunk circular-dependency errors).
+ * The parent is responsible for building the correct URL.
  */
-import { Link } from "@tanstack/react-router";
 import { Clock, ArrowRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ArticleCardProps {
+  href: string;
   title: string;
-  slug: string;
   excerpt: string;
   category: string;
   coverImageUrl?: string | null;
@@ -17,12 +17,11 @@ interface ArticleCardProps {
   publishedAt?: string | null;
   featured?: boolean;
   large?: boolean;
-  externalUrl?: string | null;
 }
 
 export function ArticleCard({
+  href,
   title,
-  slug,
   excerpt,
   category,
   coverImageUrl,
@@ -30,7 +29,6 @@ export function ArticleCard({
   publishedAt,
   featured,
   large = false,
-  externalUrl,
 }: ArticleCardProps) {
   const date = publishedAt
     ? new Date(publishedAt).toLocaleDateString("en-US", {
@@ -40,14 +38,15 @@ export function ArticleCard({
       })
     : null;
 
-  const className = cn(
-    "group flex flex-col rounded-2xl bg-white border border-[#C8C3BA]/50 overflow-hidden",
-    "shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300",
-    large && "sm:flex-row",
-  );
-
-  const content = (
-    <>
+  return (
+    <a
+      href={href}
+      className={cn(
+        "group flex flex-col rounded-2xl bg-white border border-[#C8C3BA]/50 overflow-hidden",
+        "shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300",
+        large && "sm:flex-row",
+      )}
+    >
       {/* Cover Image */}
       <div
         className={cn(
@@ -113,16 +112,6 @@ export function ArticleCard({
           </span>
         </div>
       </div>
-    </>
-  );
-
-  if (externalUrl) {
-    return <a href={externalUrl} className={className}>{content}</a>;
-  }
-
-  return (
-    <Link to="/intel/$slug" params={{ slug }} className={className}>
-      {content}
-    </Link>
+    </a>
   );
 }

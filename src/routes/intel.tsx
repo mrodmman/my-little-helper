@@ -156,14 +156,13 @@ function IntelHub() {
               {featured.slice(0, 2).map((a) => (
                 <ArticleCard
                   key={a.slug}
+                  href={a.external_url || `/intel/${a.slug}`}
                   title={a.title}
-                  slug={a.slug}
                   excerpt={a.excerpt}
                   category={a.category}
                   coverImageUrl={a.cover_image_url}
                   readTime={a.read_time}
                   publishedAt={a.published_at}
-                  externalUrl={a.external_url}
                   featured
                   large
                 />
@@ -201,14 +200,13 @@ function IntelHub() {
               {(searchQuery || selectedCategory ? filtered : [...featured.slice(2), ...regular]).map((a) => (
                 <ArticleCard
                   key={a.slug}
+                  href={a.external_url || `/intel/${a.slug}`}
                   title={a.title}
-                  slug={a.slug}
                   excerpt={a.excerpt}
                   category={a.category}
                   coverImageUrl={a.cover_image_url}
                   readTime={a.read_time}
                   publishedAt={a.published_at}
-                  externalUrl={a.external_url}
                   featured={!!a.featured}
                 />
               ))}
