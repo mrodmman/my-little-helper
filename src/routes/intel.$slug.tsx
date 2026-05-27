@@ -63,6 +63,27 @@ export const Route = createFileRoute("/intel/$slug")({
 });
 
 
+function normalizeImageUrl(rawUrl?: string | null) {
+  if (!rawUrl) return "";
+  const trimmed = rawUrl.trim();
+  if (!trimmed) return "";
+  if (!trimmed.startsWith("/api/cdn/")) return trimmed;
+
+  const prefix = "/api/cdn/";
+  const tail = trimmed.slice(prefix.length);
+  let decoded = tail;
+  for (let i = 0; i < 3; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+  return `${prefix}${encodeURIComponent(decoded)}`;
+}
+
 function isRenderableImageUrl(url?: string | null) {
   if (!url) return false;
   const trimmed = url.trim();
@@ -74,6 +95,7 @@ function isRenderableImageUrl(url?: string | null) {
 
 function ArticlePage() {
   const { article, related, nextArticle } = Route.useLoaderData();
+  const coverImageUrl = normalizeImageUrl(article.cover_image_url);
 
   const tags: string[] = (() => {
     try {
@@ -165,11 +187,11 @@ function ArticlePage() {
       </div>
 
       {/* ── Hero Image (if exists) ── */}
-      {isRenderableImageUrl(article.cover_image_url) && (
+      {isRenderableImageUrl(coverImageUrl) && (
         <div className="max-w-6xl mx-auto px-4 sm:px-6 -mt-0 pb-0">
           <div className="rounded-2xl overflow-hidden border border-[#C8C3BA]/40 shadow-md">
             <img
-              src={article.cover_image_url}
+              src={coverImageUrl}
               alt={article.title}
               className="w-full object-cover max-h-[420px]"
             />

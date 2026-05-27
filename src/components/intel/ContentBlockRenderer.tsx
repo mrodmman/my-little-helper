@@ -8,6 +8,27 @@ import { Info, Lightbulb, AlertTriangle, CheckCircle2, ExternalLink, ChevronRigh
 import { CopyButton } from "@/components/ui/CopyButton";
 import type { ContentBlock } from "@/rpc/intel";
 import { cn } from "@/lib/utils";
+function normalizeImageUrl(rawUrl?: string | null) {
+  if (!rawUrl) return "";
+  const trimmed = rawUrl.trim();
+  if (!trimmed) return "";
+  if (!trimmed.startsWith("/api/cdn/")) return trimmed;
+
+  const prefix = "/api/cdn/";
+  const tail = trimmed.slice(prefix.length);
+  let decoded = tail;
+  for (let i = 0; i < 3; i += 1) {
+    try {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    } catch {
+      break;
+    }
+  }
+  return `${prefix}${encodeURIComponent(decoded)}`;
+}
+
 interface ContentBlockRendererProps {
   blocks: ContentBlock[];
 }
@@ -37,7 +58,7 @@ function BlockSwitch({ block }: { block: ContentBlock }) {
       return <hr className="border-[#C8C3BA]/60 my-6" />;
     case "image": {
       const raw = block as typeof block & { src?: string; image_url?: string };
-      const imgSrc = block.url ?? raw.src ?? raw.image_url ?? "";
+      const imgSrc = normalizeImageUrl(block.url ?? raw.src ?? raw.image_url ?? "");
       if (!imgSrc) return null;
       return (
         <figure className="rounded-xl overflow-hidden border border-[#C8C3BA]/50">
