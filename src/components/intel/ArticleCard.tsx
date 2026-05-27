@@ -3,9 +3,9 @@
  * If externalUrl is set the card is a plain <a> linking directly there.
  * Otherwise it routes to /intel/$slug via TanStack Router.
  */
-import { Link } from "@tanstack/react-router";
 import { Clock, ArrowRight, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "@tanstack/react-router";
 
 interface ArticleCardProps {
   title: string;
