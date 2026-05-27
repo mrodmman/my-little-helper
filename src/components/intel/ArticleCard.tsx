@@ -1,6 +1,6 @@
 /**
  * ArticleCard — used in the Kraken Intel hub grid.
- * If externalUrl is set the card is a plain <a> linking directly there (opens in same tab).
+ * If externalUrl is set the card is a plain <a> linking directly there.
  * Otherwise it routes to /intel/$slug via TanStack Router.
  */
 import { Link } from "@tanstack/react-router";
@@ -20,28 +20,33 @@ interface ArticleCardProps {
   externalUrl?: string | null;
 }
 
-const cardCls = (large: boolean) =>
-  cn(
-    "group flex flex-col rounded-2xl bg-white border border-[#C8C3BA]/50 overflow-hidden",
-    "shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300",
-    large && "sm:flex-row",
-  );
-
-function CardInner({
+export function ArticleCard({
   title,
+  slug,
   excerpt,
   category,
   coverImageUrl,
   readTime,
   publishedAt,
   featured,
-  large,
-}: Omit<ArticleCardProps, "slug" | "externalUrl">) {
+  large = false,
+  externalUrl,
+}: ArticleCardProps) {
   const date = publishedAt
-    ? new Date(publishedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+    ? new Date(publishedAt).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
     : null;
 
-  return (
+  const className = cn(
+    "group flex flex-col rounded-2xl bg-white border border-[#C8C3BA]/50 overflow-hidden",
+    "shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300",
+    large && "sm:flex-row",
+  );
+
+  const content = (
     <>
       {/* Cover Image */}
       <div
@@ -73,14 +78,12 @@ function CardInner({
 
       {/* Content */}
       <div className={cn("flex flex-col flex-1 p-5", large && "sm:p-6")}>
-        {/* Category pill */}
         <div className="flex items-center gap-2 mb-3">
           <span className="inline-flex items-center bg-[#2563FF]/8 text-[#2563FF] text-xs font-semibold px-2.5 py-0.5 rounded-full border border-[#2563FF]/15">
             {category}
           </span>
         </div>
 
-        {/* Title */}
         <h3
           className={cn(
             "font-bold text-[#0D1220] leading-snug group-hover:text-[#2563FF] transition-colors mb-2",
@@ -90,12 +93,10 @@ function CardInner({
           {title}
         </h3>
 
-        {/* Excerpt */}
         <p className="text-[#556070] text-sm leading-relaxed flex-1 line-clamp-3 mb-4">
           {excerpt}
         </p>
 
-        {/* Footer */}
         <div className="flex items-center justify-between mt-auto">
           <div className="flex items-center gap-3 text-xs text-[#888]">
             {readTime && (
@@ -114,48 +115,14 @@ function CardInner({
       </div>
     </>
   );
-}
-
-export function ArticleCard({
-  title,
-  slug,
-  excerpt,
-  category,
-  coverImageUrl,
-  readTime,
-  publishedAt,
-  featured,
-  large = false,
-  externalUrl,
-}: ArticleCardProps) {
-  const inner = (
-    <CardInner
-      title={title}
-      excerpt={excerpt}
-      category={category}
-      coverImageUrl={coverImageUrl}
-      readTime={readTime}
-      publishedAt={publishedAt}
-      featured={featured}
-      large={large}
-    />
-  );
 
   if (externalUrl) {
-    return (
-      <a href={externalUrl} className={cardCls(large)}>
-        {inner}
-      </a>
-    );
+    return <a href={externalUrl} className={className}>{content}</a>;
   }
 
   return (
-    <Link
-      to="/intel/$slug"
-      params={{ slug }}
-      className={cardCls(large)}
-    >
-      {inner}
+    <Link to="/intel/$slug" params={{ slug }} className={className}>
+      {content}
     </Link>
   );
 }
