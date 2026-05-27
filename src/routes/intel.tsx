@@ -2,7 +2,7 @@
  * /intel — Kraken Intel article hub.
  * Public editorial layer for Keyboard Kraken.
  */
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useChildMatches } from "@tanstack/react-router";
 import { useState } from "react";
 import { BookOpen, Layers, ArrowRight, Search } from "lucide-react";
 import { getPublishedArticles } from "@/rpc/intel";
@@ -24,8 +24,16 @@ export const Route = createFileRoute("/intel")({
     const articles = await getPublishedArticles().catch(() => []);
     return { articles };
   },
-  component: IntelHub,
+  component: IntelLayout,
 });
+
+// Layout wrapper: renders the hub at /intel, transparently passes through to
+// child routes (e.g. /intel/$slug) via <Outlet />.
+function IntelLayout() {
+  const childMatches = useChildMatches();
+  if (childMatches.length > 0) return <Outlet />;
+  return <IntelHub />;
+}
 
 function IntelHub() {
   const { articles } = Route.useLoaderData();

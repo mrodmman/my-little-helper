@@ -269,8 +269,8 @@ function ArticlePage() {
               {related.map((a) => (
                 <ArticleCard
                   key={a.slug}
+                  href={a.external_url || `/intel/${a.slug}`}
                   title={a.title}
-                  slug={a.slug}
                   excerpt={a.excerpt}
                   category={a.category}
                   coverImageUrl={a.cover_image_url}

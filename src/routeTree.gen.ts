@@ -271,8 +271,8 @@ const IntelRoute = IntelRouteImport.update({
 } as any)
 const IntelSlugRoute = IntelSlugRouteImport.update({
   id: '/intel/$slug',
-  path: '/intel/$slug',
-  getParentRoute: () => rootRouteImport,
+  path: '$slug',
+  getParentRoute: () => IntelRoute,
 } as any)
 const StarterVaultRoute = StarterVaultRouteImport.update({
   id: '/starter-vault',
@@ -613,11 +613,14 @@ export interface FileRouteTypes {
     | '/api/booking/admin/settings'
   fileRoutesById: FileRoutesById
 }
+export interface IntelRouteChildren {
+  IntelSlugRoute: typeof IntelSlugRoute
+}
+
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  IntelRoute: typeof IntelRoute
-  IntelSlugRoute: typeof IntelSlugRoute
+  IntelRoute: typeof IntelRouteWithChildren
   StarterVaultRoute: typeof StarterVaultRoute
   StarterVaultSlugRoute: typeof StarterVaultSlugRoute
   AiLeadKitRoute: typeof AiLeadKitRoute
@@ -1038,11 +1041,15 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+const intelRouteChildren: IntelRouteChildren = {
+  IntelSlugRoute: IntelSlugRoute,
+}
+const IntelRouteWithChildren = IntelRoute._addFileChildren(intelRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  IntelRoute: IntelRoute,
-  IntelSlugRoute: IntelSlugRoute,
+  IntelRoute: IntelRouteWithChildren,
   StarterVaultRoute: StarterVaultRoute,
   StarterVaultSlugRoute: StarterVaultSlugRoute,
   AiLeadKitRoute: AiLeadKitRoute,
