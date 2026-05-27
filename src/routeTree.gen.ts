@@ -51,6 +51,7 @@ import { Route as AdminAvailabilityRouteImport } from './routes/admin/availabili
 import { Route as AdminAssetsRouteImport } from './routes/admin/assets'
 import { Route as AdminIntelRouteImport } from './routes/admin/intel'
 import { Route as IntelRouteImport } from './routes/intel'
+import { Route as IntelIndexRouteImport } from './routes/intel/index'
 import { Route as IntelSlugRouteImport } from './routes/intel.$slug'
 import { Route as StarterVaultRouteImport } from './routes/starter-vault'
 import { Route as StarterVaultSlugRouteImport } from './routes/starter-vault.$slug'
@@ -268,6 +269,11 @@ const IntelRoute = IntelRouteImport.update({
   id: '/intel',
   path: '/intel',
   getParentRoute: () => rootRouteImport,
+} as any)
+const IntelIndexRoute = IntelIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => IntelRoute,
 } as any)
 const IntelSlugRoute = IntelSlugRouteImport.update({
   id: '/intel/$slug',
@@ -614,6 +620,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface IntelRouteChildren {
+  IntelIndexRoute: typeof IntelIndexRoute
   IntelSlugRoute: typeof IntelSlugRoute
 }
 
@@ -1042,6 +1049,7 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 const intelRouteChildren: IntelRouteChildren = {
+  IntelIndexRoute: IntelIndexRoute,
   IntelSlugRoute: IntelSlugRoute,
 }
 const IntelRouteWithChildren = IntelRoute._addFileChildren(intelRouteChildren)
