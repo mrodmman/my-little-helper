@@ -17,7 +17,7 @@ const templates = [
     ctaUrl: JUMPSTART_URL,
     body: `
       <p style="margin:0 0 14px;">Hey — you made the right move getting here.</p>
-      <p style="margin:0 0 14px;">Your free 7-Day Affiliate Jumpstart is ready right now. One action per day. 45 minutes max. By day 7 you'll have the foundation of a real affiliate system running.</p>
+      <p style="margin:0 0 14px;">Your free 7-Day Online System Jumpstart is ready right now. One action per day. 45 minutes max. By day 7 you'll have the foundation of a real online system running.</p>
       <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
         <tr><td style="border-left:3px solid #0A8FE8;padding:12px 16px;background:#f0f8ff;">
           <span style="font-family:Arial Black,Arial,sans-serif;font-size:13px;color:#0a0a0a;text-transform:uppercase;">→ <a href="${JUMPSTART_URL}" style="color:#0A8FE8;text-decoration:none;">Access Your 7-Day Jumpstart Here</a></span>
@@ -42,7 +42,7 @@ const templates = [
     headlineAccent: "people stay stuck.",
     ctaText: 'See The System →',
     body: `
-      <p style="margin:0 0 14px;">If you've tried affiliate marketing before and it didn't work — it probably wasn't your fault.</p>
+      <p style="margin:0 0 14px;">If you've tried building online before and it didn't work — it probably wasn't your fault.</p>
       <p style="margin:0 0 14px;">90% of what's taught online is tactics without structure. "Start a YouTube channel." "Build a niche blog." None of that is wrong exactly. But it's incomplete in a way that destroys people.</p>
       <p style="margin:0 0 14px;">When you try one thing, don't see results in 30 days, and jump to something else — you're not building. You're just spinning.</p>
       <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
@@ -62,7 +62,7 @@ const templates = [
     headlineAccent: "nobody shows you.",
     ctaText: 'Get The Full Blueprint →',
     body: `
-      <p style="margin:0 0 14px;">Here's what a real affiliate system looks like — not the guru version, the actual version.</p>
+      <p style="margin:0 0 14px;">Here's what a real online system looks like — not the guru version, the actual version.</p>
       <p style="margin:0 0 6px;"><strong style="color:#0A8FE8;font-size:13px;">01 — NICHE + ANGLE</strong></p>
       <p style="margin:0 0 14px;padding-left:12px;">Who you're talking to and why they'd listen. Specific, not broad.</p>
       <p style="margin:0 0 6px;"><strong style="color:#0A8FE8;font-size:13px;">02 — CONTENT ENGINE</strong></p>
@@ -72,7 +72,7 @@ const templates = [
       <p style="margin:0 0 6px;"><strong style="color:#0A8FE8;font-size:13px;">04 — EMAIL LIST</strong></p>
       <p style="margin:0 0 14px;padding-left:12px;">The only asset you actually own. Social media is rented.</p>
       <p style="margin:0 0 6px;"><strong style="color:#0A8FE8;font-size:13px;">05 — OFFER STACK</strong></p>
-      <p style="margin:0 0 14px;padding-left:12px;">Affiliate products that match your audience's real problems.</p>
+      <p style="margin:0 0 14px;padding-left:12px;">Offers that match your audience's real problems.</p>
       <p style="margin:0 0 14px;">Five pieces. When they connect — it compounds.</p>
     `,
   },
@@ -103,8 +103,8 @@ const templates = [
     ctaText: 'Get Into Kraken Vault →',
     ctaUrl: OFFER_URL,
     body: `
-      <p style="margin:0 0 14px;"><strong style="color:#0a0a0a;">Kraken Vault</strong> is a structured system for building affiliate marketing income — built for people who still have a job, still have a life, and are done with courses that teach concepts without a path.</p>
-      <p style="margin:0 0 6px;padding-left:12px;">→ The full affiliate system framework built in sequence</p>
+      <p style="margin:0 0 14px;"><strong style="color:#0a0a0a;">Kraken Vault</strong> is a structured system for building online income — built for people who still have a job, still have a life, and are done with courses that teach concepts without a path.</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ The full online system framework built in sequence</p>
       <p style="margin:0 0 6px;padding-left:12px;">→ Module-by-module lessons that build on each other</p>
       <p style="margin:0 0 6px;padding-left:12px;">→ Real tools, automations, and workflows you can actually use</p>
       <p style="margin:0 0 6px;padding-left:12px;">→ The tech stack explained simply — no developer background needed</p>
@@ -255,7 +255,7 @@ const templates = [
     ctaText: 'Start The Build →',
     ctaUrl: OFFER_URL,
     body: `
-      <p style="margin:0 0 14px;">If you've tried affiliate marketing and nothing happened — here's the honest question:</p>
+      <p style="margin:0 0 14px;">If you've tried building online and nothing happened — here's the honest question:</p>
       <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
         <tr><td style="border-left:3px solid #0A8FE8;padding:12px 16px;background:#f0f8ff;">
           <span style="font-family:Arial Black,Arial,sans-serif;font-size:13px;color:#0a0a0a;text-transform:uppercase;">Did you have a system, or a collection of tactics?</span>
