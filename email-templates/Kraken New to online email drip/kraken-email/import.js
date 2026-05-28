@@ -1,8 +1,8 @@
 const { buildEmail } = require('./template');
 
-const RESEND_API_KEY = 're_M7D5w2E7_UijBsq5tQhzrErd3dyhV6z8p';
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const LOGO_URL = 'https://i.ibb.co/607fGNdR/file-45.jpg';
-const JUMPSTART_URL = 'https://my-little-helper.mathias2413.workers.dev/jumpstart';
+const JUMPSTART_URL = 'https://keyboardkraken.kbkcompanies.com/jumpstart-guide.html';
 const OFFER_URL = 'https://my-little-helper.mathias2413.workers.dev/offer';
 
 const templates = [
