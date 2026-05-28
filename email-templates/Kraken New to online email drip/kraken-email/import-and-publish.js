@@ -1,13 +1,13 @@
 const { buildEmail } = require('./template.fixed');
 
-const RESEND_API_KEY = "re_M7D5w2E7_UijBsq5tQhzrErd3dyhV6z8p";
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
 if (!RESEND_API_KEY) {
   console.error('Missing RESEND_API_KEY. Run: set RESEND_API_KEY=re_xxx  (Windows CMD) or $env:RESEND_API_KEY="re_xxx" (PowerShell)');
   process.exit(1);
 }
 const LOGO_URL = 'https://i.ibb.co/607fGNdR/file-45.jpg';
-const JUMPSTART_URL = 'https://keyboardkraken.kbkcompanies.com/jumpstart';
+const JUMPSTART_URL = 'https://keyboardkraken.kbkcompanies.com/jumpstart-guide.html';
 const OFFER_URL = 'https://keyboardkraken.kbkcompanies.com/offer';
 
 

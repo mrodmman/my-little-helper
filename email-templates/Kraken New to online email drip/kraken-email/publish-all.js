@@ -1,5 +1,4 @@
-const RESEND_API_KEY = process.env.re_M7D5w2E7_UijBsq5tQhzrErd3dyhV6z8p
-;
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
 if (!RESEND_API_KEY) {
   console.error('Missing RESEND_API_KEY. PowerShell: $env:RESEND_API_KEY="re_xxx" then node publish-all.js');
