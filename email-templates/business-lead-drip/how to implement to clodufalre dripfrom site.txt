@@ -1,0 +1,41 @@
+Use the new Resend business-owner drip templates tied to the AI Lead Kit opt-in.
+
+These are the actual Resend template IDs in order:
+
+1.
+Template Name: bo-lead-01-delivery
+Template ID: e9762cc8-6cdf-400e-a272-960d293e9776
+
+2.
+Template Name: bo-lead-02-real-problem
+Template ID: f91831da-4d2f-4865-8541-f6fa14ed96ac
+
+3.
+Template Name: bo-lead-03-leaky-website
+Template ID: b13c90af-b6ce-4897-956c-a0b2c7d26dbc
+
+4.
+Template Name: bo-lead-04-example-system
+Template ID: 5b10afce-d862-41bc-bd0c-3eba0bf474ac
+
+5.
+Template Name: bo-lead-05-agencies-stop-short
+Template ID: e24ff040-f874-4ed6-8496-2c13704fd6ab
+
+6.
+Template Name: bo-lead-06-diy-or-dfy
+Template ID: 70c31748-5166-4830-be3d-edf6ff8478d0
+
+7.
+Template Name: bo-lead-07-work-with-me
+Template ID: 44ced47a-6eff-450b-9f06-ecc78daabf65
+
+Opt-in source:
+https://keyboardkraken.kbkcompanies.com/ai-lead-kit
+
+Variables required:
+- first_name
+- email
+
+Unsubscribe route:
+https://keyboardkraken.kbkcompanies.com/unsubscribe?email={{{email}}}

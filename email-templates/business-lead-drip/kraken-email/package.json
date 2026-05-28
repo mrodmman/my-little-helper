@@ -1,0 +1,12 @@
+{
+  "name": "kraken-vault-email-import",
+  "version": "1.0.0",
+  "description": "Bulk Resend template importer for Kraken Vault",
+  "main": "import.js",
+  "scripts": {
+    "import": "node import.js"
+  },
+  "dependencies": {
+    "resend": "^3.0.0"
+  }
+}
