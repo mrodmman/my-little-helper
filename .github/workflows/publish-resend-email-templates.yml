@@ -1,0 +1,75 @@
+name: Publish Resend Email Templates
+
+on:
+  workflow_dispatch:
+    inputs:
+      flow:
+        description: Email template flow to update and publish in Resend
+        required: true
+        default: all
+        type: choice
+        options:
+          - new-to-kraken
+          - business-owner-growth
+          - all
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish selected Resend templates
+    runs-on: ubuntu-latest
+    env:
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Verify RESEND_API_KEY secret
+        shell: bash
+        run: |
+          if [ -z "$RESEND_API_KEY" ]; then
+            echo "RESEND_API_KEY GitHub Actions secret is missing."
+            exit 1
+          fi
+
+      - name: Update and publish selected Resend templates
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          run_template_flow() {
+            local folder="$1"
+            echo ""
+            echo "========================================"
+            echo "Updating and publishing: $folder"
+            echo "========================================"
+            pushd "$folder" >/dev/null
+            npm install
+            node import-and-publish.js
+            popd >/dev/null
+          }
+
+          case "${{ inputs.flow }}" in
+            new-to-kraken)
+              run_template_flow "email-templates/Kraken New to online email drip/kraken-email"
+              ;;
+            business-owner-growth)
+              run_template_flow "email-templates/business-lead-drip/kraken-email"
+              ;;
+            all)
+              run_template_flow "email-templates/Kraken New to online email drip/kraken-email"
+              run_template_flow "email-templates/business-lead-drip/kraken-email"
+              ;;
+            *)
+              echo "Unknown flow: ${{ inputs.flow }}"
+              exit 1
+              ;;
+          esac
