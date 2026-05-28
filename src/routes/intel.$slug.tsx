@@ -24,20 +24,20 @@ export const Route = createFileRoute("/intel/$slug")({
       getArticleBySlug({ data: params.slug }),
       getPublishedArticles().catch(() => []),
     ]);
-    
+
     // Debug log for troubleshooting
     if (!article) {
       console.error(`[Intel] Article not found for slug: "${params.slug}"`);
     }
-    
+
     if (!article) throw notFound();
-    
+
     const related = allArticles
       .filter((a) => a.slug !== article.slug && a.category === article.category)
       .slice(0, 3);
 
     const articleIndex = allArticles.findIndex((a) => a.slug === article.slug);
-    const nextArticle = articleIndex >= 0 ? allArticles[articleIndex + 1] ?? null : null;
+    const nextArticle = articleIndex >= 0 ? (allArticles[articleIndex + 1] ?? null) : null;
 
     return { article, related, nextArticle };
   },
@@ -61,7 +61,6 @@ export const Route = createFileRoute("/intel/$slug")({
     </div>
   ),
 });
-
 
 function isPlaceholderImageUrl(value: string) {
   const upper = value.toUpperCase();
@@ -105,7 +104,10 @@ function ArticlePage() {
 
   const tags: string[] = (() => {
     try {
-      return JSON.parse(article.tags || "[]") as string[];
+      const parsed = JSON.parse(article.tags || "[]");
+      return Array.isArray(parsed)
+        ? parsed.filter((tag): tag is string => typeof tag === "string")
+        : [];
     } catch {
       return [];
     }
@@ -113,7 +115,8 @@ function ArticlePage() {
 
   const blocks: ContentBlock[] = (() => {
     try {
-      return JSON.parse(article.content_blocks || "[]") as ContentBlock[];
+      const parsed = JSON.parse(article.content_blocks || "[]");
+      return Array.isArray(parsed) ? (parsed as ContentBlock[]) : [];
     } catch {
       return [];
     }
@@ -169,12 +172,24 @@ function ArticlePage() {
 
           {/* Title */}
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-hero-display leading-[0.92] uppercase max-w-4xl mb-4">
-            <span className="text-[#14B8FF]">{article.title.split(" ").slice(0, Math.ceil(article.title.split(" ").length / 2)).join(" ")}</span>{" "}
-            <span className="text-[#FFD400]">{article.title.split(" ").slice(Math.ceil(article.title.split(" ").length / 2)).join(" ")}</span>
+            <span className="text-[#14B8FF]">
+              {article.title
+                .split(" ")
+                .slice(0, Math.ceil(article.title.split(" ").length / 2))
+                .join(" ")}
+            </span>{" "}
+            <span className="text-[#FFD400]">
+              {article.title
+                .split(" ")
+                .slice(Math.ceil(article.title.split(" ").length / 2))
+                .join(" ")}
+            </span>
           </h1>
 
           {/* Excerpt */}
-          <p className="font-hero-sans text-[#8899BB] text-lg leading-relaxed max-w-2xl mb-5">{article.excerpt}</p>
+          <p className="font-hero-sans text-[#8899BB] text-lg leading-relaxed max-w-2xl mb-5">
+            {article.excerpt}
+          </p>
 
           {/* Tags */}
           {tags.length > 0 && (
@@ -293,8 +308,6 @@ function ArticlePage() {
             />
           )}
         </div>
-
-
 
         {/* ── Article Navigation ── */}
         <section className="mt-12">
