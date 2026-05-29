@@ -11,6 +11,7 @@ on:
         options:
           - new-to-kraken
           - business-owner-growth
+          - vault-unlock
           - all
 
 permissions:
@@ -64,9 +65,13 @@ jobs:
             business-owner-growth)
               run_template_flow "email-templates/business-lead-drip/kraken-email"
               ;;
+            vault-unlock)
+              run_template_flow "email-templates/starter-vault/kraken-email"
+              ;;
             all)
               run_template_flow "email-templates/Kraken New to online email drip/kraken-email"
               run_template_flow "email-templates/business-lead-drip/kraken-email"
+              run_template_flow "email-templates/starter-vault/kraken-email"
               ;;
             *)
               echo "Unknown flow: ${{ inputs.flow }}"

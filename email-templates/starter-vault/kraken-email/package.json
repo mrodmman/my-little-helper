@@ -1,0 +1,10 @@
+{
+  "name": "kraken-starter-vault-email-import",
+  "version": "1.0.0",
+  "description": "Resend template publisher for Keyboard Kraken Starter Vault unlock emails",
+  "main": "import-and-publish.js",
+  "scripts": {
+    "publish": "node import-and-publish.js"
+  },
+  "dependencies": {}
+}

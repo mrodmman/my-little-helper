@@ -258,18 +258,21 @@ function BlockSwitch({ block }: { block: ContentBlock }) {
         button_text?: string;
         button_url?: string;
       };
+      const ctaUrl = block.buttonUrl ?? raw.button_url ?? "";
       return (
         <div className="rounded-xl bg-[#2563FF]/5 border-2 border-[#2563FF]/20 p-5 text-center">
           <div className="font-bold text-[#0D1220] text-lg mb-1">
             {block.headline ?? raw.heading ?? "Learn more"}
           </div>
-          <p className="text-[#556070] text-sm mb-4">{block.description ?? raw.text ?? ""}</p>
-          <a
-            href={block.buttonUrl ?? raw.button_url ?? "#"}
-            className="inline-flex items-center gap-2 bg-[#2563FF] text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-[#1D50D9] transition-colors"
-          >
-            {block.buttonText ?? raw.button_text ?? "Continue"}
-          </a>
+          <p className={cn("text-[#556070] text-sm", ctaUrl ? "mb-4" : "")}>{block.description ?? raw.text ?? ""}</p>
+          {ctaUrl && (
+            <a
+              href={ctaUrl}
+              className="inline-flex items-center gap-2 bg-[#2563FF] text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-[#1D50D9] transition-colors"
+            >
+              {block.buttonText ?? raw.button_text ?? "Continue"}
+            </a>
+          )}
         </div>
       );
     }
