@@ -2,24 +2,13 @@ name: Publish Resend Email Templates
 
 on:
   workflow_dispatch:
-    inputs:
-      flow:
-        description: Email template flow to update and publish in Resend
-        required: true
-        default: all
-        type: choice
-        options:
-          - new-to-kraken
-          - business-owner-growth
-          - vault-unlock
-          - all
 
 permissions:
   contents: read
 
 jobs:
   publish:
-    name: Publish selected Resend templates
+    name: Publish all Resend templates
     runs-on: ubuntu-latest
     env:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
@@ -41,40 +30,30 @@ jobs:
             exit 1
           fi
 
-      - name: Update and publish selected Resend templates
+      - name: Discover and publish all email template flows
         shell: bash
         run: |
           set -euo pipefail
 
-          run_template_flow() {
-            local folder="$1"
+          # Find every import-and-publish.js under email-templates/ and run each one.
+          # To add a new email flow: drop a new folder with import-and-publish.js and push.
+          # No changes to this workflow file are ever needed.
+
+          found=0
+          while IFS= read -r script; do
+            folder="$(dirname "$script")"
             echo ""
             echo "========================================"
-            echo "Updating and publishing: $folder"
+            echo "Flow: $folder"
             echo "========================================"
             pushd "$folder" >/dev/null
-            npm install
+            npm install --silent
             node import-and-publish.js
             popd >/dev/null
-          }
+            found=$((found + 1))
+          done < <(find email-templates -name "import-and-publish.js" | sort)
 
-          case "${{ inputs.flow }}" in
-            new-to-kraken)
-              run_template_flow "email-templates/Kraken New to online email drip/kraken-email"
-              ;;
-            business-owner-growth)
-              run_template_flow "email-templates/business-lead-drip/kraken-email"
-              ;;
-            vault-unlock)
-              run_template_flow "email-templates/starter-vault/kraken-email"
-              ;;
-            all)
-              run_template_flow "email-templates/Kraken New to online email drip/kraken-email"
-              run_template_flow "email-templates/business-lead-drip/kraken-email"
-              run_template_flow "email-templates/starter-vault/kraken-email"
-              ;;
-            *)
-              echo "Unknown flow: ${{ inputs.flow }}"
-              exit 1
-              ;;
-          esac
+          echo ""
+          echo "========================================"
+          echo "Done — ran $found template flow(s)"
+          echo "========================================"
