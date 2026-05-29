@@ -59,7 +59,7 @@ function IntelHub() {
       {/* ── Hero ── */}
       <div className="relative overflow-hidden" style={{ background: "#02050C" }}>
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-          <div className={heroImageUrl ? "flex items-center gap-10 lg:gap-16" : ""}>
+          <div className={heroImageUrl ? "flex flex-col lg:flex-row lg:items-center gap-8 lg:gap-16" : ""}>
             {/* Text content */}
             <div className={heroImageUrl ? "flex-1 min-w-0" : "max-w-4xl"}>
               <div className="inline-flex items-center rounded-full bg-[#14B8FF] text-[#031122] px-4 py-1.5 text-sm font-bold mb-6">
@@ -87,13 +87,13 @@ function IntelHub() {
               </div>
             </div>
 
-            {/* Hero image / gif */}
+            {/* Hero image / gif — stacked on mobile, side-by-side on lg+ */}
             {heroImageUrl && (
-              <div className="hidden lg:flex shrink-0 items-center justify-center w-80 xl:w-96">
+              <div className="flex shrink-0 items-center justify-center lg:w-80 xl:w-96">
                 <img
                   src={heroImageUrl}
                   alt=""
-                  className="max-h-80 w-full object-contain drop-shadow-2xl"
+                  className="max-h-64 lg:max-h-80 w-auto object-contain drop-shadow-2xl"
                 />
               </div>
             )}
