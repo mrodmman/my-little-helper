@@ -113,8 +113,8 @@ function IntelHub() {
               </h2>
               <div className="h-px flex-1 bg-[#C8C3BA]/40" />
             </div>
-            <div className="grid lg:grid-cols-2 gap-5">
-              {featured.slice(0, 2).map((a) => (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {featured.slice(0, 3).map((a) => (
                 <ArticleCard
                   key={a.slug}
                   title={a.title}
@@ -125,7 +125,6 @@ function IntelHub() {
                   readTime={a.read_time}
                   publishedAt={a.published_at}
                   featured
-                  large
                 />
               ))}
             </div>
