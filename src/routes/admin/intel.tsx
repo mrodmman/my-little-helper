@@ -1,13 +1,13 @@
 /**
  * Admin — Kraken Intel & Starter Vault manager.
- * Tabs: Articles | Starter Drops | Import Package
+ * Tabs: Articles | Starter Drops | Import Package | Hero
  */
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useRef, useState, useTransition } from "react";
 import {
   BookOpen, Package, Upload, Plus, Trash2, Edit2, Copy,
   Eye, EyeOff, Check, X, ExternalLink, ChevronDown, ChevronUp,
-  AlertCircle, CheckCircle2,
+  AlertCircle, CheckCircle2, Image,
 } from "lucide-react";
 import {
   getAllArticlesAdmin, getAllStarterDropsAdmin,
@@ -17,6 +17,7 @@ import {
   importIntelPackage,
 } from "@/rpc/intel";
 import type { DbIntelArticle, DbStarterDrop, ImportPackage, ContentBlock } from "@/rpc/intel";
+import { getSiteConfig, updateSiteConfig } from "@/rpc/siteConfig";
 import { cn } from "@/lib/utils";
 
 // ── Route ────────────────────────────────────────────────────────────────────
@@ -24,34 +25,38 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/admin/intel")({
   component: IntelAdmin,
   loader: async () => {
-    const [articles, drops] = await Promise.all([
+    const [articles, drops, siteConfig] = await Promise.all([
       getAllArticlesAdmin().catch(() => []),
       getAllStarterDropsAdmin().catch(() => []),
+      getSiteConfig().catch(() => ({ intel_hero_image_url: null })),
     ]);
-    return { articles, drops };
+    return { articles, drops, siteConfig };
   },
 });
 
 // ── Tab types ─────────────────────────────────────────────────────────────────
 
-type Tab = "articles" | "drops" | "import";
+type Tab = "articles" | "drops" | "import" | "hero";
 
 // ── Main component ────────────────────────────────────────────────────────────
 
 function IntelAdmin() {
-  const { articles: initialArticles, drops: initialDrops } = Route.useLoaderData();
+  const { articles: initialArticles, drops: initialDrops, siteConfig: initialSiteConfig } = Route.useLoaderData();
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("articles");
   const [articles, setArticles] = useState(initialArticles);
   const [drops, setDrops] = useState(initialDrops);
+  const [siteConfig, setSiteConfig] = useState(initialSiteConfig);
 
   const refresh = async () => {
-    const [a, d] = await Promise.all([
+    const [a, d, sc] = await Promise.all([
       getAllArticlesAdmin().catch(() => articles),
       getAllStarterDropsAdmin().catch(() => drops),
+      getSiteConfig().catch(() => siteConfig),
     ]);
     setArticles(a);
     setDrops(d);
+    setSiteConfig(sc);
   };
 
   return (
@@ -71,6 +76,7 @@ function IntelAdmin() {
             { id: "articles" as Tab, label: "Articles", icon: BookOpen, count: articles.length },
             { id: "drops" as Tab, label: "Starter Drops", icon: Package, count: drops.length },
             { id: "import" as Tab, label: "Import Package", icon: Upload, count: null },
+            { id: "hero" as Tab, label: "Hero", icon: Image, count: null },
           ] as const
         ).map(({ id, label, icon: Icon, count }) => (
           <button
@@ -109,6 +115,122 @@ function IntelAdmin() {
       {tab === "import" && (
         <ImportTab onImported={refresh} />
       )}
+      {tab === "hero" && (
+        <HeroTab
+          heroImageUrl={siteConfig.intel_hero_image_url ?? ""}
+          onSaved={(url) => setSiteConfig({ ...siteConfig, intel_hero_image_url: url || null })}
+        />
+      )}
+    </div>
+  );
+}
+
+// ── Hero Tab ──────────────────────────────────────────────────────────────────
+
+function HeroTab({
+  heroImageUrl,
+  onSaved,
+}: {
+  heroImageUrl: string;
+  onSaved: (url: string) => void;
+}) {
+  const [url, setUrl] = useState(heroImageUrl);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const ref = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      form.append("prefix", "intel/hero/");
+      const res = await fetch("/api/upload", { method: "POST", body: form });
+      if (!res.ok) throw new Error("Upload failed");
+      const { url: uploaded } = await res.json() as { url: string };
+      setUrl(uploaded);
+    } catch {
+      alert("Upload failed — check your admin session.");
+    } finally {
+      setUploading(false);
+      if (ref.current) ref.current.value = "";
+    }
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await updateSiteConfig({ data: { intel_hero_image_url: url || null } });
+      onSaved(url);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch {
+      alert("Save failed.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="glass-card rounded-xl p-6 space-y-6 max-w-lg">
+      <div>
+        <h2 className="text-base font-semibold text-foreground">Intel Hero Image / GIF</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Displayed on the right side of the Intel page hero. Supports images and animated GIFs.
+          Leave blank to hide.
+        </p>
+      </div>
+
+      <div className="space-y-3">
+        <label className="block text-xs font-medium text-muted-foreground uppercase tracking-wide">
+          Image URL
+        </label>
+        <div className="flex gap-2">
+          <input
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="https://... or upload a file →"
+            className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
+          <button
+            type="button"
+            onClick={() => ref.current?.click()}
+            disabled={uploading}
+            className="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-3 py-2 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-surface-elevated disabled:opacity-50 transition-all"
+          >
+            <Upload className="h-3.5 w-3.5" />
+            {uploading ? "Uploading…" : "Upload"}
+          </button>
+          <input ref={ref} type="file" accept="image/*,image/gif" className="hidden" onChange={handleFile} />
+        </div>
+
+        {url && (
+          <div className="rounded-xl overflow-hidden border border-border bg-[#02050C] flex items-center justify-center p-4 h-48">
+            <img src={url} alt="Hero preview" className="max-h-full max-w-full object-contain" />
+          </div>
+        )}
+      </div>
+
+      <div className="flex items-center gap-3">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 disabled:opacity-50 transition-colors"
+        >
+          {saved ? <><Check className="h-4 w-4" /> Saved!</> : saving ? "Saving…" : "Save"}
+        </button>
+        {url && (
+          <button
+            onClick={() => setUrl("")}
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Clear image
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -218,7 +340,7 @@ function ArticlesTab({ articles, onRefresh }: { articles: DbIntelArticle[]; onRe
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
                 <a
-                  href={`/intel/${encodeURIComponent(a.slug)}`}
+                  href={a.external_url || `/intel/${encodeURIComponent(a.slug)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-1.5 rounded-lg hover:bg-surface text-muted-foreground hover:text-foreground transition-colors"
