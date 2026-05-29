@@ -2,7 +2,7 @@
  * /starter-vault/:slug — Individual Starter Drop page.
  */
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import {
   ChevronRight,
   Clock,
@@ -11,6 +11,7 @@ import {
   ChevronDown,
   ChevronUp,
   BookOpen,
+  Lock,
 } from "lucide-react";
 import { getStarterDropBySlug, getPublishedStarterDrops } from "@/rpc/intel";
 import type { DbStarterDrop } from "@/rpc/intel";
@@ -73,6 +74,35 @@ function parseJson<T>(raw: string, fallback: T): T {
 function StarterDropPage() {
   const { drop, related } = Route.useLoaderData();
   const [expandedSection, setExpandedSection] = useState<string | null>("setup");
+  const [unlocked, setUnlocked] = useState(false);
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
+  useEffect(() => {
+    if (localStorage.getItem("vaultUnlocked") === "true") setUnlocked(true);
+  }, []);
+
+  const handleUnlock = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      const res = await fetch("/api/subscribe-vault", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), drop_slug: drop.slug, drop_title: drop.title }),
+      });
+      if (!res.ok) throw new Error("failed");
+      localStorage.setItem("vaultUnlocked", "true");
+      setUnlocked(true);
+    } catch {
+      setSubmitError("Something went wrong — try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const tools = parseJson<string[]>(drop.tools_used, []);
   const whatThisBuilds = parseJson<string[]>(drop.what_this_builds, []);
@@ -216,27 +246,73 @@ function StarterDropPage() {
           </div>
         )}
 
-        {/* Build Prompt */}
+        {/* Build Prompt — gated behind email */}
         {drop.build_prompt && (
-          <CollapsibleSection
-            id="prompt"
-            title="🤖 Build Prompt"
-            subtitle="Copy and paste into Claude, ChatGPT, or your AI of choice."
-            isOpen={expandedSection === "prompt"}
-            onToggle={() => toggleSection("prompt")}
-          >
-            <div className="rounded-xl bg-[#0D1220] overflow-hidden">
-              <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/10">
-                <span className="text-[#8899BB] text-xs font-mono">prompt</span>
-                <CopyButton text={drop.build_prompt} label="Copy Prompt" />
+          unlocked ? (
+            <CollapsibleSection
+              id="prompt"
+              title="🤖 Build Prompt"
+              subtitle="Copy and paste into Claude, ChatGPT, or your AI of choice."
+              isOpen={expandedSection === "prompt"}
+              onToggle={() => toggleSection("prompt")}
+            >
+              <div className="rounded-xl bg-[#0D1220] overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/10">
+                  <span className="text-[#8899BB] text-xs font-mono">prompt</span>
+                  <CopyButton text={drop.build_prompt} label="Copy Prompt" />
+                </div>
+                <pre className="p-4 overflow-x-auto text-sm">
+                  <code className="text-[#E2E8F0] font-mono leading-relaxed whitespace-pre-wrap">
+                    {drop.build_prompt}
+                  </code>
+                </pre>
               </div>
-              <pre className="p-4 overflow-x-auto text-sm">
-                <code className="text-[#E2E8F0] font-mono leading-relaxed whitespace-pre-wrap">
-                  {drop.build_prompt}
-                </code>
-              </pre>
+            </CollapsibleSection>
+          ) : (
+            <div className="rounded-xl bg-white border border-[#C8C3BA]/50 overflow-hidden">
+              {/* Blurred prompt preview */}
+              <div className="relative select-none pointer-events-none px-5 py-4 blur-sm opacity-60">
+                <div className="font-bold text-[#0D1220] text-base mb-1">🤖 Build Prompt</div>
+                <div className="rounded-lg bg-[#0D1220] p-4 mt-2">
+                  <code className="text-[#E2E8F0] text-xs font-mono leading-relaxed">
+                    {drop.build_prompt.slice(0, 180)}...
+                  </code>
+                </div>
+              </div>
+
+              {/* Gate overlay */}
+              <div className="relative -mt-2 bg-gradient-to-t from-white via-white to-white/80 px-5 pb-6 pt-4 text-center">
+                <div className="flex items-center justify-center gap-2 mb-1">
+                  <Lock className="h-4 w-4 text-[#2563FF]" />
+                  <span className="font-bold text-[#0D1220] text-base">Unlock the Build Prompt</span>
+                </div>
+                <p className="text-[#556070] text-sm mb-4">
+                  Free — enter your email to access this prompt and unlock every kit in the Vault.
+                </p>
+                <form onSubmit={handleUnlock} className="flex gap-2 max-w-sm mx-auto">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    required
+                    className="flex-1 rounded-lg border border-[#C8C3BA] px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2563FF]/30 focus:border-[#2563FF]/50"
+                  />
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="shrink-0 bg-[#2563FF] text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-[#1D50D9] disabled:opacity-50 transition-colors"
+                  >
+                    {submitting ? "..." : "Unlock"}
+                  </button>
+                </form>
+                {submitError && (
+                  <p className="text-red-500 text-xs mt-2">{submitError}</p>
+                )}
+                <p className="text-[#AAA] text-xs mt-3">No spam. Unsubscribe any time.</p>
+              </div>
             </div>
-          </CollapsibleSection>
+          )
         )}
 
         {/* File Tree */}
