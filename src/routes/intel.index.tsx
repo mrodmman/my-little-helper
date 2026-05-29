@@ -6,6 +6,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Search, Wrench, Cog, DollarSign } from "lucide-react";
 import { getPublishedArticles } from "@/rpc/intel";
+import { getSiteConfig } from "@/rpc/siteConfig";
 import { ArticleCard } from "@/components/intel/ArticleCard";
 import { CategoryChips } from "@/components/intel/CategoryChips";
 
@@ -21,14 +22,17 @@ export const Route = createFileRoute("/intel/")({
     ],
   }),
   loader: async () => {
-    const articles = await getPublishedArticles().catch(() => []);
-    return { articles };
+    const [articles, siteConfig] = await Promise.all([
+      getPublishedArticles().catch(() => []),
+      getSiteConfig().catch(() => ({ intel_hero_image_url: null })),
+    ]);
+    return { articles, heroImageUrl: siteConfig.intel_hero_image_url };
   },
   component: IntelHub,
 });
 
 function IntelHub() {
-  const { articles } = Route.useLoaderData();
+  const { articles, heroImageUrl } = Route.useLoaderData();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -55,30 +59,44 @@ function IntelHub() {
       {/* ── Hero ── */}
       <div className="relative overflow-hidden" style={{ background: "#02050C" }}>
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
-          <div className="max-w-4xl">
-            <div className="inline-flex items-center rounded-full bg-[#14B8FF] text-[#031122] px-4 py-1.5 text-sm font-bold mb-6">
-              Online Marketing Growth
+          <div className={heroImageUrl ? "flex items-center gap-10 lg:gap-16" : ""}>
+            {/* Text content */}
+            <div className={heroImageUrl ? "flex-1 min-w-0" : "max-w-4xl"}>
+              <div className="inline-flex items-center rounded-full bg-[#14B8FF] text-[#031122] px-4 py-1.5 text-sm font-bold mb-6">
+                Online Marketing Growth
+              </div>
+
+              <h1 className="font-hero-display text-6xl sm:text-7xl lg:text-8xl uppercase leading-[0.9] mb-6">
+                <span className="block text-[#14B8FF]">Reduce subscriptions.</span>
+                <span className="block text-[#FFD400]">Increase control.</span>
+              </h1>
+
+              <ul className="space-y-2.5 text-[#E6EEF9] text-xl sm:text-2xl mb-9 font-hero-sans">
+                <li className="flex items-center gap-3"><Wrench className="h-6 w-6 text-[#14B8FF]" /> <span>Find smarter tools</span></li>
+                <li className="flex items-center gap-3"><Cog className="h-6 w-6 text-[#14B8FF]" /> <span>Build online systems you actually own</span></li>
+                <li className="flex items-center gap-3"><DollarSign className="h-6 w-6 text-[#14B8FF]" /> <span>Grow your Business</span></li>
+              </ul>
+
+              <div className="flex flex-wrap gap-3">
+                <a href="#articles" className="inline-flex items-center justify-center rounded-xl bg-[#14B8FF] text-[#031122] px-6 py-3 font-bold text-base hover:brightness-95 transition">
+                  Browse Articles
+                </a>
+                <Link to="/starter-vault" className="inline-flex items-center justify-center rounded-xl border-2 border-[#14B8FF] text-[#14B8FF] px-6 py-3 font-bold text-base hover:bg-[#14B8FF]/10 transition">
+                  Full Builds
+                </Link>
+              </div>
             </div>
 
-            <h1 className="font-hero-display text-6xl sm:text-7xl lg:text-8xl uppercase leading-[0.9] mb-6">
-              <span className="block text-[#14B8FF]">Reduce subscriptions.</span>
-              <span className="block text-[#FFD400]">Increase control.</span>
-            </h1>
-
-            <ul className="space-y-2.5 text-[#E6EEF9] text-xl sm:text-2xl mb-9 font-hero-sans">
-              <li className="flex items-center gap-3"><Wrench className="h-6 w-6 text-[#14B8FF]" /> <span>Find smarter tools</span></li>
-              <li className="flex items-center gap-3"><Cog className="h-6 w-6 text-[#14B8FF]" /> <span>Build online systems you actually own</span></li>
-              <li className="flex items-center gap-3"><DollarSign className="h-6 w-6 text-[#14B8FF]" /> <span>Grow your Business</span></li>
-            </ul>
-
-            <div className="flex flex-wrap gap-3">
-              <a href="#articles" className="inline-flex items-center justify-center rounded-xl bg-[#14B8FF] text-[#031122] px-6 py-3 font-bold text-base hover:brightness-95 transition">
-                Browse Articles
-              </a>
-              <Link to="/starter-vault" className="inline-flex items-center justify-center rounded-xl border-2 border-[#14B8FF] text-[#14B8FF] px-6 py-3 font-bold text-base hover:bg-[#14B8FF]/10 transition">
-                Full Builds
-              </Link>
-            </div>
+            {/* Hero image / gif */}
+            {heroImageUrl && (
+              <div className="hidden lg:flex shrink-0 items-center justify-center w-80 xl:w-96">
+                <img
+                  src={heroImageUrl}
+                  alt=""
+                  className="max-h-80 w-full object-contain drop-shadow-2xl"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
