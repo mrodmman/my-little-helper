@@ -135,8 +135,8 @@ function IntelHub() {
               {featured.slice(0, 3).map((a) => (
                 <ArticleCard
                   key={a.slug}
+                  href={a.external_url || `/intel/${a.slug}`}
                   title={a.title}
-                  slug={a.slug}
                   excerpt={a.excerpt}
                   category={a.category}
                   coverImageUrl={a.cover_image_url}
@@ -175,11 +175,11 @@ function IntelHub() {
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {(searchQuery || selectedCategory ? filtered : [...featured.slice(2), ...regular]).map((a) => (
+              {(searchQuery || selectedCategory ? filtered : [...featured.slice(3), ...regular]).map((a) => (
                 <ArticleCard
                   key={a.slug}
+                  href={a.external_url || `/intel/${a.slug}`}
                   title={a.title}
-                  slug={a.slug}
                   excerpt={a.excerpt}
                   category={a.category}
                   coverImageUrl={a.cover_image_url}

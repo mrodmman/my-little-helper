@@ -5,6 +5,20 @@ import { useNavigate } from "@tanstack/react-router";
 import { Clock, Wrench, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+function normalizeImageUrl(rawUrl?: string | null): string {
+  if (!rawUrl) return "";
+  const trimmed = rawUrl.trim();
+  if (!trimmed) return "";
+  if (trimmed.toUpperCase().startsWith("REPLACE_WITH_") || trimmed.toUpperCase().includes("_URL")) return "";
+  if (!trimmed.startsWith("/api/cdn/")) return trimmed;
+  const tail = trimmed.slice("/api/cdn/".length);
+  let decoded = tail;
+  for (let i = 0; i < 3; i++) {
+    try { const next = decodeURIComponent(decoded); if (next === decoded) break; decoded = next; } catch { break; }
+  }
+  return `/api/cdn/${encodeURIComponent(decoded)}`;
+}
+
 interface StarterDropCardProps {
   title: string;
   slug: string;
