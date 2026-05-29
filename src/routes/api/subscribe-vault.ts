@@ -39,7 +39,11 @@ export const Route = createFileRoute("/api/subscribe-vault")({
           // Non-blocking — don't fail the request over a DB insert
         }
 
-        // Send confirmation email with link back to the kit
+        // Send confirmation email with link back to the kit.
+        // TODO: Once you've created the template in Resend and run the vault-unlock
+        // workflow, replace this block with template_id + variables:
+        //   template_id: "YOUR-RESEND-TEMPLATE-UUID",
+        //   variables: { drop_title: dropTitle, drop_url: dropUrl, email, first_name: "" }
         const dropSlug = body.drop_slug ?? "";
         const dropTitle = body.drop_title ?? "Your Starter Kit";
         const dropUrl = `https://keyboardkraken.kbkcompanies.com/starter-vault/${dropSlug}`;
