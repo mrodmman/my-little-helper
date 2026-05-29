@@ -1,6 +1,6 @@
 const { buildEmail } = require('./template.business');
 
-const RESEND_API_KEY = 're_M7D5w2E7_UijBsq5tQhzrErd3dyhV6z8p';
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
 if (!RESEND_API_KEY || RESEND_API_KEY === 'PASTE_YOUR_RESEND_KEY_HERE') {
   console.error('Missing RESEND_API_KEY. Paste your Resend key into the RESEND_API_KEY line.');

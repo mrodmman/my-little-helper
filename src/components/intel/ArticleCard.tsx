@@ -88,7 +88,10 @@ export function ArticleCard({
           <img
             src={normalizedCoverImageUrl}
             alt={title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className={cn(
+              "w-full h-full transition-transform duration-500",
+              large ? "object-contain" : "object-cover group-hover:scale-105",
+            )}
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
@@ -122,9 +125,7 @@ export function ArticleCard({
           {title}
         </h3>
 
-        <p className="text-[#556070] text-sm leading-relaxed flex-1 line-clamp-3 mb-4">
-          {excerpt}
-        </p>
+        <p className="text-[#556070] text-sm leading-relaxed flex-1 line-clamp-3 mb-4">{excerpt}</p>
 
         <div className="flex items-center justify-between mt-auto">
           <div className="flex items-center gap-3 text-xs text-[#888]">
