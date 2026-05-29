@@ -39,11 +39,7 @@ export const Route = createFileRoute("/api/subscribe-vault")({
           // Non-blocking — don't fail the request over a DB insert
         }
 
-        // Send confirmation email with link back to the kit.
-        // TODO: Once you've created the template in Resend and run the vault-unlock
-        // workflow, replace this block with template_id + variables:
-        //   template_id: "YOUR-RESEND-TEMPLATE-UUID",
-        //   variables: { drop_title: dropTitle, drop_url: dropUrl, email, first_name: "" }
+        // Send branded confirmation email via Resend template
         const dropSlug = body.drop_slug ?? "";
         const dropTitle = body.drop_title ?? "Your Starter Kit";
         const dropUrl = `https://keyboardkraken.kbkcompanies.com/starter-vault/${dropSlug}`;
@@ -58,19 +54,13 @@ export const Route = createFileRoute("/api/subscribe-vault")({
             body: JSON.stringify({
               from: `${env.FROM_NAME} <${env.FROM_EMAIL}>`,
               to: email,
-              subject: `Your free kit: ${dropTitle}`,
-              html: `
-<p>Hi,</p>
-<p>Here's your free Starter Vault kit — <strong>${dropTitle}</strong>.</p>
-<p>It includes the full AI build prompt, file structure, setup steps, and edit map so you can ship the whole thing in one session.</p>
-<p>
-  <a href="${dropUrl}" style="display:inline-block;background:#2563FF;color:#fff;padding:12px 24px;border-radius:8px;font-weight:700;text-decoration:none;">
-    Open Your Kit →
-  </a>
-</p>
-<p>You've also unlocked every other kit in the Starter Vault — no paywall, no catch.</p>
-<p>— Matt @ Keyboard Kraken</p>
-              `.trim(),
+              template_id: "8b1fd136-1503-44ce-a8e4-2f2c1417bc9a",
+              variables: {
+                email,
+                first_name: "",
+                drop_title: dropTitle,
+                drop_url: dropUrl,
+              },
             }),
           });
         } catch {
