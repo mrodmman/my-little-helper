@@ -102,17 +102,6 @@ function ArticlePage() {
   const { article, related, nextArticle } = Route.useLoaderData();
   const coverImageUrl = normalizeImageUrl(article.cover_image_url);
 
-  const tags: string[] = (() => {
-    try {
-      const parsed = JSON.parse(article.tags || "[]");
-      return Array.isArray(parsed)
-        ? parsed.filter((tag): tag is string => typeof tag === "string")
-        : [];
-    } catch {
-      return [];
-    }
-  })();
-
   const blocks: ContentBlock[] = (() => {
     try {
       const parsed = JSON.parse(article.content_blocks || "[]");
@@ -190,31 +179,17 @@ function ArticlePage() {
           <p className="font-hero-sans text-[#8899BB] text-lg leading-relaxed max-w-2xl mb-5">
             {article.excerpt}
           </p>
-
-          {/* Tags */}
-          {tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-[11px] bg-white border border-[#C8C3BA]/50 text-[#556070] px-2.5 py-0.5 rounded-full"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
       {/* ── Hero Image (if exists) ── */}
       {isRenderableImageUrl(coverImageUrl) && (
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 -mt-0 pb-0">
-          <div className="rounded-2xl overflow-hidden border border-[#C8C3BA]/40 shadow-md">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 -mt-0 pb-0">
+          <div className="rounded-2xl overflow-hidden border border-[#C8C3BA]/40 shadow-md bg-[#05070A]">
             <img
               src={coverImageUrl}
               alt={article.title}
-              className="w-full object-cover max-h-[420px]"
+              className="w-full max-h-[320px] object-contain"
             />
           </div>
         </div>
