@@ -3,7 +3,7 @@ const { buildEmail } = require('./template.business');
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
 if (!RESEND_API_KEY || RESEND_API_KEY === 'PASTE_YOUR_RESEND_KEY_HERE') {
-  console.error('Missing RESEND_API_KEY. Paste your Resend key into the RESEND_API_KEY line.');
+  console.error('Missing RESEND_API_KEY.');
   process.exit(1);
 }
 
@@ -13,7 +13,6 @@ const WORK_WITH_ME_URL = 'https://keyboardkraken.kbkcompanies.com/work-with-me';
 
 const templates = [
   {
-    id: 'e9762cc8-6cdf-400e-a272-960d293e9776',
     name: 'bo-lead-01-delivery',
     subject: 'Your free growth playbook is inside',
     seriesLabel: 'Business Systems',
@@ -22,7 +21,7 @@ const templates = [
     ctaText: 'Open The Playbook →',
     ctaUrl: PLAYBOOK_URL,
     body: `
-      <p style="margin:0 0 14px;">Hey {{{first_name}}} — here’s the free business owner growth playbook you requested.</p>
+      <p style="margin:0 0 14px;">Hey {{{first_name}}} — here's the free business owner growth playbook you requested.</p>
 
       <p style="margin:0 0 14px;">
       This is the simple version of how your online presence, lead capture, follow-up, and backend automation should connect.
@@ -49,7 +48,6 @@ const templates = [
   },
 
   {
-    id: 'f91831da-4d2f-4865-8541-f6fa14ed96ac',
     name: 'bo-lead-02-real-problem',
     subject: 'The bottleneck is probably not effort',
     seriesLabel: 'Business Systems',
@@ -92,7 +90,6 @@ const templates = [
   },
 
   {
-    id: 'b13c90af-b6ce-4897-956c-a0b2c7d26dbc',
     name: 'bo-lead-03-leaky-website',
     subject: 'A website is not the whole system',
     seriesLabel: 'Business Systems',
@@ -126,7 +123,6 @@ const templates = [
   },
 
   {
-    id: '5b10afce-d862-41bc-bd0c-3eba0bf474ac',
     name: 'bo-lead-04-example-system',
     subject: 'What a hands-off acquisition system looks like',
     seriesLabel: 'Business Systems',
@@ -166,7 +162,6 @@ const templates = [
   },
 
   {
-    id: 'e24ff040-f874-4ed6-8496-2c13704fd6ab',
     name: 'bo-lead-05-agencies-stop-short',
     subject: 'Most marketing help stops too early',
     seriesLabel: 'Business Systems',
@@ -205,7 +200,6 @@ const templates = [
   },
 
   {
-    id: '70c31748-5166-4830-be3d-edf6ff8478d0',
     name: 'bo-lead-06-diy-or-dfy',
     subject: 'You can build this yourself',
     seriesLabel: 'Business Systems',
@@ -243,7 +237,6 @@ const templates = [
   },
 
   {
-    id: '44ced47a-6eff-450b-9f06-ecc78daabf65',
     name: 'bo-lead-07-work-with-me',
     subject: 'Stop stalling your growth',
     seriesLabel: 'Business Systems',
@@ -281,7 +274,16 @@ const templates = [
   },
 ];
 
-async function createOrUpdateTemplate(t) {
+async function listExistingTemplates() {
+  const res = await fetch('https://api.resend.com/templates', {
+    headers: { Authorization: `Bearer ${RESEND_API_KEY}` },
+  });
+  const data = await res.json();
+  const list = Array.isArray(data.data) ? data.data : [];
+  return Object.fromEntries(list.map(t => [t.name, t]));
+}
+
+async function upsertTemplate(t, existingByName) {
   const html = buildEmail({
     seriesLabel: t.seriesLabel,
     headline: t.headline,
@@ -302,61 +304,60 @@ async function createOrUpdateTemplate(t) {
     ],
   };
 
-  const response = await fetch(`https://api.resend.com/templates/${t.id}`, {
-    method: 'PATCH',
-    headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
+  const existing = existingByName[t.name];
 
-  return { response, data: await response.json(), id: t.id };
+  if (existing) {
+    const res = await fetch(`https://api.resend.com/templates/${existing.id}`, {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || res.status);
+    console.log(`✓ ${t.name} — updated (id: ${existing.id})`);
+    return existing.id;
+  } else {
+    const res = await fetch('https://api.resend.com/templates', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || res.status);
+    console.log(`✓ ${t.name} — created (id: ${data.id})`);
+    return data.id;
+  }
 }
 
-async function publishTemplate(id) {
-  const response = await fetch(`https://api.resend.com/templates/${id}/publish`, {
+async function publishTemplate(id, name) {
+  const res = await fetch(`https://api.resend.com/templates/${id}/publish`, {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
+    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
   });
-
-  const data = await response.json().catch(() => ({}));
-  return { response, data };
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message || res.status);
+  console.log(`🚀 ${name} — published`);
 }
 
 async function run() {
-  console.log('\n🦑 BUSINESS OWNER GROWTH PLAYBOOK — RESEND BULK UPDATE');
-  console.log('=====================================================');
+  console.log('\n🦑 BUSINESS OWNER GROWTH PLAYBOOK — RESEND UPSERT + PUBLISH');
+  console.log('=============================================================');
+
+  const existingByName = await listExistingTemplates();
+  console.log(`Found ${Object.keys(existingByName).length} existing templates in Resend\n`);
 
   for (const t of templates) {
     try {
-      const result = await createOrUpdateTemplate(t);
-
-      if (!result.response.ok) {
-        console.log(`✗ ${t.name} — ${result.data?.message || result.response.status}`);
-        continue;
-      }
-
-      console.log(`✓ ${t.name} — updated`);
-
-      const publish = await publishTemplate(result.id);
-
-      if (!publish.response.ok) {
-        console.log(`✗ ${t.name} — publish failed: ${publish.data?.message || publish.response.status}`);
-      } else {
-        console.log(`🚀 ${t.name} — published`);
-      }
-
+      const id = await upsertTemplate(t, existingByName);
+      await publishTemplate(id, t.name);
       await new Promise(r => setTimeout(r, 300));
     } catch (err) {
-      console.log(`✗ ${t.name} — ${err.message}`);
+      console.error(`✗ ${t.name} — ${err.message}`);
+      process.exitCode = 1;
     }
   }
 
-  console.log('\n✅ Business-owner growth playbook templates updated + published');
+  console.log('\n✅ Business-owner growth playbook templates done');
 }
 
 run();

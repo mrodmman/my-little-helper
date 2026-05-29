@@ -3,17 +3,16 @@ const { buildEmail } = require('./template.fixed');
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
 if (!RESEND_API_KEY) {
-  console.error('Missing RESEND_API_KEY. Run: set RESEND_API_KEY=re_xxx  (Windows CMD) or $env:RESEND_API_KEY="re_xxx" (PowerShell)');
+  console.error('Missing RESEND_API_KEY.');
   process.exit(1);
 }
+
 const LOGO_URL = 'https://i.ibb.co/607fGNdR/file-45.jpg';
 const JUMPSTART_URL = 'https://keyboardkraken.kbkcompanies.com/jumpstart-guide.html';
 const OFFER_URL = 'https://keyboardkraken.kbkcompanies.com/offer';
 
-
 const templates = [
   {
-    id: 'f26e99f7-212c-484e-9576-988a644fe0e8',
     name: 'kv-welcome-01',
     subject: "Your 7-Day Jumpstart is ready",
     seriesLabel: 'Keyboard Kraken',
@@ -40,13 +39,13 @@ const templates = [
     `,
   },
   {
-    id: '62d59869-87dd-43ee-ab97-e02f0cdd57f5',
     name: 'kv-welcome-02',
     subject: "Why most people fail at this (it's not what you think)",
     seriesLabel: 'Keyboard Kraken',
     headline: "The real reason",
     headlineAccent: "people stay stuck.",
     ctaText: 'See The System →',
+    ctaUrl: OFFER_URL,
     body: `
       <p style="margin:0 0 14px;">If you've tried building online before and it didn't work — it probably wasn't your fault.</p>
       <p style="margin:0 0 14px;">90% of what's taught online is tactics without structure. "Start a YouTube channel." "Build a niche blog." None of that is wrong exactly. But it's incomplete in a way that destroys people.</p>
@@ -60,13 +59,13 @@ const templates = [
     `,
   },
   {
-    id: '72c3879e-1bcf-405e-9ee9-287efe08c095',
     name: 'kv-welcome-03',
     subject: "The actual sequence (nobody explains this part)",
     seriesLabel: 'Keyboard Kraken',
     headline: "The 5-part system",
     headlineAccent: "nobody shows you.",
     ctaText: 'Get The Full Blueprint →',
+    ctaUrl: OFFER_URL,
     body: `
       <p style="margin:0 0 14px;">Here's what a real online system looks like — not the guru version, the actual version.</p>
       <p style="margin:0 0 6px;"><strong style="color:#0A8FE8;font-size:13px;">01 — NICHE + ANGLE</strong></p>
@@ -83,13 +82,13 @@ const templates = [
     `,
   },
   {
-    id: '5cab1bbc-62d6-422a-a4c4-b8c8e3877e2a',
     name: 'kv-welcome-04',
     subject: "What this looks like when it actually works",
     seriesLabel: 'Keyboard Kraken',
     headline: "What real progress",
     headlineAccent: "actually looks like.",
     ctaText: "See What's Inside →",
+    ctaUrl: OFFER_URL,
     body: `
       <p style="margin:0 0 14px;">Progress with this is quieter than they show you. It's not a dashboard screenshot six months in.</p>
       <p style="margin:0 0 6px;"><strong style="color:#0A8FE8;font-size:13px;">MONTH 1</strong> — Direction. System. Building in the background.</p>
@@ -100,7 +99,6 @@ const templates = [
     `,
   },
   {
-    id: '0b242f65-9059-40a5-8d9d-e661da424963',
     name: 'kv-welcome-05',
     subject: "Here's what's inside Kraken Vault (and how to get in)",
     seriesLabel: 'Keyboard Kraken',
@@ -123,13 +121,13 @@ const templates = [
     `,
   },
   {
-    id: '7795a340-8ed0-4a4f-a814-a5667d23721c',
     name: 'kv-nurture-01',
     subject: "Stop trying to stay motivated. Do this instead.",
     seriesLabel: 'Keyboard Kraken',
     headline: "Systems over",
     headlineAccent: "motivation.",
     ctaText: 'Get The System →',
+    ctaUrl: OFFER_URL,
     body: `
       <p style="margin:0 0 14px;">Motivation is unreliable. You know this. You've felt it.</p>
       <p style="margin:0 0 14px;">You get fired up, you're consistent for two weeks, then life happens and the streak dies.</p>
@@ -142,13 +140,13 @@ const templates = [
     `,
   },
   {
-    id: '396d2876-d6e0-428f-b810-5e5489d851e7',
     name: 'kv-nurture-02',
     subject: 'What "building slowly" actually means',
     seriesLabel: 'Keyboard Kraken',
     headline: "The honest",
     headlineAccent: "timeline.",
     ctaText: 'Start The Build →',
+    ctaUrl: OFFER_URL,
     body: `
       <p style="margin:0 0 14px;">"Building slowly" gets a bad rep because everyone sells speed. But here's what slow actually looks like:</p>
       <p style="margin:0 0 6px;"><strong style="color:#0A8FE8;font-size:13px;">MONTH 1</strong> — Direction. System. Building quietly.</p>
@@ -159,13 +157,13 @@ const templates = [
     `,
   },
   {
-    id: 'be848a11-9689-4e37-8d21-7097acd89fae',
     name: 'kv-nurture-03',
     subject: "The cost of waiting (nobody says this out loud)",
     seriesLabel: 'Keyboard Kraken',
     headline: "Every week you",
     headlineAccent: "don't start.",
     ctaText: 'Get The Structure →',
+    ctaUrl: OFFER_URL,
     body: `
       <p style="margin:0 0 14px;">Every month you don't start is another month you could have been building. Not in a guilt-trip way. In a math way.</p>
       <p style="margin:0 0 14px;">If a piece of evergreen content published today generates traffic for two years — and you waited six months — you just lost six months of compounding.</p>
@@ -178,13 +176,13 @@ const templates = [
     `,
   },
   {
-    id: '0740acc2-2cb4-4bc4-83de-3ed004abafa8',
     name: 'kv-nurture-04',
     subject: "I don't have time for this. (Let's talk about that.)",
     seriesLabel: 'Keyboard Kraken',
     headline: "You have more",
     headlineAccent: "time than you think.",
     ctaText: 'Get The Direction →',
+    ctaUrl: OFFER_URL,
     body: `
       <p style="margin:0 0 14px;">"I would love to build something but I genuinely don't have time." I believe people when they say it. Life is full. But here's the question:</p>
       <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
@@ -196,7 +194,6 @@ const templates = [
     `,
   },
   {
-    id: '018c683f-f4f3-4028-a983-c9d9ce874568',
     name: 'kv-nurture-05',
     subject: "If you're still thinking about it…",
     seriesLabel: 'Keyboard Kraken',
@@ -215,7 +212,6 @@ const templates = [
     `,
   },
   {
-    id: 'be623ad2-0add-4365-b193-4d7cdd5e2e67',
     name: 'kv-sales-01',
     subject: "Something I built for people like us",
     seriesLabel: 'Keyboard Kraken',
@@ -234,7 +230,6 @@ const templates = [
     `,
   },
   {
-    id: 'fa608ce3-ddb1-477e-93dd-80314b36a694',
     name: 'kv-sales-02',
     subject: "The real reason most people stay stuck",
     seriesLabel: 'Keyboard Kraken',
@@ -252,7 +247,6 @@ const templates = [
     `,
   },
   {
-    id: '78a46c87-2dc7-4ac3-987a-74e9353a8b6b',
     name: 'kv-sales-03',
     subject: "I've tried this before and it didn't work.",
     seriesLabel: 'Keyboard Kraken',
@@ -271,7 +265,6 @@ const templates = [
     `,
   },
   {
-    id: 'e16018a4-6d58-48ba-aa0a-00353e518d39',
     name: 'kv-sales-04',
     subject: "The honest version of why now",
     seriesLabel: 'Keyboard Kraken',
@@ -290,7 +283,6 @@ const templates = [
     `,
   },
   {
-    id: 'e6ad750c-638d-49d6-8f5c-c8b7b69aa50a',
     name: 'kv-sales-05',
     subject: "Last thing I'll say about this.",
     seriesLabel: 'Keyboard Kraken',
@@ -311,84 +303,90 @@ const templates = [
   },
 ];
 
-async function updateAll() {
-  console.log('\n🦑 KEYBOARD KRAKEN JUMPSTART — RESEND BULK UPDATE');
-  console.log('=====================================');
-  console.log(`Updating + publishing ${templates.length} templates...\n`);
+async function listExistingTemplates() {
+  const res = await fetch('https://api.resend.com/templates', {
+    headers: { Authorization: `Bearer ${RESEND_API_KEY}` },
+  });
+  const data = await res.json();
+  const list = Array.isArray(data.data) ? data.data : [];
+  return Object.fromEntries(list.map(t => [t.name, t]));
+}
 
-  const results = [];
-  const errors = [];
+async function upsertTemplate(t, existingByName) {
+  const html = buildEmail({
+    seriesLabel: t.seriesLabel,
+    headline: t.headline,
+    headlineAccent: t.headlineAccent,
+    body: t.body,
+    ctaText: t.ctaText,
+    ctaUrl: t.ctaUrl,
+    logoUrl: LOGO_URL,
+  });
 
-  for (const t of templates) {
-    try {
-      const html = buildEmail({
-        seriesLabel: t.seriesLabel,
-        headline: t.headline,
-        headlineAccent: t.headlineAccent,
-        body: t.body,
-        ctaText: t.ctaText,
-        ctaUrl: t.ctaUrl || OFFER_URL,
-        logoUrl: LOGO_URL,
-      });
+  const payload = {
+    name: t.name,
+    subject: t.subject,
+    html,
+    variables: [
+      { key: 'email', type: 'string' },
+      { key: 'first_name', type: 'string' },
+    ],
+  };
 
-      const response = await fetch(`https://api.resend.com/templates/${t.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${RESEND_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-  name: t.name,
-  subject: t.subject,
-  html,
-  variables: [
-    { key: 'email', type: 'string' },
-    { key: 'first_name', type: 'string' }
-  ],
-}),
-      });
+  const existing = existingByName[t.name];
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        errors.push({ name: t.name, error: data.message || 'Unknown error' });
-        console.log(`  ✗  ${t.name} — ${data.message}`);
-      } else {
-        console.log(`  ✓  ${t.name} — updated`);
-
-        const publishResponse = await fetch(`https://api.resend.com/templates/${t.id}/publish`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${RESEND_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        const publishData = await publishResponse.json().catch(() => ({}));
-
-        if (!publishResponse.ok) {
-          errors.push({ name: t.name, error: publishData.message || 'Publish failed' });
-          console.log(`  ✗  ${t.name} — publish failed: ${publishData.message || publishResponse.status}`);
-        } else {
-          results.push({ name: t.name });
-          console.log(`  🚀 ${t.name} — published`);
-        }
-      }
-
-      await new Promise(r => setTimeout(r, 300));
-
-    } catch (err) {
-      errors.push({ name: t.name, error: err.message });
-      console.log(`  ✗  ${t.name} — ${err.message}`);
-    }
-  }
-
-  console.log('\n=====================================');
-  console.log(`✅ ${results.length} templates updated`);
-  if (errors.length) {
-    console.log(`❌ ${errors.length} errors`);
-    errors.forEach(e => console.log(`  ${e.name}: ${e.error}`));
+  if (existing) {
+    const res = await fetch(`https://api.resend.com/templates/${existing.id}`, {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || res.status);
+    console.log(`✓ ${t.name} — updated (id: ${existing.id})`);
+    return existing.id;
+  } else {
+    const res = await fetch('https://api.resend.com/templates', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || res.status);
+    console.log(`✓ ${t.name} — created (id: ${data.id})`);
+    return data.id;
   }
 }
 
-updateAll();
+async function publishTemplate(id, name) {
+  const res = await fetch(`https://api.resend.com/templates/${id}/publish`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message || res.status);
+  console.log(`🚀 ${name} — published`);
+}
+
+async function run() {
+  console.log('\n🦑 KEYBOARD KRAKEN JUMPSTART — RESEND UPSERT + PUBLISH');
+  console.log('========================================================');
+
+  const existingByName = await listExistingTemplates();
+  console.log(`Found ${Object.keys(existingByName).length} existing templates in Resend\n`);
+
+  for (const t of templates) {
+    try {
+      const id = await upsertTemplate(t, existingByName);
+      await publishTemplate(id, t.name);
+      await new Promise(r => setTimeout(r, 300));
+    } catch (err) {
+      console.error(`✗ ${t.name} — ${err.message}`);
+      process.exitCode = 1;
+    }
+  }
+
+  console.log('\n✅ Keyboard Kraken jumpstart templates done');
+}
+
+run();

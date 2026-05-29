@@ -10,11 +10,8 @@ if (!RESEND_API_KEY) {
 const LOGO_URL = 'https://i.ibb.co/607fGNdR/file-45.jpg';
 const VAULT_URL = 'https://keyboardkraken.kbkcompanies.com/starter-vault';
 
-// NOTE: Replace this ID with the real Resend template UUID after you create
-// the template once in the Resend dashboard. The ID is a UUID assigned by Resend.
 const templates = [
   {
-    id: 'REPLACE_WITH_RESEND_TEMPLATE_UUID',
     name: 'vault-unlock-delivery',
     subject: 'Your free kit is ready — {{{drop_title}}}',
     headline: 'Your free kit',
@@ -42,10 +39,25 @@ const templates = [
       You've also unlocked every other kit in the Starter Vault — no paywall, no catch.
       </p>
     `,
+    variables: [
+      { key: 'email', type: 'string' },
+      { key: 'first_name', type: 'string' },
+      { key: 'drop_title', type: 'string' },
+      { key: 'drop_url', type: 'string' },
+    ],
   },
 ];
 
-async function createOrUpdateTemplate(t) {
+async function listExistingTemplates() {
+  const res = await fetch('https://api.resend.com/templates', {
+    headers: { Authorization: `Bearer ${RESEND_API_KEY}` },
+  });
+  const data = await res.json();
+  const list = Array.isArray(data.data) ? data.data : [];
+  return Object.fromEntries(list.map(t => [t.name, t]));
+}
+
+async function upsertTemplate(t, existingByName) {
   const html = buildEmail({
     headline: t.headline,
     headlineAccent: t.headlineAccent,
@@ -59,74 +71,65 @@ async function createOrUpdateTemplate(t) {
     name: t.name,
     subject: t.subject,
     html,
-    variables: [
-      { key: 'email', type: 'string' },
-      { key: 'first_name', type: 'string' },
-      { key: 'drop_title', type: 'string' },
-      { key: 'drop_url', type: 'string' },
-    ],
+    variables: t.variables,
   };
 
-  if (t.id === 'REPLACE_WITH_RESEND_TEMPLATE_UUID') {
-    console.error('Template ID is still a placeholder. Create the template in Resend first, then paste the UUID.');
-    process.exit(1);
+  const existing = existingByName[t.name];
+
+  if (existing) {
+    const res = await fetch(`https://api.resend.com/templates/${existing.id}`, {
+      method: 'PATCH',
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || res.status);
+    console.log(`✓ ${t.name} — updated (id: ${existing.id})`);
+    return existing.id;
+  } else {
+    const res = await fetch('https://api.resend.com/templates', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || res.status);
+    console.log(`✓ ${t.name} — created`);
+    console.log(`  ➜ Template ID: ${data.id}`);
+    console.log(`  ➜ Set this in subscribe-vault.ts as the template_id`);
+    return data.id;
   }
-
-  const response = await fetch(`https://api.resend.com/templates/${t.id}`, {
-    method: 'PATCH',
-    headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-
-  return { response, data: await response.json(), id: t.id };
 }
 
-async function publishTemplate(id) {
-  const response = await fetch(`https://api.resend.com/templates/${id}/publish`, {
+async function publishTemplate(id, name) {
+  const res = await fetch(`https://api.resend.com/templates/${id}/publish`, {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
+    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
   });
-
-  const data = await response.json().catch(() => ({}));
-  return { response, data };
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message || res.status);
+  console.log(`🚀 ${name} — published`);
 }
 
 async function run() {
-  console.log('\n🦑 STARTER VAULT — RESEND TEMPLATE UPDATE');
-  console.log('==========================================');
+  console.log('\n🦑 STARTER VAULT — RESEND TEMPLATE UPSERT + PUBLISH');
+  console.log('=====================================================');
+
+  const existingByName = await listExistingTemplates();
+  console.log(`Found ${Object.keys(existingByName).length} existing templates in Resend\n`);
 
   for (const t of templates) {
     try {
-      const result = await createOrUpdateTemplate(t);
-
-      if (!result.response.ok) {
-        console.log(`✗ ${t.name} — ${result.data?.message || result.response.status}`);
-        continue;
-      }
-
-      console.log(`✓ ${t.name} — updated`);
-
-      const publish = await publishTemplate(result.id);
-
-      if (!publish.response.ok) {
-        console.log(`✗ ${t.name} — publish failed: ${publish.data?.message || publish.response.status}`);
-      } else {
-        console.log(`🚀 ${t.name} — published`);
-      }
-
+      const id = await upsertTemplate(t, existingByName);
+      await publishTemplate(id, t.name);
       await new Promise(r => setTimeout(r, 300));
     } catch (err) {
-      console.log(`✗ ${t.name} — ${err.message}`);
+      console.error(`✗ ${t.name} — ${err.message}`);
+      process.exitCode = 1;
     }
   }
 
-  console.log('\n✅ Starter Vault templates updated + published');
+  console.log('\n✅ Starter Vault templates done');
 }
 
 run();
