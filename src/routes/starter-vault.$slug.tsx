@@ -451,10 +451,10 @@ function StarterDropPage() {
               {drop.upgrade_note}
             </p>
             <Link
-              to="/subscribe"
+              to="/offer"
               className="inline-flex items-center gap-2 bg-[#2563FF] text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-[#1D50D9] transition-colors"
             >
-              Get Premium Access
+              See Premium Vault Offer
               <ChevronRight className="h-3.5 w-3.5" />
             </Link>
           </div>
