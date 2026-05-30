@@ -1008,8 +1008,8 @@ function DropEditor({
         </Field>
       </div>
 
-      <Field label="Upgrade Note (optional)">
-        <textarea value={draft.upgrade_note ?? ""} onChange={(e) => set("upgrade_note", e.target.value)} className={cn(inputCls, "h-16 resize-y")} placeholder="Once you have X, consider upgrading to..." />
+      <Field label="Upgrade Note (optional — shown above a Premium Vault offer CTA)">
+        <textarea value={draft.upgrade_note ?? ""} onChange={(e) => set("upgrade_note", e.target.value)} className={cn(inputCls, "h-16 resize-y")} placeholder="Once you have X, consider exploring the Premium Vault offer for advanced systems..." />
       </Field>
 
       <label className="flex items-center gap-2 cursor-pointer">
