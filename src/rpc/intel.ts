@@ -94,10 +94,28 @@ function normalizeSlug(raw: string) {
     .replace(/%2f/gi, "/")
     .replace(/[^a-z0-9\s/_-]/g, "")
     .replace(/[\s_]+/g, "-")
-    .replace(/\/+/, "/")
+    .replace(/\/+/g, "/")
     .replace(/\//g, "-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
+}
+
+function normalizeOptionalSlug(raw?: string | null) {
+  if (!raw) return null;
+  const normalized = normalizeSlug(raw);
+  return normalized || null;
+}
+
+function normalizePublishFlag(raw: unknown, fallback: number) {
+  if (raw === undefined || raw === null || raw === "") return fallback;
+  if (typeof raw === "boolean") return raw ? 1 : 0;
+  if (typeof raw === "number") return raw ? 1 : 0;
+  if (typeof raw === "string") {
+    const value = raw.trim().toLowerCase();
+    if (["1", "true", "yes", "published", "publish"].includes(value)) return 1;
+    if (["0", "false", "no", "draft", "unpublished", "unpublish"].includes(value)) return 0;
+  }
+  return fallback;
 }
 
 function genId(prefix: string) {
@@ -137,7 +155,9 @@ export const getArticleBySlug = createServerFn()
           return slug;
         }
       })();
-      const candidateSlugs = Array.from(new Set([slug, decodedSlug, normalizeSlug(slug)]));
+      const candidateSlugs = Array.from(
+        new Set([slug, decodedSlug, normalizeSlug(slug)]),
+      );
       for (const candidate of candidateSlugs) {
         const row = await env.DB.prepare(
           "SELECT * FROM intel_articles WHERE slug = ? AND published = 1",
@@ -193,12 +213,30 @@ export const getStarterDropBySlug = createServerFn()
   .handler(async ({ data: slug }) => {
     try {
       const env = await getEnv();
-      const row = await env.DB.prepare(
-        "SELECT * FROM starter_drops WHERE slug = ? AND published = 1",
-      )
-        .bind(slug)
-        .first<DbStarterDrop>();
-      return row ?? null;
+      const decodedSlug = (() => {
+        try {
+          return decodeURIComponent(slug);
+        } catch {
+          return slug;
+        }
+      })();
+      const candidateSlugs = Array.from(
+        new Set([slug, decodedSlug, normalizeSlug(slug)]),
+      );
+      for (const candidate of candidateSlugs) {
+        const row = await env.DB.prepare(
+          "SELECT * FROM starter_drops WHERE slug = ? AND published = 1",
+        )
+          .bind(candidate)
+          .first<DbStarterDrop>();
+        if (row) return row;
+      }
+      // Fallback: tolerate historical slug drift from imported JSON.
+      const { results } = await env.DB.prepare(
+        "SELECT * FROM starter_drops WHERE published = 1",
+      ).all<DbStarterDrop>();
+      const wanted = normalizeSlug(decodedSlug);
+      return results.find((row) => normalizeSlug(row.slug) === wanted) ?? null;
     } catch {
       return null;
     }
@@ -310,9 +348,9 @@ export const upsertArticle = createServerFn({ method: "POST" })
           data.cover_image_url ?? null,
           data.read_time ?? "",
           data.published_at ?? null,
-          data.featured ?? 0,
-          data.published ?? 0,
-          data.related_starter_drop_slug ?? null,
+          normalizePublishFlag(data.featured, 0),
+          normalizePublishFlag(data.published, 0),
+          normalizeOptionalSlug(data.related_starter_drop_slug),
           data.fast_route_tool_name ?? null,
           data.fast_route_description ?? null,
           data.fast_route_affiliate_url ?? null,
@@ -421,7 +459,7 @@ export const upsertStarterDrop = createServerFn({ method: "POST" })
       )
         .bind(
           id,
-          data.slug,
+          normalizeSlug(data.slug),
           data.title,
           data.excerpt ?? "",
           data.category ?? "",
@@ -429,8 +467,8 @@ export const upsertStarterDrop = createServerFn({ method: "POST" })
           data.difficulty ?? "Beginner",
           data.estimated_build_time ?? "",
           data.tools_used ?? "[]",
-          data.published ?? 0,
-          data.related_article_slug ?? null,
+          normalizePublishFlag(data.published, 0),
+          normalizeOptionalSlug(data.related_article_slug),
           data.what_this_builds ?? "[]",
           data.what_you_get ?? "[]",
           data.build_prompt ?? "",
@@ -524,8 +562,9 @@ export const importIntelPackage = createServerFn({ method: "POST" })
       if (pkg.article) {
         const a = pkg.article;
         // Check if slug exists
+        const articleSlug = normalizeSlug(a.slug);
         const existing = await env.DB.prepare("SELECT id FROM intel_articles WHERE slug = ?")
-          .bind(a.slug)
+          .bind(articleSlug)
           .first<{ id: string }>();
         const id = existing?.id || genId("article");
         const now = new Date().toISOString();
@@ -554,7 +593,7 @@ export const importIntelPackage = createServerFn({ method: "POST" })
         )
           .bind(
             id,
-            normalizeSlug(a.slug),
+            articleSlug,
             a.title,
             a.excerpt ?? "",
             a.category ?? "",
@@ -562,13 +601,17 @@ export const importIntelPackage = createServerFn({ method: "POST" })
             a.cover_image_url ?? null,
             a.read_time ?? "",
             a.published_at ?? new Date().toISOString(),
-            a.featured ?? 0,
-            a.published ?? 1,
-            a.related_starter_drop_slug ?? null,
-            a.fast_route_tool_name ?? null, a.fast_route_description ?? null,
-            a.fast_route_affiliate_url ?? null, a.fast_route_button_text ?? null,
+            normalizePublishFlag(a.featured, 0),
+            normalizePublishFlag(a.published, 1),
+            normalizeOptionalSlug(a.related_starter_drop_slug),
+            a.fast_route_tool_name ?? null,
+            a.fast_route_description ?? null,
+            a.fast_route_affiliate_url ?? null,
+            a.fast_route_button_text ?? null,
             a.external_url ?? null,
-            typeof a.content_blocks === "string" ? a.content_blocks : JSON.stringify(a.content_blocks ?? []),
+            typeof a.content_blocks === "string"
+              ? a.content_blocks
+              : JSON.stringify(a.content_blocks ?? []),
             now, now,
           )
           .run();
@@ -577,8 +620,9 @@ export const importIntelPackage = createServerFn({ method: "POST" })
 
       if (pkg.starterDrop) {
         const d = pkg.starterDrop;
+        const dropSlug = normalizeSlug(d.slug);
         const existing = await env.DB.prepare("SELECT id FROM starter_drops WHERE slug = ?")
-          .bind(d.slug)
+          .bind(dropSlug)
           .first<{ id: string }>();
         const id = existing?.id || genId("drop");
         const now = new Date().toISOString();
@@ -604,16 +648,18 @@ export const importIntelPackage = createServerFn({ method: "POST" })
         )
           .bind(
             id,
-            d.slug,
+            dropSlug,
             d.title,
             d.excerpt ?? "",
             d.category ?? "",
             d.cover_image_url ?? null,
             d.difficulty ?? "Beginner",
             d.estimated_build_time ?? "",
-            typeof d.tools_used === "string" ? d.tools_used : JSON.stringify(d.tools_used ?? []),
-            d.published ?? 1,
-            d.related_article_slug ?? null,
+            typeof d.tools_used === "string"
+              ? d.tools_used
+              : JSON.stringify(d.tools_used ?? []),
+            normalizePublishFlag(d.published, 1),
+            normalizeOptionalSlug(d.related_article_slug),
             typeof d.what_this_builds === "string"
               ? d.what_this_builds
               : JSON.stringify(d.what_this_builds ?? []),
@@ -622,8 +668,12 @@ export const importIntelPackage = createServerFn({ method: "POST" })
               : JSON.stringify(d.what_you_get ?? []),
             d.build_prompt ?? "",
             d.file_tree ?? "",
-            typeof d.setup_steps === "string" ? d.setup_steps : JSON.stringify(d.setup_steps ?? []),
-            typeof d.edit_map === "string" ? d.edit_map : JSON.stringify(d.edit_map ?? []),
+            typeof d.setup_steps === "string"
+              ? d.setup_steps
+              : JSON.stringify(d.setup_steps ?? []),
+            typeof d.edit_map === "string"
+              ? d.edit_map
+              : JSON.stringify(d.edit_map ?? []),
             typeof d.troubleshooting === "string"
               ? d.troubleshooting
               : JSON.stringify(d.troubleshooting ?? []),

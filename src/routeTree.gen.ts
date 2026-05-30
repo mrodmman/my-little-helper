@@ -46,9 +46,11 @@ import { Route as AuthLogoutRouteImport } from './routes/auth/logout'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as ApiUploadRouteImport } from './routes/api/upload'
 import { Route as ApiTestAiLeadKitRouteImport } from './routes/api/test-ai-lead-kit'
+import { Route as ApiSubscribeVaultRouteImport } from './routes/api/subscribe-vault'
 import { Route as ApiSubscribeBizRouteImport } from './routes/api/subscribe-biz'
 import { Route as ApiSubscribeAiLeadKitRouteImport } from './routes/api/subscribe-ai-lead-kit'
 import { Route as ApiStripeWebhookRouteImport } from './routes/api/stripe-webhook'
+import { Route as ApiPublishResendTemplatesRouteImport } from './routes/api/publish-resend-templates'
 import { Route as ApiContactRouteImport } from './routes/api/contact'
 import { Route as ApiCheckoutRouteImport } from './routes/api/checkout'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
@@ -246,6 +248,11 @@ const ApiTestAiLeadKitRoute = ApiTestAiLeadKitRouteImport.update({
   path: '/api/test-ai-lead-kit',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSubscribeVaultRoute = ApiSubscribeVaultRouteImport.update({
+  id: '/api/subscribe-vault',
+  path: '/api/subscribe-vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiSubscribeBizRoute = ApiSubscribeBizRouteImport.update({
   id: '/api/subscribe-biz',
   path: '/api/subscribe-biz',
@@ -261,6 +268,12 @@ const ApiStripeWebhookRoute = ApiStripeWebhookRouteImport.update({
   path: '/api/stripe-webhook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublishResendTemplatesRoute =
+  ApiPublishResendTemplatesRouteImport.update({
+    id: '/api/publish-resend-templates',
+    path: '/api/publish-resend-templates',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiContactRoute = ApiContactRouteImport.update({
   id: '/api/contact',
   path: '/api/contact',
@@ -350,9 +363,11 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AdminUsersRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/contact': typeof ApiContactRoute
+  '/api/publish-resend-templates': typeof ApiPublishResendTemplatesRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/api/subscribe-ai-lead-kit': typeof ApiSubscribeAiLeadKitRoute
   '/api/subscribe-biz': typeof ApiSubscribeBizRoute
+  '/api/subscribe-vault': typeof ApiSubscribeVaultRoute
   '/api/test-ai-lead-kit': typeof ApiTestAiLeadKitRoute
   '/api/upload': typeof ApiUploadRoute
   '/auth/login': typeof AuthLoginRoute
@@ -400,9 +415,11 @@ export interface FileRoutesByTo {
   '/admin/users': typeof AdminUsersRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/contact': typeof ApiContactRoute
+  '/api/publish-resend-templates': typeof ApiPublishResendTemplatesRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/api/subscribe-ai-lead-kit': typeof ApiSubscribeAiLeadKitRoute
   '/api/subscribe-biz': typeof ApiSubscribeBizRoute
+  '/api/subscribe-vault': typeof ApiSubscribeVaultRoute
   '/api/test-ai-lead-kit': typeof ApiTestAiLeadKitRoute
   '/api/upload': typeof ApiUploadRoute
   '/auth/login': typeof AuthLoginRoute
@@ -454,9 +471,11 @@ export interface FileRoutesById {
   '/admin/users': typeof AdminUsersRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/contact': typeof ApiContactRoute
+  '/api/publish-resend-templates': typeof ApiPublishResendTemplatesRoute
   '/api/stripe-webhook': typeof ApiStripeWebhookRoute
   '/api/subscribe-ai-lead-kit': typeof ApiSubscribeAiLeadKitRoute
   '/api/subscribe-biz': typeof ApiSubscribeBizRoute
+  '/api/subscribe-vault': typeof ApiSubscribeVaultRoute
   '/api/test-ai-lead-kit': typeof ApiTestAiLeadKitRoute
   '/api/upload': typeof ApiUploadRoute
   '/auth/login': typeof AuthLoginRoute
@@ -509,9 +528,11 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/api/checkout'
     | '/api/contact'
+    | '/api/publish-resend-templates'
     | '/api/stripe-webhook'
     | '/api/subscribe-ai-lead-kit'
     | '/api/subscribe-biz'
+    | '/api/subscribe-vault'
     | '/api/test-ai-lead-kit'
     | '/api/upload'
     | '/auth/login'
@@ -559,9 +580,11 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/api/checkout'
     | '/api/contact'
+    | '/api/publish-resend-templates'
     | '/api/stripe-webhook'
     | '/api/subscribe-ai-lead-kit'
     | '/api/subscribe-biz'
+    | '/api/subscribe-vault'
     | '/api/test-ai-lead-kit'
     | '/api/upload'
     | '/auth/login'
@@ -612,9 +635,11 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/api/checkout'
     | '/api/contact'
+    | '/api/publish-resend-templates'
     | '/api/stripe-webhook'
     | '/api/subscribe-ai-lead-kit'
     | '/api/subscribe-biz'
+    | '/api/subscribe-vault'
     | '/api/test-ai-lead-kit'
     | '/api/upload'
     | '/auth/login'
@@ -661,9 +686,11 @@ export interface RootRouteChildren {
   WorkWithMeRoute: typeof WorkWithMeRoute
   ApiCheckoutRoute: typeof ApiCheckoutRoute
   ApiContactRoute: typeof ApiContactRoute
+  ApiPublishResendTemplatesRoute: typeof ApiPublishResendTemplatesRoute
   ApiStripeWebhookRoute: typeof ApiStripeWebhookRoute
   ApiSubscribeAiLeadKitRoute: typeof ApiSubscribeAiLeadKitRoute
   ApiSubscribeBizRoute: typeof ApiSubscribeBizRoute
+  ApiSubscribeVaultRoute: typeof ApiSubscribeVaultRoute
   ApiTestAiLeadKitRoute: typeof ApiTestAiLeadKitRoute
   ApiUploadRoute: typeof ApiUploadRoute
   AuthLoginRoute: typeof AuthLoginRoute
@@ -937,6 +964,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTestAiLeadKitRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/subscribe-vault': {
+      id: '/api/subscribe-vault'
+      path: '/api/subscribe-vault'
+      fullPath: '/api/subscribe-vault'
+      preLoaderRoute: typeof ApiSubscribeVaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/subscribe-biz': {
       id: '/api/subscribe-biz'
       path: '/api/subscribe-biz'
@@ -956,6 +990,13 @@ declare module '@tanstack/react-router' {
       path: '/api/stripe-webhook'
       fullPath: '/api/stripe-webhook'
       preLoaderRoute: typeof ApiStripeWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/publish-resend-templates': {
+      id: '/api/publish-resend-templates'
+      path: '/api/publish-resend-templates'
+      fullPath: '/api/publish-resend-templates'
+      preLoaderRoute: typeof ApiPublishResendTemplatesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/contact': {
@@ -1124,9 +1165,11 @@ const rootRouteChildren: RootRouteChildren = {
   WorkWithMeRoute: WorkWithMeRoute,
   ApiCheckoutRoute: ApiCheckoutRoute,
   ApiContactRoute: ApiContactRoute,
+  ApiPublishResendTemplatesRoute: ApiPublishResendTemplatesRoute,
   ApiStripeWebhookRoute: ApiStripeWebhookRoute,
   ApiSubscribeAiLeadKitRoute: ApiSubscribeAiLeadKitRoute,
   ApiSubscribeBizRoute: ApiSubscribeBizRoute,
+  ApiSubscribeVaultRoute: ApiSubscribeVaultRoute,
   ApiTestAiLeadKitRoute: ApiTestAiLeadKitRoute,
   ApiUploadRoute: ApiUploadRoute,
   AuthLoginRoute: AuthLoginRoute,
