@@ -1109,6 +1109,39 @@ function applyImageSlot(pkg: ImportPackage, slotId: string, url: string): Import
   return pkg;
 }
 
+const ARTICLE_IMPORT_KEYS = ["article", "intelArticle", "intel_article"] as const;
+const STARTER_DROP_IMPORT_KEYS = [
+  "starterDrop",
+  "starter_drop",
+  "buildDrop",
+  "build_drop",
+  "drop",
+  "starterVaultDrop",
+  "starter_vault_drop",
+] as const;
+
+function getImportObject(
+  source: Record<string, unknown>,
+  keys: readonly string[],
+) {
+  for (const key of keys) {
+    const value = source[key];
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      return value as Record<string, unknown>;
+    }
+  }
+  return undefined;
+}
+
+function normalizeImportedPackage(source: Record<string, unknown>): ImportPackage {
+  const article = getImportObject(source, ARTICLE_IMPORT_KEYS);
+  const starterDrop = getImportObject(source, STARTER_DROP_IMPORT_KEYS);
+  return {
+    ...(article ? { article: article as ImportPackage["article"] } : {}),
+    ...(starterDrop ? { starterDrop: starterDrop as ImportPackage["starterDrop"] } : {}),
+  };
+}
+
 // ── Import tab ────────────────────────────────────────────────────────────────
 
 function ImportTab({ onImported }: { onImported: () => void }) {
@@ -1127,9 +1160,12 @@ function ImportTab({ onImported }: { onImported: () => void }) {
     setImageSlots([]);
     setResult(null);
     try {
-      const obj = JSON.parse(raw) as ImportPackage;
+      const source = JSON.parse(raw) as Record<string, unknown>;
+      const obj = normalizeImportedPackage(source);
       if (!obj.article && !obj.starterDrop) {
-        setParseError('JSON must have at least "article" or "starterDrop" key.');
+        setParseError(
+          'JSON must include an article or starter drop key. Supported drop keys: "starterDrop", "buildDrop", "starter_drop", or "drop".',
+        );
         return;
       }
       // ── Normalize array fields to JSON strings before RPC transport ──────────
