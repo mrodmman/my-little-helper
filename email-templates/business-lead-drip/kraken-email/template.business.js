@@ -1,8 +1,8 @@
-const FROM_NAME = 'Matt @ Keyboard Kraken';
-const BRAND_URL = 'https://keyboardkraken.kbkcompanies.com';
+const FROM_NAME = "Matt @ Keyboard Kraken";
+const BRAND_URL = "https://keyboardkraken.kbkcompanies.com";
 
 function buildEmail({ seriesLabel, headline, headlineAccent, body, ctaText, ctaUrl, logoUrl }) {
-  const LOGO_URL = logoUrl || 'https://i.ibb.co/607fGNdR/file-45.jpg';
+  const LOGO_URL = logoUrl || "https://i.ibb.co/607fGNdR/file-45.jpg";
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -51,7 +51,7 @@ Keyboard Kraken
 </div>
 
 <div style="font-family:Arial,sans-serif;font-size:9px;letter-spacing:3px;color:#0A8FE8;text-transform:uppercase;margin-top:3px;">
-Business Systems
+Local Business Growth
 </div>
 </td>
 
@@ -72,7 +72,7 @@ Business Systems
 
 <td style="padding-left:7px;">
 <span style="font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#0A8FE8;">
-Business Systems
+${seriesLabel || "Local Business Growth"}
 </span>
 </td>
 </tr>
@@ -82,11 +82,15 @@ Business Systems
 ${headline}
 </div>
 
-${headlineAccent ? `
+${
+  headlineAccent
+    ? `
 <div style="font-family:Arial Black,Arial,sans-serif;font-size:22px;font-weight:900;color:#0A8FE8;line-height:1.25;text-transform:uppercase;letter-spacing:-0.3px;margin-bottom:20px;">
 ${headlineAccent}
 </div>
-` : '<div style="margin-bottom:20px;"></div>'}
+`
+    : '<div style="margin-bottom:20px;"></div>'
+}
 
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
 <tr>
@@ -112,7 +116,7 @@ ${body}
   href="${ctaUrl || BRAND_URL}" 
   style="display:inline-block;padding:12px 28px;font-family:Arial Black,Arial,sans-serif;font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:#ffffff;text-decoration:none;"
 >
-${ctaText || 'Learn More →'}
+${ctaText || "Learn More →"}
 </a>
 </td>
 

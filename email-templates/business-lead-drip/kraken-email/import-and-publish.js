@@ -1,286 +1,315 @@
-const { buildEmail } = require('./template.business');
+const { buildEmail } = require("./template.business");
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
-if (!RESEND_API_KEY || RESEND_API_KEY === 'PASTE_YOUR_RESEND_KEY_HERE') {
-  console.error('Missing RESEND_API_KEY.');
+if (!RESEND_API_KEY || RESEND_API_KEY === "PASTE_YOUR_RESEND_KEY_HERE") {
+  console.error("Missing RESEND_API_KEY.");
   process.exit(1);
 }
 
-const LOGO_URL = 'https://i.ibb.co/607fGNdR/file-45.jpg';
-const PLAYBOOK_URL = 'https://keyboardkraken.kbkcompanies.com/playbook/business-owner-growth-playbook.html';
-const WORK_WITH_ME_URL = 'https://keyboardkraken.kbkcompanies.com/work-with-me';
+const LOGO_URL = "https://i.ibb.co/607fGNdR/file-45.jpg";
+const PLAYBOOK_URL =
+  "https://keyboardkraken.kbkcompanies.com/playbook/business-owner-growth-playbook.html";
+const AUDIT_URL = "https://keyboardkraken.kbkcompanies.com/book";
 
 const templates = [
   {
-    name: 'bo-lead-01-delivery',
-    subject: 'Your free growth playbook is inside',
-    seriesLabel: 'Business Systems',
-    headline: 'Your growth',
-    headlineAccent: 'playbook is ready.',
-    ctaText: 'Open The Playbook →',
+    name: "bo-lead-01-delivery",
+    subject: "Your customer leak audit is inside",
+    seriesLabel: "Customer Leak Audit",
+    headline: "Your customer leak",
+    headlineAccent: "audit is ready.",
+    ctaText: "Open The Audit →",
     ctaUrl: PLAYBOOK_URL,
     body: `
-      <p style="margin:0 0 14px;">Hey {{{first_name}}} — here's the free business owner growth playbook you requested.</p>
+      <p style="margin:0 0 14px;">Hey {{{first_name}}} — here is the free local business audit you requested.</p>
 
       <p style="margin:0 0 14px;">
-      This is the simple version of how your online presence, lead capture, follow-up, and backend automation should connect.
+      It is called <strong>The 5 Places Local Businesses Lose Customers</strong>, and it is built to help you quickly spot where real opportunities may be slipping through the cracks.
       </p>
 
       <p style="margin:0 0 14px;">
-      The goal is not to give you more random marketing tasks. The goal is to show you the system your business should be building toward.
-      </p>
-
-      <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
-        <tr>
-          <td style="border-left:3px solid #0A8FE8;padding:12px 16px;background:#f0f8ff;">
-            <span style="font-family:Arial Black,Arial,sans-serif;font-size:13px;color:#0a0a0a;text-transform:uppercase;">
-            Traffic, content, funnels, lead capture, and automation only work when they are connected.
-            </span>
-          </td>
-        </tr>
-      </table>
-
-      <p style="margin:0 0 14px;">
-      Open the playbook first. Then look at where your current setup is disconnected.
-      </p>
-    `,
-  },
-
-  {
-    name: 'bo-lead-02-real-problem',
-    subject: 'The bottleneck is probably not effort',
-    seriesLabel: 'Business Systems',
-    headline: 'Your growth',
-    headlineAccent: 'may be bottlenecked.',
-    ctaText: 'Audit The Bottlenecks →',
-    ctaUrl: WORK_WITH_ME_URL,
-    body: `
-      <p style="margin:0 0 14px;">
-      Most business owners are not lazy.
-      </p>
-
-      <p style="margin:0 0 14px;">
-      They are already busy. They are already solving problems. They are already wearing too many hats.
-      </p>
-
-      <p style="margin:0 0 14px;">
-      The real issue is usually that the business has pieces that do not talk to each other.
-      </p>
-
-      <p style="margin:0 0 6px;padding-left:12px;">→ The website is separate from the follow-up</p>
-      <p style="margin:0 0 6px;padding-left:12px;">→ The social content is separate from the lead capture</p>
-      <p style="margin:0 0 6px;padding-left:12px;">→ The forms are separate from the reminders</p>
-      <p style="margin:0 0 20px;padding-left:12px;">→ The owner becomes the glue holding everything together</p>
-
-      <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
-        <tr>
-          <td style="border-left:3px solid #0A8FE8;padding:12px 16px;background:#f0f8ff;">
-            <span style="font-family:Arial Black,Arial,sans-serif;font-size:13px;color:#0a0a0a;text-transform:uppercase;">
-            Growth gets harder when your systems are disconnected.
-            </span>
-          </td>
-        </tr>
-      </table>
-
-      <p style="margin:0 0 14px;">
-      The playbook shows the layers. The next step is finding which layer is holding you back.
-      </p>
-    `,
-  },
-
-  {
-    name: 'bo-lead-03-leaky-website',
-    subject: 'A website is not the whole system',
-    seriesLabel: 'Business Systems',
-    headline: 'A website alone',
-    headlineAccent: 'is not enough.',
-    ctaText: 'Fix The Leaks →',
-    ctaUrl: WORK_WITH_ME_URL,
-    body: `
-      <p style="margin:0 0 14px;">
-      A website matters. But a website by itself does not create a real customer acquisition system.
-      </p>
-
-      <p style="margin:0 0 14px;">
-      If somebody lands on your page, clicks around, leaves, and nothing happens after that, your business is relying on luck.
-      </p>
-
-      <p style="margin:0 0 14px;">
-      A stronger setup connects the full path:
-      </p>
-
-      <p style="margin:0 0 6px;padding-left:12px;">→ Online presence</p>
-      <p style="margin:0 0 6px;padding-left:12px;">→ Traffic source</p>
-      <p style="margin:0 0 6px;padding-left:12px;">→ Lead capture</p>
-      <p style="margin:0 0 6px;padding-left:12px;">→ Instant follow-up</p>
-      <p style="margin:0 0 20px;padding-left:12px;">→ Backend tracking and automation</p>
-
-      <p style="margin:0 0 14px;">
-      That is the difference between having a page and having a pipeline.
-      </p>
-    `,
-  },
-
-  {
-    name: 'bo-lead-04-example-system',
-    subject: 'What a hands-off acquisition system looks like',
-    seriesLabel: 'Business Systems',
-    headline: 'The simple',
-    headlineAccent: 'connected system.',
-    ctaText: 'Map Your System →',
-    ctaUrl: WORK_WITH_ME_URL,
-    body: `
-      <p style="margin:0 0 14px;">
-      Here is the simple version of what your system should do.
-      </p>
-
-      <p style="margin:0 0 14px;">
-      A potential customer sees your content, ad, Google profile, or referral link. They land on a page that gives them a clear next step.
-      </p>
-
-      <p style="margin:0 0 14px;">
-      When they take that step, the system should automatically:
-      </p>
-
-      <p style="margin:0 0 6px;padding-left:12px;">→ Capture their info</p>
-      <p style="margin:0 0 6px;padding-left:12px;">→ Notify you immediately</p>
-      <p style="margin:0 0 6px;padding-left:12px;">→ Send them a confirmation</p>
-      <p style="margin:0 0 6px;padding-left:12px;">→ Start follow-up</p>
-      <p style="margin:0 0 20px;padding-left:12px;">→ Keep the lead from getting buried</p>
-
-      <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
-        <tr>
-          <td style="border-left:3px solid #0A8FE8;padding:12px 16px;background:#f0f8ff;">
-            <span style="font-family:Arial Black,Arial,sans-serif;font-size:13px;color:#0a0a0a;text-transform:uppercase;">
-            The win is not more software. The win is making the pieces work together.
-            </span>
-          </td>
-        </tr>
-      </table>
-    `,
-  },
-
-  {
-    name: 'bo-lead-05-agencies-stop-short',
-    subject: 'Most marketing help stops too early',
-    seriesLabel: 'Business Systems',
-    headline: 'Traffic is not',
-    headlineAccent: 'the whole game.',
-    ctaText: "See What You're Missing →",
-    ctaUrl: WORK_WITH_ME_URL,
-    body: `
-      <p style="margin:0 0 14px;">
-      A lot of marketing help focuses on one piece.
-      </p>
-
-      <p style="margin:0 0 6px;padding-left:12px;">→ Someone builds a page</p>
-      <p style="margin:0 0 6px;padding-left:12px;">→ Someone posts content</p>
-      <p style="margin:0 0 6px;padding-left:12px;">→ Someone runs ads</p>
-      <p style="margin:0 0 20px;padding-left:12px;">→ Someone sets up a form</p>
-
-      <p style="margin:0 0 14px;">
-      None of that is bad. But when those pieces are not connected, the owner still has to manually chase the outcome.
-      </p>
-
-      <p style="margin:0 0 14px;">
-      That is where businesses start leaking opportunities.
+      Most businesses do not need more random marketing tasks. They need to know where visibility, leads, reviews, and follow-up are breaking down.
       </p>
 
       <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
         <tr>
           <td style="border-left:3px solid #0A8FE8;padding:12px 16px;background:#f0f8ff;">
             <span style="font-family:Arial Black,Arial,sans-serif;font-size:13px;color:#0a0a0a;text-transform:uppercase;">
-            You do not just need marketing assets. You need a connected customer acquisition system.
+            The goal is simple: find the leaks, fix the missed opportunities, and make growth easier to see.
             </span>
           </td>
         </tr>
       </table>
+
+      <p style="margin:0 0 14px;">
+      Open the audit first. As you go through it, ask yourself: “Where are customers most likely getting lost in my business?”
+      </p>
     `,
   },
 
   {
-    name: 'bo-lead-06-diy-or-dfy',
-    subject: 'You can build this yourself',
-    seriesLabel: 'Business Systems',
-    headline: 'DIY or',
-    headlineAccent: 'done with help.',
-    ctaText: 'Build Smarter →',
-    ctaUrl: WORK_WITH_ME_URL,
+    name: "bo-lead-02-real-problem",
+    subject: "Most businesses do not have a traffic problem",
+    seriesLabel: "Customer Leak Audit",
+    headline: "The real problem",
+    headlineAccent: "is usually leaks.",
+    ctaText: "Review The 5 Leaks →",
+    ctaUrl: PLAYBOOK_URL,
     body: `
       <p style="margin:0 0 14px;">
-      You can absolutely build parts of this yourself.
+      Most business owners are already working hard.
       </p>
 
       <p style="margin:0 0 14px;">
-      That is why the playbook lays out the layers. Foundation, traffic, lead capture, follow-up, and automation.
+      They are serving customers, answering calls, managing staff, handling appointments, posting when they can, and trying to keep everything moving.
       </p>
 
       <p style="margin:0 0 14px;">
-      But when you are running the actual business, building the system often gets pushed behind everything urgent.
+      The problem is usually not effort. It is that customers are getting lost in a few predictable places:
       </p>
 
-      <p style="margin:0 0 14px;">
-      That is where help makes sense.
-      </p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ People do not see the business often enough</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ Comments, messages, forms, or calls get missed</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ Follow-up happens too late or not at all</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ Happy customers are not being turned into reviews</p>
+      <p style="margin:0 0 20px;padding-left:12px;">→ The owner is buried in repetitive work</p>
 
       <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
         <tr>
           <td style="border-left:3px solid #0A8FE8;padding:12px 16px;background:#f0f8ff;">
             <span style="font-family:Arial Black,Arial,sans-serif;font-size:13px;color:#0a0a0a;text-transform:uppercase;">
-            The goal is not to make your business more complicated. The goal is to remove the manual bottlenecks.
+            Growth gets easier when you know exactly where customers are leaking out.
             </span>
           </td>
         </tr>
       </table>
+
+      <p style="margin:0 0 14px;">
+      That is why the audit starts with visibility, then moves through leads, follow-up, reviews, and efficiency.
+      </p>
     `,
   },
 
   {
-    name: 'bo-lead-07-work-with-me',
-    subject: 'Stop stalling your growth',
-    seriesLabel: 'Business Systems',
-    headline: 'Ready for',
-    headlineAccent: 'a connected system?',
-    ctaText: 'Work With Me →',
-    ctaUrl: WORK_WITH_ME_URL,
+    name: "bo-lead-03-leaky-website",
+    subject: "People can't buy from you if they don't see you",
+    seriesLabel: "Visibility Leak",
+    headline: "Visibility is",
+    headlineAccent: "the first leak.",
+    ctaText: "Check Visibility →",
+    ctaUrl: PLAYBOOK_URL,
     body: `
       <p style="margin:0 0 14px;">
-      If your business depends on leads, follow-up, appointments, quotes, calls, or repeat customers, the system behind those steps matters.
+      The first place local businesses lose customers is before a conversation ever happens.
       </p>
 
       <p style="margin:0 0 14px;">
-      A disconnected setup keeps forcing you to do manual work that should already be handled.
+      If people do not see you consistently on Facebook, Instagram, Google, YouTube, or wherever your customers spend time, they may never think of you when they need help.
       </p>
 
       <p style="margin:0 0 14px;">
-      That slows down response time, buries opportunities, and makes growth feel harder than it needs to be.
+      This usually shows up as:
       </p>
 
-      <p style="margin:0 0 14px;">
-      If you want help building the traffic pipelines, marketing assets, lead capture, and backend automation your business needs to scale, that is the kind of work I help with.
-      </p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ Posting only when there is time</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ Content that gets low engagement</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ Weak hooks that do not stop the scroll</p>
+      <p style="margin:0 0 20px;padding-left:12px;">→ No clear next step for interested customers</p>
 
       <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
         <tr>
           <td style="border-left:3px solid #0A8FE8;padding:12px 16px;background:#f0f8ff;">
             <span style="font-family:Arial Black,Arial,sans-serif;font-size:13px;color:#0a0a0a;text-transform:uppercase;">
-            Stop patching together tools. Build the system your business actually needs.
+            Better visibility means more reach, more awareness, and more opportunities.
             </span>
           </td>
         </tr>
       </table>
+
+      <p style="margin:0 0 14px;">
+      The fix starts with a simple content plan, stronger hooks, better calls to action, and consistent publishing across the places your customers already check.
+      </p>
+    `,
+  },
+
+  {
+    name: "bo-lead-04-example-system",
+    subject: "Interested customers are falling through the cracks",
+    seriesLabel: "Lead Leak",
+    headline: "Every inquiry",
+    headlineAccent: "needs to be seen.",
+    ctaText: "Find Missed Leads →",
+    ctaUrl: PLAYBOOK_URL,
+    body: `
+      <p style="margin:0 0 14px;">
+      Once people start noticing your business, the next leak is lead capture.
+      </p>
+
+      <p style="margin:0 0 14px;">
+      Local businesses get interest from more places than they realize: comments, direct messages, form submissions, missed calls, review questions, quote requests, and referral conversations.
+      </p>
+
+      <p style="margin:0 0 14px;">
+      The problem is that those opportunities are often scattered.
+      </p>
+
+      <p style="margin:0 0 6px;padding-left:12px;">→ A comment gets buried</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ A message is opened but not handled</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ A missed call never gets called back</p>
+      <p style="margin:0 0 20px;padding-left:12px;">→ A form submission sits too long</p>
+
+      <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
+        <tr>
+          <td style="border-left:3px solid #0A8FE8;padding:12px 16px;background:#f0f8ff;">
+            <span style="font-family:Arial Black,Arial,sans-serif;font-size:13px;color:#0a0a0a;text-transform:uppercase;">
+            The win is making sure every real opportunity gets seen quickly.
+            </span>
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:0 0 14px;">
+      A strong lead alert setup gives you clear notifications, lead tracking, one place to review inquiries, and reminders so nothing important disappears.
+      </p>
+    `,
+  },
+
+  {
+    name: "bo-lead-05-agencies-stop-short",
+    subject: "Most sales are lost after the first contact",
+    seriesLabel: "Follow-Up Leak",
+    headline: "The first contact",
+    headlineAccent: "is not enough.",
+    ctaText: "Check Follow-Up →",
+    ctaUrl: PLAYBOOK_URL,
+    body: `
+      <p style="margin:0 0 14px;">
+      A lot of customers do not buy the first time they reach out.
+      </p>
+
+      <p style="margin:0 0 14px;">
+      They ask a question. They compare options. They get busy. They mean to reply later. Then, if nobody follows up, the opportunity fades.
+      </p>
+
+      <p style="margin:0 0 14px;">
+      This is where many local businesses lose sales they already had a shot at winning.
+      </p>
+
+      <p style="margin:0 0 6px;padding-left:12px;">→ Follow-up gets forgotten during a busy day</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ There is no reminder to check back in</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ Past inquiries are not organized</p>
+      <p style="margin:0 0 20px;padding-left:12px;">→ Warm leads slowly go cold</p>
+
+      <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
+        <tr>
+          <td style="border-left:3px solid #0A8FE8;padding:12px 16px;background:#f0f8ff;">
+            <span style="font-family:Arial Black,Arial,sans-serif;font-size:13px;color:#0a0a0a;text-transform:uppercase;">
+            Better follow-up turns more interested people into actual customers.
+            </span>
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:0 0 14px;">
+      The fix is simple: reminders, lead tracking, follow-up sequences, and re-engagement for people who already showed interest.
+      </p>
+    `,
+  },
+
+  {
+    name: "bo-lead-06-diy-or-dfy",
+    subject: "Customers check reviews before they contact you",
+    seriesLabel: "Trust Leak",
+    headline: "Reviews build",
+    headlineAccent: "the trust gap.",
+    ctaText: "Review The Trust Leak →",
+    ctaUrl: PLAYBOOK_URL,
+    body: `
+      <p style="margin:0 0 14px;">
+      Before many customers call, book, or request a quote, they check reviews.
+      </p>
+
+      <p style="margin:0 0 14px;">
+      That means trust is not only built during the service. It is also built before the customer ever contacts you.
+      </p>
+
+      <p style="margin:0 0 14px;">
+      The trust leak usually looks like this:
+      </p>
+
+      <p style="margin:0 0 6px;padding-left:12px;">→ Happy customers are not asked for reviews</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ Review requests happen randomly</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ Negative feedback is not caught early</p>
+      <p style="margin:0 0 20px;padding-left:12px;">→ Google and Facebook proof does not reflect the real quality of the business</p>
+
+      <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
+        <tr>
+          <td style="border-left:3px solid #0A8FE8;padding:12px 16px;background:#f0f8ff;">
+            <span style="font-family:Arial Black,Arial,sans-serif;font-size:13px;color:#0a0a0a;text-transform:uppercase;">
+            More trust leads to stronger conversion before the first conversation even starts.
+            </span>
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:0 0 14px;">
+      A review growth setup makes it easier to request reviews, collect feedback, monitor reputation, and turn satisfied customers into public proof.
+      </p>
+    `,
+  },
+
+  {
+    name: "bo-lead-07-work-with-me",
+    subject: "Want me to find the leaks for you?",
+    seriesLabel: "Free Growth Audit",
+    headline: "Ready to attract",
+    headlineAccent: "more customers?",
+    ctaText: "Book A Free Growth Audit →",
+    ctaUrl: AUDIT_URL,
+    body: `
+      <p style="margin:0 0 14px;">
+      The last leak is efficiency: too much of the owner’s time gets swallowed by posting, checking messages, remembering follow-up, scheduling, admin work, and trying to keep track of everything manually.
+      </p>
+
+      <p style="margin:0 0 14px;">
+      That is usually the point where growth starts feeling heavier than it should.
+      </p>
+
+      <p style="margin:0 0 14px;">
+      If you want help, the next step is a free growth audit. We will look for where your business may be losing:
+      </p>
+
+      <p style="margin:0 0 6px;padding-left:12px;">→ Visibility</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ Leads</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ Follow-up opportunities</p>
+      <p style="margin:0 0 6px;padding-left:12px;">→ Reviews</p>
+      <p style="margin:0 0 20px;padding-left:12px;">→ Time that should be going back into the business</p>
+
+      <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:20px 0;">
+        <tr>
+          <td style="border-left:3px solid #0A8FE8;padding:12px 16px;background:#f0f8ff;">
+            <span style="font-family:Arial Black,Arial,sans-serif;font-size:13px;color:#0a0a0a;text-transform:uppercase;">
+            The goal is not more software. The goal is a business that consistently attracts, captures, and converts customers.
+            </span>
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:0 0 14px;">
+      If that would help, book the audit and we will map out the most practical places to start.
+      </p>
     `,
   },
 ];
 
 async function listExistingTemplates() {
-  const res = await fetch('https://api.resend.com/templates', {
+  const res = await fetch("https://api.resend.com/templates", {
     headers: { Authorization: `Bearer ${RESEND_API_KEY}` },
   });
   const data = await res.json();
   const list = Array.isArray(data.data) ? data.data : [];
-  return Object.fromEntries(list.map(t => [t.name, t]));
+  return Object.fromEntries(list.map((t) => [t.name, t]));
 }
 
 async function upsertTemplate(t, existingByName) {
@@ -299,8 +328,8 @@ async function upsertTemplate(t, existingByName) {
     subject: t.subject,
     html,
     variables: [
-      { key: 'email', type: 'string' },
-      { key: 'first_name', type: 'string' },
+      { key: "email", type: "string" },
+      { key: "first_name", type: "string" },
     ],
   };
 
@@ -308,8 +337,8 @@ async function upsertTemplate(t, existingByName) {
 
   if (existing) {
     const res = await fetch(`https://api.resend.com/templates/${existing.id}`, {
-      method: 'PATCH',
-      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
     const data = await res.json();
@@ -317,9 +346,9 @@ async function upsertTemplate(t, existingByName) {
     console.log(`✓ ${t.name} — updated (id: ${existing.id})`);
     return existing.id;
   } else {
-    const res = await fetch('https://api.resend.com/templates', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    const res = await fetch("https://api.resend.com/templates", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
     const data = await res.json();
@@ -331,8 +360,8 @@ async function upsertTemplate(t, existingByName) {
 
 async function publishTemplate(id, name) {
   const res = await fetch(`https://api.resend.com/templates/${id}/publish`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.message || res.status);
@@ -340,8 +369,8 @@ async function publishTemplate(id, name) {
 }
 
 async function run() {
-  console.log('\n🦑 BUSINESS OWNER GROWTH PLAYBOOK — RESEND UPSERT + PUBLISH');
-  console.log('=============================================================');
+  console.log("\n🦑 CUSTOMER LEAK AUDIT — RESEND UPSERT + PUBLISH");
+  console.log("==================================================");
 
   const existingByName = await listExistingTemplates();
   console.log(`Found ${Object.keys(existingByName).length} existing templates in Resend\n`);
@@ -350,14 +379,14 @@ async function run() {
     try {
       const id = await upsertTemplate(t, existingByName);
       await publishTemplate(id, t.name);
-      await new Promise(r => setTimeout(r, 300));
+      await new Promise((r) => setTimeout(r, 300));
     } catch (err) {
       console.error(`✗ ${t.name} — ${err.message}`);
       process.exitCode = 1;
     }
   }
 
-  console.log('\n✅ Business-owner growth playbook templates done');
+  console.log("\n✅ Customer leak audit templates done");
 }
 
 run();
