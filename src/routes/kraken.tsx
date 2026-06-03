@@ -6,21 +6,27 @@ import { FormEvent, useState } from "react";
 // SWAPPABLE ASSETS — edit only this block to customise the page
 // ══════════════════════════════════════════════════════════════════════════════
 
-const LOGO_URL        = "/api/cdn/Final.Logo.png"; // navbar + hero logo; leave "" for SVG fallback
-const HERO_IMAGE_URL  = "https://i.ibb.co/XhcGS64/file-49.jpg"; // right-side hero image; leave "" for network diagram
+const LOGO_URL = "/api/cdn/Final.Logo.png"; // navbar + hero logo; leave "" for SVG fallback
+const HERO_IMAGE_URL = "https://i.ibb.co/XhcGS64/file-49.jpg"; // right-side hero image; leave "" for network diagram
 const ABOUT_MEDIA_URL = "/api/cdn/Logo.animate.mp4"; // About Me circle — paste a .gif, .mp4/.webm, or image URL; leave "" for logo fallback
 const VAULT_IMAGE_URL = "https://i.ibb.co/fd8Q6fp8/file-48.jpg"; // Vault section image; leave "" for placeholder
 
 // Social links — leave a value empty ("") to hide that icon entirely
 const SOCIAL = {
-  twitter:   "https://x.com/keyboardkraken",
-  youtube:   "https://youtube.com/@keyboardkraken",
+  twitter: "https://x.com/keyboardkraken",
+  youtube: "https://youtube.com/@keyboardkraken",
   instagram: "", // e.g. "https://instagram.com/yourhandle"
-  tiktok:    "", // e.g. "https://tiktok.com/@yourhandle"
+  tiktok: "", // e.g. "https://tiktok.com/@yourhandle"
 };
 
 // Video testimonial cards — paste any YouTube URL or bare video ID into youtubeId
-const VIDEOS: { youtubeId: string; title: string; tag: string; quote: string; attribution: string }[] = [
+const VIDEOS: {
+  youtubeId: string;
+  title: string;
+  tag: string;
+  quote: string;
+  attribution: string;
+}[] = [
   {
     youtubeId: "https://youtu.be/9hxy2dzk7Ko?si=JdN5H2SZVBqFPpfv",
     title: "Real Estate Agent",
@@ -60,8 +66,8 @@ function extractYoutubeId(input: string): string {
 const P = "#1a5cff"; // electric blue
 const V = "#2952cc"; // deep ocean navy
 
-const FG  = "#0d1220";                    // main dark text
-const fg  = (a: number) => `rgba(13,18,32,${a})`; // helper for opacity text
+const FG = "#0d1220"; // main dark text
+const fg = (a: number) => `rgba(13,18,32,${a})`; // helper for opacity text
 
 const glass: React.CSSProperties = {
   background: "rgba(252,250,246,0.80)",
@@ -75,16 +81,17 @@ export const Route = createFileRoute("/kraken")({
   component: KrakenPage,
   head: () => ({
     meta: [
-      { title: "Keyboard Kraken — Done-For-You Business Systems" },
+      { title: "Keyboard Kraken — Growth Systems For Local Businesses" },
       {
         name: "description",
         content:
-          "We build the online infrastructure, marketing systems, and lead automation your business needs to scale—without you touching a line of code.",
+          "We help local businesses get found online, capture more leads, generate more reviews, and stay consistent across every platform—without adding more work to your day.",
       },
-      { property: "og:title", content: "Keyboard Kraken — Done-For-You Business Systems" },
+      { property: "og:title", content: "Keyboard Kraken — Growth Systems For Local Businesses" },
       {
         property: "og:description",
-        content: "Scale your business with done-for-you traffic pipelines, marketing assets, and backend automation.",
+        content:
+          "Get more visibility, more reviews, and more leads with practical growth systems for local businesses.",
       },
     ],
   }),
@@ -125,6 +132,7 @@ function KrakenPage() {
         <KrakenNav onOpenContact={() => setContactOpen(true)} />
         <HeroSection onOpenContact={() => setContactOpen(true)} />
         <ChoosePathSection onOpenContact={() => setContactOpen(true)} />
+        <ServicesSection />
         <ProofSection />
         <AboutSection />
         <FinalCtaSection onOpenContact={() => setContactOpen(true)} />
@@ -148,7 +156,10 @@ function KrakenNav({ onOpenContact }: { onOpenContact: () => void }) {
     >
       <Link to="/kraken" className="flex items-center gap-2.5">
         <LogoMark className="h-7 w-7" />
-        <span className="text-[11px] font-bold uppercase tracking-[0.28em]" style={{ color: fg(0.45) }}>
+        <span
+          className="text-[11px] font-bold uppercase tracking-[0.28em]"
+          style={{ color: fg(0.45) }}
+        >
           Keyboard Kraken
         </span>
       </Link>
@@ -158,7 +169,7 @@ function KrakenNav({ onOpenContact }: { onOpenContact: () => void }) {
           type="button"
           onClick={onOpenContact}
           className="text-[12px] font-semibold uppercase tracking-wider transition hidden sm:block"
-          style={{ color: fg(0.40) }}
+          style={{ color: fg(0.4) }}
         >
           Work With Me
         </button>
@@ -168,32 +179,56 @@ function KrakenNav({ onOpenContact }: { onOpenContact: () => void }) {
             style={{ borderLeft: "0.5px solid rgba(0,0,0,0.10)" }}
           >
             {SOCIAL.twitter && (
-              <a href={SOCIAL.twitter} target="_blank" rel="noopener noreferrer"
-                className="transition" style={{ color: fg(0.30) }} aria-label="X / Twitter">
+              <a
+                href={SOCIAL.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition"
+                style={{ color: fg(0.3) }}
+                aria-label="X / Twitter"
+              >
                 <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
                   <path d="M15.32 1.5H18L11.93 8.5 18.9 18.5h-5.65l-4.08-5.34L4.07 18.5H1.39l6.49-7.43L1.1 1.5h5.8l3.69 4.88L15.32 1.5Zm-.95 15.3h1.5L5.73 3H4.12L14.37 16.8Z" />
                 </svg>
               </a>
             )}
             {SOCIAL.youtube && (
-              <a href={SOCIAL.youtube} target="_blank" rel="noopener noreferrer"
-                className="transition" style={{ color: fg(0.30) }} aria-label="YouTube">
+              <a
+                href={SOCIAL.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition"
+                style={{ color: fg(0.3) }}
+                aria-label="YouTube"
+              >
                 <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
                   <path d="M18.7 5.4a2.26 2.26 0 0 0-1.59-1.6C15.73 3.5 10 3.5 10 3.5s-5.73 0-7.11.3A2.26 2.26 0 0 0 1.3 5.4 23.8 23.8 0 0 0 1 10a23.8 23.8 0 0 0 .3 4.6 2.26 2.26 0 0 0 1.59 1.6C4.27 16.5 10 16.5 10 16.5s5.73 0 7.11-.3a2.26 2.26 0 0 0 1.59-1.6A23.8 23.8 0 0 0 19 10a23.8 23.8 0 0 0-.3-4.6Zm-10.58 7.5V7.1L13.37 10l-5.25 2.9Z" />
                 </svg>
               </a>
             )}
             {SOCIAL.instagram && (
-              <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer"
-                className="transition" style={{ color: fg(0.30) }} aria-label="Instagram">
+              <a
+                href={SOCIAL.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition"
+                style={{ color: fg(0.3) }}
+                aria-label="Instagram"
+              >
                 <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
                   <path d="M10 1.8c2.67 0 2.99.01 4.04.06 2.75.13 4.03 1.42 4.16 4.16.05 1.05.06 1.37.06 4.04s-.01 2.99-.06 4.04c-.13 2.73-1.4 4.03-4.16 4.16-1.05.05-1.36.06-4.04.06s-2.99-.01-4.04-.06c-2.75-.13-4.03-1.43-4.16-4.16C1.75 12.99 1.74 12.67 1.74 10s.01-2.99.06-4.04C1.93 3.22 3.21 1.93 5.96 1.86 7.01 1.81 7.33 1.8 10 1.8Zm0-1.8C7.28 0 6.94.01 5.88.06 2.24.23.23 2.24.06 5.88.01 6.94 0 7.28 0 10c0 2.72.01 3.06.06 4.12.17 3.64 2.18 5.65 5.82 5.82C6.94 19.99 7.28 20 10 20s3.06-.01 4.12-.06c3.63-.17 5.65-2.18 5.82-5.82C19.99 13.06 20 12.72 20 10c0-2.72-.01-3.06-.06-4.12C19.77 2.25 17.76.23 14.12.06 13.06.01 12.72 0 10 0Zm0 4.86a5.14 5.14 0 1 0 0 10.28A5.14 5.14 0 0 0 10 4.86Zm0 8.48a3.34 3.34 0 1 1 0-6.68 3.34 3.34 0 0 1 0 6.68Zm5.34-9.8a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4Z" />
                 </svg>
               </a>
             )}
             {SOCIAL.tiktok && (
-              <a href={SOCIAL.tiktok} target="_blank" rel="noopener noreferrer"
-                className="transition" style={{ color: fg(0.30) }} aria-label="TikTok">
+              <a
+                href={SOCIAL.tiktok}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition"
+                style={{ color: fg(0.3) }}
+                aria-label="TikTok"
+              >
                 <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
                   <path d="M17 4.1a4.9 4.9 0 0 1-3-.96V12a5 5 0 1 1-5-5c.17 0 .34.01.5.03V9.6a2.5 2.5 0 1 0 2 2.45V0h2.5A4.9 4.9 0 0 0 17 4.1Z" />
                 </svg>
@@ -208,7 +243,13 @@ function KrakenNav({ onOpenContact }: { onOpenContact: () => void }) {
 
 // ── 1. HERO ───────────────────────────────────────────────────────────────────
 
-const TRUST_TAGS = ["Traffic Pipelines", "Marketing Systems", "Lead Automation", "Client Acquisition", "Done For You"];
+const TRUST_TAGS = [
+  "More Visibility",
+  "More Reviews",
+  "More Leads",
+  "Better Follow-Up",
+  "Stronger Online Presence",
+];
 
 function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
   return (
@@ -236,31 +277,42 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
           <div>
             <div className="flex items-center gap-3 mb-10">
               <LogoMark className="h-9 w-9" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.28em]" style={{ color: fg(0.35) }}>
+              <span
+                className="text-[11px] font-bold uppercase tracking-[0.28em]"
+                style={{ color: fg(0.35) }}
+              >
                 Keyboard Kraken
               </span>
             </div>
 
-            <h1 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.92]" style={{ color: FG }}>
-              Build the Online Infrastructure{" "}
+            <h1
+              className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.92]"
+              style={{ color: FG }}
+            >
+              Get More Leads, Reviews &{" "}
               <span style={{ color: P }}>
-                Your Business Needs
+                Visibility For
                 <br />
-                to Scale.
+                Your Business.
               </span>
             </h1>
 
             <p className="mt-7 text-lg leading-relaxed max-w-lg" style={{ color: fg(0.55) }}>
-              We handle the traffic pipelines, marketing assets, and backend automation. Get a seamless client acquisition system that grows your online presence—without you ever needing to touch a line of code or figure out complex software.
+              We help local businesses get found online, capture more leads, generate more reviews,
+              and stay consistent across every platform—without adding more work to your day.
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
               <Link
                 to="/lead-kit"
                 className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
-                style={{ background: P, color: "#ffffff", boxShadow: `0 0 32px rgba(26,92,255,0.25)` }}
+                style={{
+                  background: P,
+                  color: "#ffffff",
+                  boxShadow: `0 0 32px rgba(26,92,255,0.25)`,
+                }}
               >
-                Download the Free Growth Playbook <ArrowRight className="h-4 w-4" />
+                Get a Free Growth Audit <ArrowRight className="h-4 w-4" />
               </Link>
               <button
                 type="button"
@@ -300,7 +352,7 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
             {HERO_IMAGE_URL ? (
               <img
                 src={HERO_IMAGE_URL}
-                alt="System overview"
+                alt="Local business growth overview"
                 className="w-full max-w-md rounded-xl"
                 style={{
                   border: "0.5px solid rgba(0,0,0,0.10)",
@@ -320,12 +372,12 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
 function HeroCommandCenter() {
   const nodes = [
     { label: "Content", color: P, x: 50, y: 10 },
-    { label: "Funnel", color: "#1a9ffa", x: 78, y: 28 },
-    { label: "Email", color: V, x: 82, y: 58 },
-    { label: "Offers", color: "#2952cc", x: 62, y: 82 },
-    { label: "Automation", color: P, x: 28, y: 76 },
+    { label: "Reviews", color: "#1a9ffa", x: 78, y: 28 },
+    { label: "Follow-Up", color: V, x: 82, y: 58 },
+    { label: "Trust", color: "#2952cc", x: 62, y: 82 },
+    { label: "Calls", color: P, x: 28, y: 76 },
     { label: "Leads", color: "#1a9ffa", x: 14, y: 50 },
-    { label: "AI", color: V, x: 22, y: 22 },
+    { label: "Visibility", color: V, x: 22, y: 22 },
   ];
 
   return (
@@ -410,15 +462,11 @@ function HeroCommandCenter() {
 
 function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
   return (
-    <section
-      className="px-6 py-24"
-      style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}
-    >
+    <section className="px-6 py-24" style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}>
       <div className="mx-auto max-w-3xl">
         <div className="mb-12 text-center">
           <h2 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.95]">
-            Remove the Bottlenecks{" "}
-            <span style={{ color: P }}>Holding Your Business Back.</span>
+            What's Holding <span style={{ color: P }}>Your Business Back?</span>
           </h2>
         </div>
 
@@ -433,13 +481,22 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
         >
           <ul className="space-y-5">
             {[
-              "You want to grow your presence online, but you don't have time to master social media, ads, and algorithms.",
-              "Your marketing efforts reset every week because your data isn't unified.",
-              "You are losing potential leads because your intake forms and internal software don't talk to each other.",
-              "Every hour your team spends on manual administrative tasks is an hour stolen from closing sales.",
+              "You know you should be posting online, but don't have the time to stay consistent.",
+              "Potential customers comment, message, call, and inquire—but follow-up isn't always immediate.",
+              "Your content isn't getting the reach or engagement it should.",
+              "Reviews, leads, and customer conversations are spread across multiple platforms.",
+              "Marketing feels disconnected and difficult to track.",
+              "You're spending time on repetitive tasks instead of growing your business.",
             ].map((point) => (
-              <li key={point} className="flex items-start gap-4 text-base leading-relaxed" style={{ color: fg(0.65) }}>
-                <span className="mt-2 h-1.5 w-1.5 rounded-full shrink-0" style={{ background: P }} />
+              <li
+                key={point}
+                className="flex items-start gap-4 text-base leading-relaxed"
+                style={{ color: fg(0.65) }}
+              >
+                <span
+                  className="mt-2 h-1.5 w-1.5 rounded-full shrink-0"
+                  style={{ background: P }}
+                />
                 {point}
               </li>
             ))}
@@ -458,10 +515,12 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
             100% Free
           </div>
           <h4 className="font-sans uppercase text-2xl sm:text-3xl font-black tracking-tight leading-[1] text-white mb-4">
-            The Hands-Off Customer Acquisition Playbook
+            The Local Business Growth Playbook
           </h4>
           <p className="text-white/80 text-sm leading-relaxed mb-6">
-            A non-technical blueprint showing exactly how we wire together high-converting ad pipelines, automated lead capture, and instant SMS alerts to secure your incoming clients—100% hands-off for you.
+            A simple guide showing how local businesses can increase visibility, capture more leads,
+            generate more reviews, and create follow-up systems that turn more inquiries into
+            customers.
           </p>
           <div className="flex flex-col gap-3">
             <Link
@@ -489,21 +548,115 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
   );
 }
 
+// ── 5. SERVICES ───────────────────────────────────────────────────────────────
+
+const SERVICES = [
+  {
+    title: "Get More Visibility",
+    items: [
+      "Content strategy",
+      "Social media optimization",
+      "Hook & CTA improvements",
+      "Multi-platform posting",
+      "Competitor analysis",
+    ],
+  },
+  {
+    title: "Capture More Leads",
+    items: [
+      "Lead alert systems",
+      "Missed lead recovery",
+      "Follow-up systems",
+      "Contact forms",
+      "Lead tracking",
+    ],
+  },
+  {
+    title: "Build More Trust",
+    items: [
+      "Review generation",
+      "Reputation management",
+      "Customer feedback systems",
+      "Google Business optimization",
+    ],
+  },
+];
+
+function ServicesSection() {
+  return (
+    <section className="px-6 py-24" style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}>
+      <div className="mx-auto max-w-6xl">
+        <div className="mx-auto mb-12 max-w-3xl text-center">
+          <div
+            className="text-[10px] font-bold uppercase tracking-[0.28em] mb-4"
+            style={{ color: P }}
+          >
+            — Growth Systems For Local Businesses
+          </div>
+          <h2
+            className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.95]"
+            style={{ color: FG }}
+          >
+            How I Help Local Businesses Grow
+          </h2>
+          <p className="mt-6 text-base leading-relaxed" style={{ color: fg(0.55) }}>
+            Practical help to improve your online presence, respond faster to real inquiries, and
+            turn more customer moments into reviews and revenue.
+          </p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          {SERVICES.map((service) => (
+            <div
+              key={service.title}
+              className="rounded-xl p-7"
+              style={{
+                ...glass,
+                background: "rgba(252,250,246,0.88)",
+                border: "0.5px solid rgba(0,0,0,0.10)",
+              }}
+            >
+              <h3
+                className="font-sans uppercase text-xl font-black tracking-tight mb-5"
+                style={{ color: P }}
+              >
+                {service.title}
+              </h3>
+              <ul className="space-y-3">
+                {service.items.map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-start gap-3 text-sm leading-relaxed"
+                    style={{ color: fg(0.62) }}
+                  >
+                    <span
+                      className="mt-2 h-1.5 w-1.5 rounded-full shrink-0"
+                      style={{ background: P }}
+                    />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── 5. PROOF ──────────────────────────────────────────────────────────────────
 
 function ProofSection() {
   return (
-    <section
-      className="px-6 py-24"
-      style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}
-    >
+    <section className="px-6 py-24" style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}>
       <div className="mx-auto max-w-6xl">
         <div className="mb-3 text-center">
           <h2 className="font-sans text-2xl sm:text-3xl font-bold" style={{ color: FG }}>
-            Real Results Using This System
+            Real Results From Local Business Growth Work
           </h2>
           <p className="mt-2 text-sm" style={{ color: fg(0.42) }}>
-            Formerly Lead Net Marketing
+            More visibility, more leads, and better follow-up for service businesses
           </p>
         </div>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -516,7 +669,13 @@ function ProofSection() {
   );
 }
 
-function VideoCard({ youtubeId: rawId, title, tag, quote, attribution }: {
+function VideoCard({
+  youtubeId: rawId,
+  title,
+  tag,
+  quote,
+  attribution,
+}: {
   youtubeId: string;
   title: string;
   tag: string;
@@ -532,7 +691,10 @@ function VideoCard({ youtubeId: rawId, title, tag, quote, attribution }: {
       {thumbUrl ? (
         <img src={thumbUrl} alt={title} className="w-full h-full object-cover" />
       ) : (
-        <div className="w-full h-full flex items-center justify-center" style={{ background: "rgba(230,226,219,0.9)" }}>
+        <div
+          className="w-full h-full flex items-center justify-center"
+          style={{ background: "rgba(230,226,219,0.9)" }}
+        >
           <Video className="h-8 w-8" style={{ color: fg(0.15) }} />
         </div>
       )}
@@ -570,15 +732,27 @@ function VideoCard({ youtubeId: rawId, title, tag, quote, attribution }: {
   return (
     <div
       className="rounded-xl overflow-hidden flex flex-col"
-      style={{ ...glass, background: "rgba(252,250,246,0.88)", border: "0.5px solid rgba(0,0,0,0.10)" }}
+      style={{
+        ...glass,
+        background: "rgba(252,250,246,0.88)",
+        border: "0.5px solid rgba(0,0,0,0.10)",
+      }}
     >
       {href ? (
-        <a href={href} target="_blank" rel="noopener noreferrer">{videoBlock}</a>
-      ) : videoBlock}
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          {videoBlock}
+        </a>
+      ) : (
+        videoBlock
+      )}
 
       <div className="p-5 flex flex-col gap-3 flex-1">
         <svg className="h-5 w-5 shrink-0" viewBox="0 0 20 16" fill="none">
-          <path d="M0 16V9.6C0 4.267 3.2 1.067 9.6 0l1.2 2C8 2.667 6.4 4 6 6h3v10H0Zm10.4 0V9.6C10.4 4.267 13.6 1.067 20 0l1.2 2c-2.8.667-4.4 2-4.8 4h3v10h-9.6Z" fill={V} opacity="0.6"/>
+          <path
+            d="M0 16V9.6C0 4.267 3.2 1.067 9.6 0l1.2 2C8 2.667 6.4 4 6 6h3v10H0Zm10.4 0V9.6C10.4 4.267 13.6 1.067 20 0l1.2 2c-2.8.667-4.4 2-4.8 4h3v10h-9.6Z"
+            fill={V}
+            opacity="0.6"
+          />
         </svg>
         <p className="text-sm leading-relaxed italic" style={{ color: fg(0.65) }}>
           "{quote}"
@@ -594,13 +768,11 @@ function VideoCard({ youtubeId: rawId, title, tag, quote, attribution }: {
 // ── 6. ABOUT ME ───────────────────────────────────────────────────────────────
 
 function AboutSection() {
-  const isVideo = ABOUT_MEDIA_URL && (ABOUT_MEDIA_URL.includes(".mp4") || ABOUT_MEDIA_URL.includes(".webm"));
+  const isVideo =
+    ABOUT_MEDIA_URL && (ABOUT_MEDIA_URL.includes(".mp4") || ABOUT_MEDIA_URL.includes(".webm"));
 
   return (
-    <section
-      className="px-6 py-24"
-      style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}
-    >
+    <section className="px-6 py-24" style={{ borderTop: "0.5px solid rgba(0,0,0,0.08)" }}>
       <div className="mx-auto max-w-3xl">
         <div className="rounded-2xl p-10 flex flex-col items-center text-center" style={glass}>
           <div
@@ -631,9 +803,11 @@ function AboutSection() {
             )}
           </div>
 
-          <h2 className="font-sans text-2xl font-bold mb-6" style={{ color: FG }}>About Me</h2>
+          <h2 className="font-sans text-2xl font-bold mb-6" style={{ color: FG }}>
+            About Me
+          </h2>
 
-          <p className="mb-4 text-sm" style={{ color: fg(0.60) }}>
+          <p className="mb-4 text-sm" style={{ color: fg(0.6) }}>
             I'm not a "guru." I've:
           </p>
 
@@ -642,7 +816,7 @@ function AboutSection() {
               "Sold on Amazon",
               "Built and sold my own products",
               "Run ads for real businesses",
-              "Built automation systems that actually save time",
+              "Improved follow-up and lead capture for local businesses",
             ].map((item) => (
               <li key={item} className="flex items-center justify-center gap-2">
                 <span className="h-1 w-1 rounded-full shrink-0" style={{ background: P }} />
@@ -651,9 +825,10 @@ function AboutSection() {
             ))}
           </ul>
 
-          <p className="max-w-md text-sm leading-relaxed" style={{ color: fg(0.50) }}>
-            I'm not here to sell you another course to resell to the next desperate taker.
-            I help you build the system behind them — the part that actually makes money.
+          <p className="max-w-md text-sm leading-relaxed" style={{ color: fg(0.5) }}>
+            I don't sell complicated software. I help local businesses solve real problems: not
+            enough visibility, inconsistent lead flow, missed opportunities, weak follow-up, and a
+            poor online presence. Then I build practical systems that help fix them.
           </p>
         </div>
       </div>
@@ -684,7 +859,10 @@ function VaultSection() {
             >
               — The Vault
             </div>
-            <h2 className="font-sans uppercase text-4xl sm:text-5xl font-black tracking-tight leading-[0.93]" style={{ color: FG }}>
+            <h2
+              className="font-sans uppercase text-4xl sm:text-5xl font-black tracking-tight leading-[0.93]"
+              style={{ color: FG }}
+            >
               Inside the Vault.
             </h2>
           </div>
@@ -703,7 +881,10 @@ function VaultSection() {
               src={VAULT_IMAGE_URL}
               alt="Inside the Vault"
               className="w-full max-w-md rounded-xl"
-              style={{ border: "0.5px solid rgba(0,0,0,0.10)", boxShadow: "0 0 60px -10px rgba(26,92,255,0.18), 0 0 0 1px rgba(0,0,0,0.05)" }}
+              style={{
+                border: "0.5px solid rgba(0,0,0,0.10)",
+                boxShadow: "0 0 60px -10px rgba(26,92,255,0.18), 0 0 0 1px rgba(0,0,0,0.05)",
+              }}
             />
           ) : (
             <div
@@ -753,16 +934,16 @@ function FinalCtaSection({ onOpenContact }: { onOpenContact: () => void }) {
       />
 
       <div className="relative mx-auto max-w-2xl text-center">
-        <h2 className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.95]" style={{ color: FG }}>
-          Ready for a Custom,{" "}
-          <span style={{ color: P }}>Done-For-You Solution?</span>
+        <h2
+          className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.95]"
+          style={{ color: FG }}
+        >
+          Ready to Attract <span style={{ color: P }}>More Customers?</span>
         </h2>
 
-        <p
-          className="mt-9 max-w-md mx-auto leading-relaxed"
-          style={{ color: fg(0.50) }}
-        >
-          Let's bridge the gap between your real-world business and the online world.
+        <p className="mt-9 max-w-md mx-auto leading-relaxed" style={{ color: fg(0.5) }}>
+          Let's identify where your business is losing visibility, leads, reviews, and
+          opportunities—and build a practical plan to fix it.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
@@ -771,7 +952,7 @@ function FinalCtaSection({ onOpenContact }: { onOpenContact: () => void }) {
             className="inline-flex items-center gap-2 rounded-md px-8 py-4 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
             style={{ background: P, color: "#ffffff", boxShadow: `0 0 32px rgba(26,92,255,0.25)` }}
           >
-            Book a Systems Audit <ArrowRight className="h-4 w-4" />
+            Get My Free Growth Audit <ArrowRight className="h-4 w-4" />
           </Link>
           <button
             type="button"
@@ -783,21 +964,17 @@ function FinalCtaSection({ onOpenContact }: { onOpenContact: () => void }) {
               color: fg(0.65),
             }}
           >
-            Apply to Work With Me <ChevronRight className="h-4 w-4" />
+            Book a Strategy Call <ChevronRight className="h-4 w-4" />
           </button>
         </div>
 
-        <p
-          className="mt-10 text-[11px] uppercase tracking-[0.2em]"
-          style={{ color: fg(0.25) }}
-        >
-          Keyboard Kraken · Systems Builder · Operating since 2008
+        <p className="mt-10 text-[11px] uppercase tracking-[0.2em]" style={{ color: fg(0.25) }}>
+          Keyboard Kraken · Growth Systems For Local Businesses · Operating since 2008
         </p>
       </div>
     </section>
   );
 }
-
 
 function ContactModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [loading, setLoading] = useState(false);
@@ -833,14 +1010,20 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
 
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center px-4">
-      <button type="button" className="absolute inset-0 bg-black/40" onClick={onClose} aria-label="Close contact modal" />
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/40"
+        onClick={onClose}
+        aria-label="Close contact modal"
+      />
       <div className="relative w-full max-w-md rounded-xl p-6" style={glass}>
         {sent ? (
           <div className="py-4 text-center space-y-4">
             <div className="text-3xl">✓</div>
             <h3 className="text-xl font-bold">Message received.</h3>
             <p className="text-sm leading-relaxed" style={{ color: fg(0.6) }}>
-              Thanks for reaching out. I review every message personally and will be in touch within 1–2 business days.
+              Thanks for reaching out. I review every message personally and will be in touch within
+              1–2 business days.
             </p>
             <button
               onClick={onClose}
@@ -852,15 +1035,42 @@ function ContactModal({ open, onClose }: { open: boolean; onClose: () => void })
         ) : (
           <>
             <h3 className="text-xl font-bold">Work With Me</h3>
-            <p className="mt-1 text-sm" style={{ color: fg(0.55) }}>Tell me what you're working on.</p>
+            <p className="mt-1 text-sm" style={{ color: fg(0.55) }}>
+              Tell me where you want more visibility, leads, reviews, or follow-up.
+            </p>
             <form className="mt-4 space-y-3" onSubmit={onSubmit}>
-              <input name="name" required placeholder="Name" className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm" />
-              <input name="email" type="email" required placeholder="Email" className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm" />
-              <textarea name="message" required rows={4} placeholder="What are you working on?" className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm" />
+              <input
+                name="name"
+                required
+                placeholder="Name"
+                className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm"
+              />
+              <input
+                name="email"
+                type="email"
+                required
+                placeholder="Email"
+                className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm"
+              />
+              <textarea
+                name="message"
+                required
+                rows={4}
+                placeholder="Where do you want help: visibility, leads, reviews, follow-up, or content?"
+                className="w-full rounded-md border border-black/10 bg-white/70 px-3 py-2 text-sm"
+              />
               {error && <p className="text-sm text-red-500">{error}</p>}
               <div className="flex justify-end gap-2">
-                <button type="button" onClick={onClose} className="rounded-md px-4 py-2 text-sm">Cancel</button>
-                <button type="submit" disabled={loading} className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white">{loading ? "Sending..." : "Send"}</button>
+                <button type="button" onClick={onClose} className="rounded-md px-4 py-2 text-sm">
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="rounded-md bg-blue-600 px-4 py-2 text-sm text-white"
+                >
+                  {loading ? "Sending..." : "Send"}
+                </button>
               </div>
             </form>
           </>
