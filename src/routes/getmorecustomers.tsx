@@ -50,7 +50,7 @@ const PILLARS = [
       "Tied to your events, specials, and launches",
       "We handle the copy and creative",
     ],
-    hint: "Canva graphic — Local Ads",
+    img: "/map.png",
   },
   {
     step: "Step 02 — Lead Capture",
@@ -61,7 +61,7 @@ const PILLARS = [
       "Mass text blasts for events and promos",
       "Texts hit 40%+ open rate vs 20% for email",
     ],
-    hint: "Canva graphic — SMS / Offer",
+    img: "/phone.png",
   },
   {
     step: "Step 03 — Trust",
@@ -72,7 +72,7 @@ const PILLARS = [
       "Routes to Google, your site, or your offer",
       "Reviews feed live into your website",
     ],
-    hint: "Canva graphic — Reviews + Website",
+    img: "/nfc.png",
   },
   {
     step: "Step 04 — Reach",
@@ -83,7 +83,7 @@ const PILLARS = [
       "Schedule posts in advance — set it and forget it",
       "More reach means more people showing up",
     ],
-    hint: "Canva graphic — Social Multi-Post",
+    img: "/socials.png",
   },
 ];
 
@@ -414,14 +414,8 @@ function GetMoreCustomersPage() {
             </div>
           </div>
           <div className="gmc-hero-graphic">
-            <div className="gmc-hero-graphic-box">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} style={{ width: "2.5rem", height: "2.5rem" }}>
-                <rect x="5" y="2" width="14" height="20" rx="2" />
-                <circle cx="12" cy="17" r="1" />
-                <path d="M9 6h6M9 10h4" />
-              </svg>
-              <div className="gmc-gfx-label">Canva graphic goes here</div>
-              <div className="gmc-gfx-desc">Ecosystem diagram — phone at center connected to: Ads · Reviews · SMS · Website · Social</div>
+            <div className="gmc-hero-graphic-box" style={{ padding: 0, background: "transparent", border: "none" }}>
+              <img src="/ads.sms.webs.ect.png" alt="Local business growth ecosystem" style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "0.875rem" }} />
             </div>
           </div>
         </div>
@@ -464,10 +458,7 @@ function GetMoreCustomersPage() {
           {PILLARS.map((p) => (
             <div key={p.step} className="gmc-card">
               <div className="gmc-card-graphic">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} style={{ width: "2rem", height: "2rem" }}>
-                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                </svg>
-                <div className="gmc-card-hint">{p.hint}</div>
+                <img src={p.img} alt={p.title} />
               </div>
               <div className="gmc-card-body">
                 <div className="gmc-card-step">{p.step}</div>
