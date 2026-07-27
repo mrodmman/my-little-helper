@@ -150,8 +150,9 @@ const css = `
     display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
   }
   @media (max-width: 768px) {
-    .gmc-hero-inner { grid-template-columns: 1fr; gap: 3rem; }
-    .gmc-hero-graphic { display: none; }
+    .gmc-hero-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .gmc-hero-graphic { display: flex; justify-content: center; }
+    .gmc-hero-graphic-box { max-width: 75%; }
   }
   .gmc-hero-eyebrow {
     font-size: 0.68rem; font-weight: 700; letter-spacing: 0.28em;
