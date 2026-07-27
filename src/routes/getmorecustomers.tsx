@@ -192,12 +192,7 @@ const css = `
   }
   .gmc-btn-outline:hover { background: rgba(13,18,32,0.06); }
   .gmc-hero-graphic-box {
-    width: 100%; aspect-ratio: 1; max-width: 420px;
-    border-radius: 1rem; background: rgba(252,250,246,0.60);
-    backdrop-filter: blur(12px); border: 0.5px solid rgba(13,18,32,0.12);
-    box-shadow: 0 8px 40px rgba(13,18,32,0.06);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 0.75rem; padding: 2rem; text-align: center; color: rgba(26,92,255,0.4);
+    width: 100%; max-width: 480px;
   }
   .gmc-gfx-label {
     font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em;
@@ -414,8 +409,8 @@ function GetMoreCustomersPage() {
             </div>
           </div>
           <div className="gmc-hero-graphic">
-            <div className="gmc-hero-graphic-box" style={{ padding: 0, background: "transparent", border: "none" }}>
-              <img src="/ads.sms.webs.ect.png" alt="Local business growth ecosystem" style={{ width: "100%", height: "100%", objectFit: "contain", borderRadius: "0.875rem" }} />
+            <div className="gmc-hero-graphic-box">
+              <img src="/ads.sms.webs.ect.png" alt="Local business growth ecosystem" style={{ width: "100%", height: "auto", display: "block" }} />
             </div>
           </div>
         </div>
