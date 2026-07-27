@@ -25,6 +25,7 @@ import { Route as LeadKitRouteImport } from './routes/lead-kit'
 import { Route as KrakenRouteImport } from './routes/kraken'
 import { Route as JumpstartRouteImport } from './routes/jumpstart'
 import { Route as IntelRouteImport } from './routes/intel'
+import { Route as GetMoreCustomersRouteImport } from './routes/getmorecustomers'
 import { Route as FunnelRouteImport } from './routes/funnel'
 import { Route as FastTrackRouteImport } from './routes/fast-track'
 import { Route as CancelRouteImport } from './routes/cancel'
@@ -141,6 +142,11 @@ const JumpstartRoute = JumpstartRouteImport.update({
 const IntelRoute = IntelRouteImport.update({
   id: '/intel',
   path: '/intel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GetMoreCustomersRoute = GetMoreCustomersRouteImport.update({
+  id: '/getmorecustomers',
+  path: '/getmorecustomers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FunnelRoute = FunnelRouteImport.update({
@@ -340,6 +346,7 @@ export interface FileRoutesByFullPath {
   '/cancel': typeof CancelRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
+  '/getmorecustomers': typeof GetMoreCustomersRoute
   '/intel': typeof IntelRouteWithChildren
   '/jumpstart': typeof JumpstartRoute
   '/kraken': typeof KrakenRoute
@@ -394,6 +401,7 @@ export interface FileRoutesByTo {
   '/cancel': typeof CancelRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
+  '/getmorecustomers': typeof GetMoreCustomersRoute
   '/jumpstart': typeof JumpstartRoute
   '/kraken': typeof KrakenRoute
   '/lead-kit': typeof LeadKitRoute
@@ -448,6 +456,7 @@ export interface FileRoutesById {
   '/cancel': typeof CancelRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
+  '/getmorecustomers': typeof GetMoreCustomersRoute
   '/intel': typeof IntelRouteWithChildren
   '/jumpstart': typeof JumpstartRoute
   '/kraken': typeof KrakenRoute
@@ -505,6 +514,7 @@ export interface FileRouteTypes {
     | '/cancel'
     | '/fast-track'
     | '/funnel'
+    | '/getmorecustomers'
     | '/intel'
     | '/jumpstart'
     | '/kraken'
@@ -559,6 +569,7 @@ export interface FileRouteTypes {
     | '/cancel'
     | '/fast-track'
     | '/funnel'
+    | '/getmorecustomers'
     | '/jumpstart'
     | '/kraken'
     | '/lead-kit'
@@ -612,6 +623,7 @@ export interface FileRouteTypes {
     | '/cancel'
     | '/fast-track'
     | '/funnel'
+    | '/getmorecustomers'
     | '/intel'
     | '/jumpstart'
     | '/kraken'
@@ -668,6 +680,7 @@ export interface RootRouteChildren {
   CancelRoute: typeof CancelRoute
   FastTrackRoute: typeof FastTrackRoute
   FunnelRoute: typeof FunnelRoute
+  GetMoreCustomersRoute: typeof GetMoreCustomersRoute
   IntelRoute: typeof IntelRouteWithChildren
   JumpstartRoute: typeof JumpstartRoute
   KrakenRoute: typeof KrakenRoute
@@ -822,6 +835,13 @@ declare module '@tanstack/react-router' {
       path: '/funnel'
       fullPath: '/funnel'
       preLoaderRoute: typeof FunnelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/getmorecustomers': {
+      id: '/getmorecustomers'
+      path: '/getmorecustomers'
+      fullPath: '/getmorecustomers'
+      preLoaderRoute: typeof GetMoreCustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fast-track': {
@@ -1147,6 +1167,7 @@ const rootRouteChildren: RootRouteChildren = {
   CancelRoute: CancelRoute,
   FastTrackRoute: FastTrackRoute,
   FunnelRoute: FunnelRoute,
+  GetMoreCustomersRoute: GetMoreCustomersRoute,
   IntelRoute: IntelRouteWithChildren,
   JumpstartRoute: JumpstartRoute,
   KrakenRoute: KrakenRoute,
