@@ -131,41 +131,34 @@ const css = `
   @media (max-width: 900px) { .g2-tiles { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 480px) { .g2-tiles { grid-template-columns: 1fr 1fr; gap: 0.75rem; } }
   .g2-tile {
-    border-radius: 0.875rem; overflow: hidden; cursor: pointer; position: relative;
-    background: rgba(252,250,246,0.85); border: 1.5px solid rgba(26,92,255,0.18);
+    border-radius: 0.875rem; overflow: hidden; cursor: pointer;
+    background: rgba(252,250,246,0.85); border: 0.5px solid rgba(13,18,32,0.10);
     box-shadow: 0 4px 24px rgba(13,18,32,0.06);
-    transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+    transition: box-shadow 0.2s, transform 0.2s;
     display: flex; flex-direction: column;
   }
-  .g2-tile:hover { box-shadow: 0 12px 40px rgba(26,92,255,0.15); transform: translateY(-3px); border-color: rgba(26,92,255,0.45); }
+  .g2-tile:hover { box-shadow: 0 12px 40px rgba(13,18,32,0.12); transform: translateY(-3px); }
   .g2-tile-img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
-  .g2-tile-plus {
-    position: absolute; top: 0.6rem; right: 0.6rem;
-    width: 1.6rem; height: 1.6rem; border-radius: 50%;
-    background: ${P}; color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1rem; font-weight: 700; line-height: 1;
-    box-shadow: 0 2px 8px rgba(26,92,255,0.35);
-    animation: g2-pulse 2s ease-in-out infinite;
-  }
-  @keyframes g2-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(26,92,255,0.4); }
-    50% { box-shadow: 0 0 0 6px rgba(26,92,255,0); }
-  }
   .g2-tile-foot {
-    padding: 0.85rem 1rem; border-top: 0.5px solid rgba(13,18,32,0.07);
-    display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+    padding: 0.75rem 1rem 0.85rem; border-top: 0.5px solid rgba(13,18,32,0.07);
   }
-  .g2-tile-foot-text { flex: 1; }
   .g2-tile-label {
     font-size: 0.72rem; font-weight: 900; text-transform: uppercase;
-    letter-spacing: 0.12em; color: ${FG}; margin-bottom: 0.2rem;
+    letter-spacing: 0.12em; color: ${FG}; margin-bottom: 0.15rem;
   }
-  .g2-tile-sub { font-size: 0.68rem; color: ${fg(0.45)}; line-height: 1.4; }
-  .g2-tile-arrow {
-    font-size: 0.7rem; font-weight: 900; color: ${P}; flex-shrink: 0;
-    width: 1.4rem; height: 1.4rem; border-radius: 50%;
-    background: rgba(26,92,255,0.08); display: flex; align-items: center; justify-content: center;
+  .g2-tile-sub { font-size: 0.65rem; color: ${fg(0.4)}; line-height: 1.4; margin-bottom: 0.5rem; }
+  .g2-tile-cta {
+    display: flex; align-items: center; gap: 0.3rem;
+    font-size: 0.72rem; font-weight: 800; color: ${P};
+    letter-spacing: 0.06em;
+  }
+  .g2-tile-cta-arrow {
+    display: inline-block;
+    animation: g2-nudge 1.8s ease-in-out infinite;
+  }
+  @keyframes g2-nudge {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(3px); }
   }
   .g2-tap-hint {
     text-align: center; font-size: 0.68rem; font-weight: 600;
@@ -301,13 +294,12 @@ function GetMoreCustomers2Page() {
         {TILES.map((t, i) => (
           <div key={t.label} className="g2-tile" onClick={() => setActive(i)} role="button" tabIndex={0} onKeyDown={(e) => e.key === "Enter" && setActive(i)}>
             <img src={t.img} alt={t.label} className="g2-tile-img" />
-            <div className="g2-tile-plus">+</div>
             <div className="g2-tile-foot">
-              <div className="g2-tile-foot-text">
-                <div className="g2-tile-label">{t.label}</div>
-                <div className="g2-tile-sub">{t.sub}</div>
+              <div className="g2-tile-label">{t.label}</div>
+              <div className="g2-tile-sub">{t.sub}</div>
+              <div className="g2-tile-cta">
+                Tap to learn more <span className="g2-tile-cta-arrow">›</span>
               </div>
-              <div className="g2-tile-arrow">›</div>
             </div>
           </div>
         ))}
