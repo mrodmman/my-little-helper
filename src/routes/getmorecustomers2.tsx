@@ -123,6 +123,21 @@ const css = `
     font-size: 1.05rem; color: ${fg(0.5)}; max-width: 32rem;
     margin: 0 auto 2.5rem; line-height: 1.65;
   }
+  /* WHO STRIP */
+  .g2-who {
+    display: flex; align-items: center; gap: 1rem;
+    max-width: 72rem; margin: 0 auto; padding: 1rem 1.5rem 1.5rem;
+  }
+  .g2-who-avatar {
+    width: 3rem; height: 3rem; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+    border: 1.5px solid rgba(26,92,255,0.30); box-shadow: 0 0 16px rgba(26,92,255,0.12);
+  }
+  .g2-who-avatar video { width: 100%; height: 100%; object-fit: cover; }
+  .g2-who-text { flex: 1; min-width: 0; }
+  .g2-who-name { font-size: 0.78rem; font-weight: 800; color: ${FG}; letter-spacing: 0.03em; }
+  .g2-who-bio { font-size: 0.72rem; color: ${fg(0.5)}; line-height: 1.45; margin-top: 0.1rem; }
+  .g2-who-link { font-size: 0.7rem; font-weight: 700; color: ${P}; text-decoration: none; white-space: nowrap; flex-shrink: 0; }
+  .g2-who-link:hover { text-decoration: underline; }
   /* TILES */
   .g2-tiles {
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
@@ -287,6 +302,18 @@ function GetMoreCustomers2Page() {
           Four simple systems that get people seeing your business, walking in, leaving reviews, and coming back.
         </p>
       </section>
+
+      {/* WHO STRIP */}
+      <div className="g2-who">
+        <div className="g2-who-avatar">
+          <video src="/api/cdn/Logo.animate.mp4" autoPlay loop muted playsInline />
+        </div>
+        <div className="g2-who-text">
+          <div className="g2-who-name">Matt — Keyboard Kraken</div>
+          <div className="g2-who-bio">I help local service businesses get more visibility, more leads, and better follow-up. I've run ads, built systems, and worked with real businesses like yours.</div>
+        </div>
+        <Link to="/kraken" className="g2-who-link">About us →</Link>
+      </div>
 
       {/* TILES */}
       <div style={{ maxWidth: "72rem", margin: "0 auto", padding: "0 1.5rem 0.75rem" }}>

@@ -311,6 +311,21 @@ const css = `
   .gmc-tbody { padding: 1.1rem 1.25rem 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
   .gmc-ttext { font-size: 0.85rem; line-height: 1.6; font-style: italic; color: ${fg(0.65)}; }
   .gmc-tattr { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: ${fg(0.35)}; }
+  /* WHO STRIP */
+  .gmc-who {
+    display: flex; align-items: center; gap: 1rem;
+    max-width: 72rem; margin: 0 auto; padding: 1rem 1.5rem 1.5rem;
+  }
+  .gmc-who-avatar {
+    width: 3rem; height: 3rem; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+    border: 1.5px solid rgba(26,92,255,0.30); box-shadow: 0 0 16px rgba(26,92,255,0.12);
+  }
+  .gmc-who-avatar video, .gmc-who-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .gmc-who-text { flex: 1; min-width: 0; }
+  .gmc-who-name { font-size: 0.78rem; font-weight: 800; color: ${FG}; letter-spacing: 0.03em; }
+  .gmc-who-bio { font-size: 0.72rem; color: ${fg(0.5)}; line-height: 1.45; margin-top: 0.1rem; }
+  .gmc-who-link { font-size: 0.7rem; font-weight: 700; color: ${P}; text-decoration: none; white-space: nowrap; flex-shrink: 0; }
+  .gmc-who-link:hover { text-decoration: underline; }
   /* ABOUT ROW */
   .gmc-about-row {
     display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
@@ -419,6 +434,18 @@ function GetMoreCustomersPage() {
           </div>
         </div>
       </section>
+
+      {/* WHO STRIP */}
+      <div className="gmc-who">
+        <div className="gmc-who-avatar">
+          <video src="/api/cdn/Logo.animate.mp4" autoPlay loop muted playsInline />
+        </div>
+        <div className="gmc-who-text">
+          <div className="gmc-who-name">Matt — Keyboard Kraken</div>
+          <div className="gmc-who-bio">I help local service businesses get more visibility, more leads, and better follow-up. I've run ads, built systems, and worked with real businesses like yours.</div>
+        </div>
+        <Link to="/kraken" className="gmc-who-link">About us →</Link>
+      </div>
 
       {/* JOURNEY STRIP */}
       <div className="gmc-journey">
