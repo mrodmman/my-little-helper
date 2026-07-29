@@ -326,9 +326,6 @@ function GetMoreCustomers2Page() {
                     </div>
                   ))}
                 </div>
-                <Link to="/book" className="g2-btn-white" style={{ background: P, color: "#fff", width: "100%", justifyContent: "center" }}>
-                  Let's Talk <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
               </div>
             </div>
             <button className="g2-modal-close" onClick={() => setActive(null)} aria-label="Close">
