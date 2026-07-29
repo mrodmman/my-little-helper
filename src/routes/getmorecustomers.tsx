@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { ArrowRight, ChevronRight } from "lucide-react";
 
 export const Route = createFileRoute("/getmorecustomers")({
@@ -288,9 +289,10 @@ const css = `
     display: flex; flex-direction: column; transition: box-shadow 0.25s, transform 0.25s;
   }
   .gmc-tcard:hover { box-shadow: 0 16px 48px rgba(13,18,32,0.11); transform: translateY(-2px); }
-  .gmc-tvideo { position: relative; aspect-ratio: 16/9; display: block; overflow: hidden; }
+  .gmc-tvideo { position: relative; aspect-ratio: 16/9; display: block; overflow: hidden; cursor: pointer; }
   .gmc-tvideo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
   .gmc-tcard:hover .gmc-tvideo img { transform: scale(1.04); }
+  .gmc-tvideo iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
   .gmc-tplay {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   }
@@ -364,6 +366,7 @@ const css = `
 `;
 
 function GetMoreCustomersPage() {
+  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   return (
     <div className="gmc-wrap">
       <style dangerouslySetInnerHTML={{ __html: css }} />
@@ -489,25 +492,31 @@ function GetMoreCustomersPage() {
         <div className="gmc-tgrid">
           {VIDEOS.map((v) => (
             <div key={v.youtubeId} className="gmc-tcard">
-              <a
-                href={`https://www.youtube.com/watch?v=${v.youtubeId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="gmc-tvideo"
-              >
-                <img
-                  src={`https://img.youtube.com/vi/${v.youtubeId}/maxresdefault.jpg`}
-                  alt={v.attribution}
-                />
-                <div className="gmc-tplay">
-                  <div className="gmc-tplay-btn">
-                    <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: "1.1rem", height: "1.1rem", marginLeft: "2px" }}>
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </div>
-                </div>
-                <div className="gmc-ttag">Results</div>
-              </a>
+              <div className="gmc-tvideo" onClick={() => setPlayingVideo(v.youtubeId)}>
+                {playingVideo === v.youtubeId ? (
+                  <iframe
+                    src={`https://www.youtube.com/embed/${v.youtubeId}?autoplay=1`}
+                    allow="autoplay; encrypted-media"
+                    allowFullScreen
+                    title={v.attribution}
+                  />
+                ) : (
+                  <>
+                    <img
+                      src={`https://img.youtube.com/vi/${v.youtubeId}/maxresdefault.jpg`}
+                      alt={v.attribution}
+                    />
+                    <div className="gmc-tplay">
+                      <div className="gmc-tplay-btn">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: "1.1rem", height: "1.1rem", marginLeft: "2px" }}>
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="gmc-ttag">Results</div>
+                  </>
+                )}
+              </div>
               <div className="gmc-tbody">
                 <svg viewBox="0 0 20 16" fill="none" style={{ width: "1.1rem", height: "0.9rem", flexShrink: 0 }}>
                   <path d="M0 16V9.6C0 4.267 3.2 1.067 9.6 0l1.2 2C8 2.667 6.4 4 6 6h3v10H0Zm10.4 0V9.6C10.4 4.267 13.6 1.067 20 0l1.2 2c-2.8.667-4.4 2-4.8 4h3v10h-9.6Z" fill={V} opacity="0.6" />
