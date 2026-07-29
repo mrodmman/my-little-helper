@@ -25,6 +25,7 @@ import { Route as LeadKitRouteImport } from './routes/lead-kit'
 import { Route as KrakenRouteImport } from './routes/kraken'
 import { Route as JumpstartRouteImport } from './routes/jumpstart'
 import { Route as IntelRouteImport } from './routes/intel'
+import { Route as GetMoreCustomers2RouteImport } from './routes/getmorecustomers2'
 import { Route as GetMoreCustomersRouteImport } from './routes/getmorecustomers'
 import { Route as FunnelRouteImport } from './routes/funnel'
 import { Route as FastTrackRouteImport } from './routes/fast-track'
@@ -142,6 +143,11 @@ const JumpstartRoute = JumpstartRouteImport.update({
 const IntelRoute = IntelRouteImport.update({
   id: '/intel',
   path: '/intel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GetMoreCustomers2Route = GetMoreCustomers2RouteImport.update({
+  id: '/getmorecustomers2',
+  path: '/getmorecustomers2',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GetMoreCustomersRoute = GetMoreCustomersRouteImport.update({
@@ -347,6 +353,7 @@ export interface FileRoutesByFullPath {
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
   '/getmorecustomers': typeof GetMoreCustomersRoute
+  '/getmorecustomers2': typeof GetMoreCustomers2Route
   '/intel': typeof IntelRouteWithChildren
   '/jumpstart': typeof JumpstartRoute
   '/kraken': typeof KrakenRoute
@@ -402,6 +409,7 @@ export interface FileRoutesByTo {
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
   '/getmorecustomers': typeof GetMoreCustomersRoute
+  '/getmorecustomers2': typeof GetMoreCustomers2Route
   '/jumpstart': typeof JumpstartRoute
   '/kraken': typeof KrakenRoute
   '/lead-kit': typeof LeadKitRoute
@@ -457,6 +465,7 @@ export interface FileRoutesById {
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
   '/getmorecustomers': typeof GetMoreCustomersRoute
+  '/getmorecustomers2': typeof GetMoreCustomers2Route
   '/intel': typeof IntelRouteWithChildren
   '/jumpstart': typeof JumpstartRoute
   '/kraken': typeof KrakenRoute
@@ -681,6 +690,7 @@ export interface RootRouteChildren {
   FastTrackRoute: typeof FastTrackRoute
   FunnelRoute: typeof FunnelRoute
   GetMoreCustomersRoute: typeof GetMoreCustomersRoute
+  GetMoreCustomers2Route: typeof GetMoreCustomers2Route
   IntelRoute: typeof IntelRouteWithChildren
   JumpstartRoute: typeof JumpstartRoute
   KrakenRoute: typeof KrakenRoute
@@ -842,6 +852,13 @@ declare module '@tanstack/react-router' {
       path: '/getmorecustomers'
       fullPath: '/getmorecustomers'
       preLoaderRoute: typeof GetMoreCustomersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/getmorecustomers2': {
+      id: '/getmorecustomers2'
+      path: '/getmorecustomers2'
+      fullPath: '/getmorecustomers2'
+      preLoaderRoute: typeof GetMoreCustomers2RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fast-track': {
@@ -1168,6 +1185,7 @@ const rootRouteChildren: RootRouteChildren = {
   FastTrackRoute: FastTrackRoute,
   FunnelRoute: FunnelRoute,
   GetMoreCustomersRoute: GetMoreCustomersRoute,
+  GetMoreCustomers2Route: GetMoreCustomers2Route,
   IntelRoute: IntelRouteWithChildren,
   JumpstartRoute: JumpstartRoute,
   KrakenRoute: KrakenRoute,
