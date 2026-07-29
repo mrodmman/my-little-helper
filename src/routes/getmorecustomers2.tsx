@@ -221,9 +221,10 @@ const css = `
     transition: box-shadow 0.25s, transform 0.25s;
   }
   .g2-tcard:hover { box-shadow: 0 16px 48px rgba(13,18,32,0.11); transform: translateY(-2px); }
-  .g2-tvideo { position: relative; aspect-ratio: 16/9; display: block; overflow: hidden; }
+  .g2-tvideo { position: relative; aspect-ratio: 16/9; overflow: hidden; display: block; cursor: pointer; }
   .g2-tvideo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
   .g2-tcard:hover .g2-tvideo img { transform: scale(1.04); }
+  .g2-tvideo iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
   .g2-tplay {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   }
@@ -259,6 +260,7 @@ const css = `
 
 function GetMoreCustomers2Page() {
   const [active, setActive] = useState<number | null>(null);
+  const [playingVideo, setPlayingVideo] = useState<string | null>(null);
   const tile = active !== null ? TILES[active] : null;
 
   return (
@@ -343,16 +345,27 @@ function GetMoreCustomers2Page() {
         <div className="g2-tgrid">
           {VIDEOS.map((v) => (
             <div key={v.youtubeId} className="g2-tcard">
-              <a href={`https://www.youtube.com/watch?v=${v.youtubeId}`} target="_blank" rel="noopener noreferrer" className="g2-tvideo">
-                <img src={`https://img.youtube.com/vi/${v.youtubeId}/maxresdefault.jpg`} alt={v.attribution} />
-                <div className="g2-tplay">
-                  <div className="g2-tplay-btn">
-                    <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: "1.1rem", height: "1.1rem", marginLeft: "2px" }}>
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </div>
-                </div>
-              </a>
+              <div className="g2-tvideo" onClick={() => setPlayingVideo(v.youtubeId)}>
+                {playingVideo === v.youtubeId ? (
+                  <iframe
+                    src={`https://www.youtube.com/embed/${v.youtubeId}?autoplay=1`}
+                    allow="autoplay; encrypted-media"
+                    allowFullScreen
+                    title={v.attribution}
+                  />
+                ) : (
+                  <>
+                    <img src={`https://img.youtube.com/vi/${v.youtubeId}/maxresdefault.jpg`} alt={v.attribution} />
+                    <div className="g2-tplay">
+                      <div className="g2-tplay-btn">
+                        <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: "1.1rem", height: "1.1rem", marginLeft: "2px" }}>
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
               <div className="g2-tbody">
                 <p className="g2-ttext">"{v.quote}"</p>
                 <p className="g2-tattr">— {v.attribution}</p>
