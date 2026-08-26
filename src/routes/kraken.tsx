@@ -682,52 +682,69 @@ function VideoCard({
   quote: string;
   attribution: string;
 }) {
+  const [isPlaying, setIsPlaying] = useState(false);
   const videoId = extractYoutubeId(rawId);
   const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
-  const href = videoId ? `https://www.youtube.com/watch?v=${videoId}` : undefined;
 
-  const videoBlock = (
-    <div className="relative aspect-video flex items-center justify-center overflow-hidden rounded-t-xl group cursor-pointer">
-      {thumbUrl ? (
-        <img src={thumbUrl} alt={title} className="w-full h-full object-cover" />
-      ) : (
-        <div
-          className="w-full h-full flex items-center justify-center"
-          style={{ background: "rgba(230,226,219,0.9)" }}
-        >
-          <Video className="h-8 w-8" style={{ color: fg(0.15) }} />
-        </div>
-      )}
-      <div
-        className="absolute inset-x-0 top-0 h-1/3 pointer-events-none"
-        style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.06) 0%, transparent 100%)" }}
-      />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div
-          className="h-12 w-12 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
-          style={{
-            background: "rgba(26,92,255,0.12)",
-            border: `1.5px solid rgba(26,92,255,0.55)`,
-            boxShadow: `0 0 24px rgba(26,92,255,0.35), inset 0 0 12px rgba(26,92,255,0.08)`,
-          }}
-        >
-          <Play className="h-4 w-4 fill-current ml-0.5" style={{ color: P }} />
-        </div>
+  const videoBlock =
+    videoId && isPlaying ? (
+      <div className="relative aspect-video overflow-hidden rounded-t-xl bg-black">
+        <iframe
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
+          title={`${title} testimonial video`}
+          className="absolute inset-0 h-full w-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
       </div>
-      <div className="absolute top-3 left-3">
-        <span
-          className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm"
-          style={{
-            background: "rgba(237,234,228,0.90)",
-            border: "0.5px solid rgba(0,0,0,0.10)",
-            color: P,
-          }}
-        >
-          {tag}
-        </span>
-      </div>
-    </div>
-  );
+    ) : (
+      <button
+        type="button"
+        onClick={() => videoId && setIsPlaying(true)}
+        disabled={!videoId}
+        aria-label={videoId ? `Play ${title} testimonial video` : `${title} video unavailable`}
+        className="relative aspect-video flex w-full items-center justify-center overflow-hidden rounded-t-xl group cursor-pointer disabled:cursor-default"
+      >
+        {thumbUrl ? (
+          <img src={thumbUrl} alt={title} className="w-full h-full object-cover" />
+        ) : (
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{ background: "rgba(230,226,219,0.9)" }}
+          >
+            <Video className="h-8 w-8" style={{ color: fg(0.15) }} />
+          </div>
+        )}
+        <div
+          className="absolute inset-x-0 top-0 h-1/3 pointer-events-none"
+          style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.06) 0%, transparent 100%)" }}
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div
+            className="h-12 w-12 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
+            style={{
+              background: "rgba(26,92,255,0.12)",
+              border: `1.5px solid rgba(26,92,255,0.55)`,
+              boxShadow: `0 0 24px rgba(26,92,255,0.35), inset 0 0 12px rgba(26,92,255,0.08)`,
+            }}
+          >
+            <Play className="h-4 w-4 fill-current ml-0.5" style={{ color: P }} />
+          </div>
+        </div>
+        <div className="absolute top-3 left-3">
+          <span
+            className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm"
+            style={{
+              background: "rgba(237,234,228,0.90)",
+              border: "0.5px solid rgba(0,0,0,0.10)",
+              color: P,
+            }}
+          >
+            {tag}
+          </span>
+        </div>
+      </button>
+    );
 
   return (
     <div
@@ -738,13 +755,7 @@ function VideoCard({
         border: "0.5px solid rgba(0,0,0,0.10)",
       }}
     >
-      {href ? (
-        <a href={href} target="_blank" rel="noopener noreferrer">
-          {videoBlock}
-        </a>
-      ) : (
-        videoBlock
-      )}
+      {videoBlock}
 
       <div className="p-5 flex flex-col gap-3 flex-1">
         <svg className="h-5 w-5 shrink-0" viewBox="0 0 20 16" fill="none">
