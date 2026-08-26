@@ -1,5 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { format } from 'date-fns';
+import { X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
 
@@ -68,7 +69,7 @@ function BookPage() {
 
       setMessage(toMessage(data.message ?? data.error, 'Done'));
       if (res.ok) {
-        setSelected('');
+        window.location.assign('/kraken');
       }
     } catch {
       setMessage('Booking request failed. Please retry.');
@@ -80,6 +81,13 @@ function BookPage() {
   return (
     <main className="min-h-screen bg-background text-foreground" style={{ fontFamily: 'Inter,system-ui,sans-serif' }}>
       <div className="relative min-h-screen overflow-hidden">
+        <Link
+          to="/kraken"
+          aria-label="Close booking calendar and return to Keyboard Kraken"
+          className="fixed right-4 top-4 z-50 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-[#040b19]/75 text-white shadow-lg backdrop-blur transition hover:bg-[#040b19] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white md:right-8 md:top-8"
+        >
+          <X className="h-5 w-5" aria-hidden="true" />
+        </Link>
         <img
           src={bgImage}
           alt=""
