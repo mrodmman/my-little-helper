@@ -505,12 +505,11 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
             100% Free
           </div>
           <h4 className="font-sans uppercase text-2xl sm:text-3xl font-black tracking-tight leading-[1] text-white mb-4">
-            The Local Business Growth Playbook
+            The Customer Leak Audit
           </h4>
           <p className="text-white/80 text-sm leading-relaxed mb-6">
-            A simple guide showing how local businesses can increase visibility, capture more leads,
-            generate more reviews, and create follow-up systems that turn more inquiries into
-            customers.
+            Find the 5 places local businesses lose customers—and quickly spot where visibility,
+            leads, reviews, and follow-up are breaking down.
           </p>
           <div className="flex flex-col gap-3">
             <Link
@@ -518,7 +517,7 @@ function ChoosePathSection({ onOpenContact }: { onOpenContact: () => void }) {
               className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-5 py-3.5 text-sm font-black uppercase tracking-wider transition hover:brightness-95"
               style={{ color: P }}
             >
-              Get the Free Playbook <ArrowRight className="h-4 w-4" />
+              Get the Free Customer Leak Audit <ArrowRight className="h-4 w-4" />
             </Link>
             <button
               type="button"

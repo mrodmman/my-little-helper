@@ -8,7 +8,7 @@ if (!RESEND_API_KEY || RESEND_API_KEY === "PASTE_YOUR_RESEND_KEY_HERE") {
 }
 
 const LOGO_URL = "https://i.ibb.co/607fGNdR/file-45.jpg";
-const PLAYBOOK_URL =
+const AUDIT_DOWNLOAD_URL =
   "https://keyboardkraken.kbkcompanies.com/playbook/business-owner-growth-playbook.html";
 const AUDIT_URL = "https://keyboardkraken.kbkcompanies.com/book";
 
@@ -20,7 +20,7 @@ const templates = [
     headline: "Your customer leak",
     headlineAccent: "audit is ready.",
     ctaText: "Open The Audit →",
-    ctaUrl: PLAYBOOK_URL,
+    ctaUrl: AUDIT_DOWNLOAD_URL,
     body: `
       <p style="margin:0 0 14px;">Hey {{{first_name}}} — here is the free local business audit you requested.</p>
 
@@ -55,7 +55,7 @@ const templates = [
     headline: "The real problem",
     headlineAccent: "is usually leaks.",
     ctaText: "Review The 5 Leaks →",
-    ctaUrl: PLAYBOOK_URL,
+    ctaUrl: AUDIT_DOWNLOAD_URL,
     body: `
       <p style="margin:0 0 14px;">
       Most business owners are already working hard.
@@ -98,7 +98,7 @@ const templates = [
     headline: "Visibility is",
     headlineAccent: "the first leak.",
     ctaText: "Check Visibility →",
-    ctaUrl: PLAYBOOK_URL,
+    ctaUrl: AUDIT_DOWNLOAD_URL,
     body: `
       <p style="margin:0 0 14px;">
       The first place local businesses lose customers is before a conversation ever happens.
@@ -140,7 +140,7 @@ const templates = [
     headline: "Every inquiry",
     headlineAccent: "needs to be seen.",
     ctaText: "Find Missed Leads →",
-    ctaUrl: PLAYBOOK_URL,
+    ctaUrl: AUDIT_DOWNLOAD_URL,
     body: `
       <p style="margin:0 0 14px;">
       Once people start noticing your business, the next leak is lead capture.
@@ -182,7 +182,7 @@ const templates = [
     headline: "The first contact",
     headlineAccent: "is not enough.",
     ctaText: "Check Follow-Up →",
-    ctaUrl: PLAYBOOK_URL,
+    ctaUrl: AUDIT_DOWNLOAD_URL,
     body: `
       <p style="margin:0 0 14px;">
       A lot of customers do not buy the first time they reach out.
@@ -224,7 +224,7 @@ const templates = [
     headline: "Reviews build",
     headlineAccent: "the trust gap.",
     ctaText: "Review The Trust Leak →",
-    ctaUrl: PLAYBOOK_URL,
+    ctaUrl: AUDIT_DOWNLOAD_URL,
     body: `
       <p style="margin:0 0 14px;">
       Before many customers call, book, or request a quote, they check reviews.
