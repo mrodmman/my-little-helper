@@ -68,7 +68,7 @@ function BookPage() {
 
       setMessage(toMessage(data.message ?? data.error, 'Done'));
       if (res.ok) {
-        setSelected('');
+        window.location.assign('/kraken');
       }
     } catch {
       setMessage('Booking request failed. Please retry.');
