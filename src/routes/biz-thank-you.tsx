@@ -1,7 +1,7 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
-import { CheckCircle2, ArrowRight, BookOpen, Mail } from 'lucide-react';
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { CheckCircle2, ArrowRight, BookOpen, Mail } from "lucide-react";
 
-export const Route = createFileRoute('/biz-thank-you')({ component: BizThankYouPage });
+export const Route = createFileRoute("/biz-thank-you")({ component: BizThankYouPage });
 
 function BizThankYouPage() {
   return (
@@ -15,11 +15,12 @@ function BizThankYouPage() {
         </div>
 
         <h1 className="font-display uppercase text-4xl md:text-5xl font-black tracking-tight leading-[1] text-foreground">
-          Your playbook is <span className="text-primary">ready now.</span>
+          Your customer leak audit is <span className="text-primary">ready now.</span>
         </h1>
 
         <p className="mt-5 text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-          Open it below — we're also sending a copy to your inbox so you can come back to it any time.
+          Open it below — we're also sending a copy to your inbox so you can come back to it any
+          time.
         </p>
 
         {/* Primary CTA — instant access */}
@@ -30,7 +31,7 @@ function BizThankYouPage() {
           className="mt-8 inline-flex items-center gap-3 rounded-md bg-primary text-primary-foreground px-8 py-4 text-base font-black uppercase tracking-wider shadow-glow hover:brightness-110 transition"
         >
           <BookOpen className="h-5 w-5" />
-          Open Your Free Playbook
+          Open Your Customer Leak Audit
           <ArrowRight className="h-5 w-5" />
         </a>
 
@@ -46,8 +47,9 @@ function BizThankYouPage() {
             Want it built for you?
           </h2>
           <p className="mt-3 text-muted-foreground leading-relaxed">
-            The playbook gives you the blueprint. If you'd rather have the full
-            lead system designed, deployed, and connected for your business — that's the Work With Me engagement.
+            The audit shows you where customers may be slipping away. If you'd rather have the full
+            lead system designed, deployed, and connected for your business — that's the Work With
+            Me engagement.
           </p>
           <Link
             to="/kraken"
