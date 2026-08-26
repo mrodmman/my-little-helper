@@ -19,14 +19,15 @@ import { Route as SubscribeRouteImport } from './routes/subscribe'
 import { Route as StarterVaultRouteImport } from './routes/starter-vault'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OfferRouteImport } from './routes/offer'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LeadKitRouteImport } from './routes/lead-kit'
 import { Route as KrakenRouteImport } from './routes/kraken'
 import { Route as JumpstartRouteImport } from './routes/jumpstart'
 import { Route as IntelRouteImport } from './routes/intel'
-import { Route as GetMoreCustomers2RouteImport } from './routes/getmorecustomers2'
-import { Route as GetMoreCustomersRouteImport } from './routes/getmorecustomers'
+import { Route as Getmorecustomers2RouteImport } from './routes/getmorecustomers2'
+import { Route as GetmorecustomersRouteImport } from './routes/getmorecustomers'
 import { Route as FunnelRouteImport } from './routes/funnel'
 import { Route as FastTrackRouteImport } from './routes/fast-track'
 import { Route as CancelRouteImport } from './routes/cancel'
@@ -115,6 +116,11 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OfferRoute = OfferRouteImport.update({
   id: '/offer',
   path: '/offer',
@@ -145,12 +151,12 @@ const IntelRoute = IntelRouteImport.update({
   path: '/intel',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GetMoreCustomers2Route = GetMoreCustomers2RouteImport.update({
+const Getmorecustomers2Route = Getmorecustomers2RouteImport.update({
   id: '/getmorecustomers2',
   path: '/getmorecustomers2',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GetMoreCustomersRoute = GetMoreCustomersRouteImport.update({
+const GetmorecustomersRoute = GetmorecustomersRouteImport.update({
   id: '/getmorecustomers',
   path: '/getmorecustomers',
   getParentRoute: () => rootRouteImport,
@@ -352,14 +358,15 @@ export interface FileRoutesByFullPath {
   '/cancel': typeof CancelRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
-  '/getmorecustomers': typeof GetMoreCustomersRoute
-  '/getmorecustomers2': typeof GetMoreCustomers2Route
+  '/getmorecustomers': typeof GetmorecustomersRoute
+  '/getmorecustomers2': typeof Getmorecustomers2Route
   '/intel': typeof IntelRouteWithChildren
   '/jumpstart': typeof JumpstartRoute
   '/kraken': typeof KrakenRoute
   '/lead-kit': typeof LeadKitRoute
   '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/starter-vault': typeof StarterVaultRouteWithChildren
@@ -408,13 +415,14 @@ export interface FileRoutesByTo {
   '/cancel': typeof CancelRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
-  '/getmorecustomers': typeof GetMoreCustomersRoute
-  '/getmorecustomers2': typeof GetMoreCustomers2Route
+  '/getmorecustomers': typeof GetmorecustomersRoute
+  '/getmorecustomers2': typeof Getmorecustomers2Route
   '/jumpstart': typeof JumpstartRoute
   '/kraken': typeof KrakenRoute
   '/lead-kit': typeof LeadKitRoute
   '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/subscribe': typeof SubscribeRoute
@@ -464,14 +472,15 @@ export interface FileRoutesById {
   '/cancel': typeof CancelRoute
   '/fast-track': typeof FastTrackRoute
   '/funnel': typeof FunnelRoute
-  '/getmorecustomers': typeof GetMoreCustomersRoute
-  '/getmorecustomers2': typeof GetMoreCustomers2Route
+  '/getmorecustomers': typeof GetmorecustomersRoute
+  '/getmorecustomers2': typeof Getmorecustomers2Route
   '/intel': typeof IntelRouteWithChildren
   '/jumpstart': typeof JumpstartRoute
   '/kraken': typeof KrakenRoute
   '/lead-kit': typeof LeadKitRoute
   '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/starter-vault': typeof StarterVaultRouteWithChildren
@@ -524,12 +533,14 @@ export interface FileRouteTypes {
     | '/fast-track'
     | '/funnel'
     | '/getmorecustomers'
+    | '/getmorecustomers2'
     | '/intel'
     | '/jumpstart'
     | '/kraken'
     | '/lead-kit'
     | '/login'
     | '/offer'
+    | '/pricing'
     | '/profile'
     | '/register'
     | '/starter-vault'
@@ -579,11 +590,13 @@ export interface FileRouteTypes {
     | '/fast-track'
     | '/funnel'
     | '/getmorecustomers'
+    | '/getmorecustomers2'
     | '/jumpstart'
     | '/kraken'
     | '/lead-kit'
     | '/login'
     | '/offer'
+    | '/pricing'
     | '/profile'
     | '/register'
     | '/subscribe'
@@ -633,12 +646,14 @@ export interface FileRouteTypes {
     | '/fast-track'
     | '/funnel'
     | '/getmorecustomers'
+    | '/getmorecustomers2'
     | '/intel'
     | '/jumpstart'
     | '/kraken'
     | '/lead-kit'
     | '/login'
     | '/offer'
+    | '/pricing'
     | '/profile'
     | '/register'
     | '/starter-vault'
@@ -689,14 +704,15 @@ export interface RootRouteChildren {
   CancelRoute: typeof CancelRoute
   FastTrackRoute: typeof FastTrackRoute
   FunnelRoute: typeof FunnelRoute
-  GetMoreCustomersRoute: typeof GetMoreCustomersRoute
-  GetMoreCustomers2Route: typeof GetMoreCustomers2Route
+  GetmorecustomersRoute: typeof GetmorecustomersRoute
+  Getmorecustomers2Route: typeof Getmorecustomers2Route
   IntelRoute: typeof IntelRouteWithChildren
   JumpstartRoute: typeof JumpstartRoute
   KrakenRoute: typeof KrakenRoute
   LeadKitRoute: typeof LeadKitRoute
   LoginRoute: typeof LoginRoute
   OfferRoute: typeof OfferRoute
+  PricingRoute: typeof PricingRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   StarterVaultRoute: typeof StarterVaultRouteWithChildren
@@ -798,6 +814,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/offer': {
       id: '/offer'
       path: '/offer'
@@ -840,25 +863,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IntelRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/funnel': {
-      id: '/funnel'
-      path: '/funnel'
-      fullPath: '/funnel'
-      preLoaderRoute: typeof FunnelRouteImport
+    '/getmorecustomers2': {
+      id: '/getmorecustomers2'
+      path: '/getmorecustomers2'
+      fullPath: '/getmorecustomers2'
+      preLoaderRoute: typeof Getmorecustomers2RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/getmorecustomers': {
       id: '/getmorecustomers'
       path: '/getmorecustomers'
       fullPath: '/getmorecustomers'
-      preLoaderRoute: typeof GetMoreCustomersRouteImport
+      preLoaderRoute: typeof GetmorecustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/getmorecustomers2': {
-      id: '/getmorecustomers2'
-      path: '/getmorecustomers2'
-      fullPath: '/getmorecustomers2'
-      preLoaderRoute: typeof GetMoreCustomers2RouteImport
+    '/funnel': {
+      id: '/funnel'
+      path: '/funnel'
+      fullPath: '/funnel'
+      preLoaderRoute: typeof FunnelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/fast-track': {
@@ -1184,14 +1207,15 @@ const rootRouteChildren: RootRouteChildren = {
   CancelRoute: CancelRoute,
   FastTrackRoute: FastTrackRoute,
   FunnelRoute: FunnelRoute,
-  GetMoreCustomersRoute: GetMoreCustomersRoute,
-  GetMoreCustomers2Route: GetMoreCustomers2Route,
+  GetmorecustomersRoute: GetmorecustomersRoute,
+  Getmorecustomers2Route: Getmorecustomers2Route,
   IntelRoute: IntelRouteWithChildren,
   JumpstartRoute: JumpstartRoute,
   KrakenRoute: KrakenRoute,
   LeadKitRoute: LeadKitRoute,
   LoginRoute: LoginRoute,
   OfferRoute: OfferRoute,
+  PricingRoute: PricingRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   StarterVaultRoute: StarterVaultRouteWithChildren,
