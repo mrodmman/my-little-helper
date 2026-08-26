@@ -13,8 +13,8 @@ const VAULT_IMAGE_URL = "https://i.ibb.co/fd8Q6fp8/file-48.jpg"; // Vault sectio
 
 // Social links — leave a value empty ("") to hide that icon entirely
 const SOCIAL = {
-  twitter: "https://x.com/keyboardkraken",
-  youtube: "https://youtube.com/@keyboardkraken",
+  facebook: "https://www.facebook.com/profile.php?id=61588441014491c",
+  youtube: "https://www.youtube.com/@Keyboard-Kraken",
   instagram: "", // e.g. "https://instagram.com/yourhandle"
   tiktok: "", // e.g. "https://tiktok.com/@yourhandle"
 };
@@ -173,22 +173,22 @@ function KrakenNav({ onOpenContact }: { onOpenContact: () => void }) {
         >
           Work With Me
         </button>
-        {(SOCIAL.twitter || SOCIAL.youtube || SOCIAL.instagram || SOCIAL.tiktok) && (
+        {(SOCIAL.facebook || SOCIAL.youtube || SOCIAL.instagram || SOCIAL.tiktok) && (
           <div
             className="flex items-center gap-3 pl-4"
             style={{ borderLeft: "0.5px solid rgba(0,0,0,0.10)" }}
           >
-            {SOCIAL.twitter && (
+            {SOCIAL.facebook && (
               <a
-                href={SOCIAL.twitter}
+                href={SOCIAL.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="transition"
                 style={{ color: fg(0.3) }}
-                aria-label="X / Twitter"
+                aria-label="Facebook"
               >
                 <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 fill-current">
-                  <path d="M15.32 1.5H18L11.93 8.5 18.9 18.5h-5.65l-4.08-5.34L4.07 18.5H1.39l6.49-7.43L1.1 1.5h5.8l3.69 4.88L15.32 1.5Zm-.95 15.3h1.5L5.73 3H4.12L14.37 16.8Z" />
+                  <path d="M11.64 19v-8.21h2.76l.41-3.2h-3.17V5.55c0-.93.26-1.56 1.59-1.56h1.7V1.13A22.7 22.7 0 0 0 12.45 1c-2.45 0-4.12 1.49-4.12 4.23v2.36H5.57v3.2h2.76V19h3.31Z" />
                 </svg>
               </a>
             )}
@@ -304,7 +304,7 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
 
             <div className="mt-9 flex flex-wrap gap-3">
               <Link
-                to="/lead-kit"
+                to="/book"
                 className="inline-flex items-center gap-2 rounded-md px-6 py-3.5 text-sm font-black uppercase tracking-wider transition hover:brightness-110"
                 style={{
                   background: P,
@@ -682,52 +682,69 @@ function VideoCard({
   quote: string;
   attribution: string;
 }) {
+  const [isPlaying, setIsPlaying] = useState(false);
   const videoId = extractYoutubeId(rawId);
   const thumbUrl = videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
-  const href = videoId ? `https://www.youtube.com/watch?v=${videoId}` : undefined;
 
-  const videoBlock = (
-    <div className="relative aspect-video flex items-center justify-center overflow-hidden rounded-t-xl group cursor-pointer">
-      {thumbUrl ? (
-        <img src={thumbUrl} alt={title} className="w-full h-full object-cover" />
-      ) : (
-        <div
-          className="w-full h-full flex items-center justify-center"
-          style={{ background: "rgba(230,226,219,0.9)" }}
-        >
-          <Video className="h-8 w-8" style={{ color: fg(0.15) }} />
-        </div>
-      )}
-      <div
-        className="absolute inset-x-0 top-0 h-1/3 pointer-events-none"
-        style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.06) 0%, transparent 100%)" }}
-      />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div
-          className="h-12 w-12 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
-          style={{
-            background: "rgba(26,92,255,0.12)",
-            border: `1.5px solid rgba(26,92,255,0.55)`,
-            boxShadow: `0 0 24px rgba(26,92,255,0.35), inset 0 0 12px rgba(26,92,255,0.08)`,
-          }}
-        >
-          <Play className="h-4 w-4 fill-current ml-0.5" style={{ color: P }} />
-        </div>
+  const videoBlock =
+    videoId && isPlaying ? (
+      <div className="relative aspect-video overflow-hidden rounded-t-xl bg-black">
+        <iframe
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`}
+          title={`${title} testimonial video`}
+          className="absolute inset-0 h-full w-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
       </div>
-      <div className="absolute top-3 left-3">
-        <span
-          className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm"
-          style={{
-            background: "rgba(237,234,228,0.90)",
-            border: "0.5px solid rgba(0,0,0,0.10)",
-            color: P,
-          }}
-        >
-          {tag}
-        </span>
-      </div>
-    </div>
-  );
+    ) : (
+      <button
+        type="button"
+        onClick={() => videoId && setIsPlaying(true)}
+        disabled={!videoId}
+        aria-label={videoId ? `Play ${title} testimonial video` : `${title} video unavailable`}
+        className="relative aspect-video flex w-full items-center justify-center overflow-hidden rounded-t-xl group cursor-pointer disabled:cursor-default"
+      >
+        {thumbUrl ? (
+          <img src={thumbUrl} alt={title} className="w-full h-full object-cover" />
+        ) : (
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{ background: "rgba(230,226,219,0.9)" }}
+          >
+            <Video className="h-8 w-8" style={{ color: fg(0.15) }} />
+          </div>
+        )}
+        <div
+          className="absolute inset-x-0 top-0 h-1/3 pointer-events-none"
+          style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.06) 0%, transparent 100%)" }}
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div
+            className="h-12 w-12 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform"
+            style={{
+              background: "rgba(26,92,255,0.12)",
+              border: `1.5px solid rgba(26,92,255,0.55)`,
+              boxShadow: `0 0 24px rgba(26,92,255,0.35), inset 0 0 12px rgba(26,92,255,0.08)`,
+            }}
+          >
+            <Play className="h-4 w-4 fill-current ml-0.5" style={{ color: P }} />
+          </div>
+        </div>
+        <div className="absolute top-3 left-3">
+          <span
+            className="rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm"
+            style={{
+              background: "rgba(237,234,228,0.90)",
+              border: "0.5px solid rgba(0,0,0,0.10)",
+              color: P,
+            }}
+          >
+            {tag}
+          </span>
+        </div>
+      </button>
+    );
 
   return (
     <div
@@ -738,13 +755,7 @@ function VideoCard({
         border: "0.5px solid rgba(0,0,0,0.10)",
       }}
     >
-      {href ? (
-        <a href={href} target="_blank" rel="noopener noreferrer">
-          {videoBlock}
-        </a>
-      ) : (
-        videoBlock
-      )}
+      {videoBlock}
 
       <div className="p-5 flex flex-col gap-3 flex-1">
         <svg className="h-5 w-5 shrink-0" viewBox="0 0 20 16" fill="none">
