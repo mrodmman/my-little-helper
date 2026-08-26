@@ -275,16 +275,6 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
       <div className="relative mx-auto max-w-6xl w-full">
         <div className="grid gap-16 lg:grid-cols-2 lg:items-center">
           <div>
-            <div className="flex items-center gap-3 mb-10">
-              <LogoMark className="h-9 w-9" />
-              <span
-                className="text-[11px] font-bold uppercase tracking-[0.28em]"
-                style={{ color: fg(0.35) }}
-              >
-                Keyboard Kraken
-              </span>
-            </div>
-
             <h1
               className="font-sans uppercase text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[0.92]"
               style={{ color: FG }}
